@@ -32,6 +32,11 @@ jobs:
           docker build --build-arg NODE_ENV=production -t ${{ secrets.DOCKER_USERNAME }}/next-app:latest .
           docker push ${{ secrets.DOCKER_USERNAME }}/next-app:latest
 
+      - name: Debug Secrets
+        run:
+          echo "Username: ${{ secrets.DOCKER_USERNAME }}"
+
+
   deploy:
     runs-on: ubuntu-latest
     needs: build
