@@ -1,29 +1,27 @@
-# Install dependencies
-FROM node:18-alpine AS deps
+# Stage 1: Build
+FROM node:23 AS builder
+
 WORKDIR /app
-COPY package.json yarn.lock* ./
+
+# Copy package files and install dependencies
+COPY package.json yarn.lock ./
 RUN yarn install --frozen-lockfile
 
-# Build the application
-FROM node:18-alpine AS builder
-WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
+# Copy the rest of the application files
 COPY . .
-ARG NODE_ENV
-ENV NODE_ENV=$NODE_ENV
+
 RUN yarn build
 
-# Run the application
-FROM node:18-alpine AS runner
+# Stage 2: Serve
+FROM node:23
+
 WORKDIR /app
 
-# Copy necessary files
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/.next ./.next
+# Copy dependencies and build artifacts from the builder stage
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/yarn.lock ./yarn.lock
+COPY --from=builder /app/.next ./.next
 
 EXPOSE 3000
-
 CMD ["yarn", "start"]
