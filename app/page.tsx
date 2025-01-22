@@ -473,7 +473,7 @@ export default function Home() {
             <h1 className="text-4xl font-bold tracking-tight text-white lg:text-6xl">New arrivals are here</h1>
             <p className="mt-4 text-xl text-white">
               The new arrivals have, well, newly arrived. Check out the latest options from our summer small-batch release
-              while they're still in stock.
+              while theyre still in stock.
             </p>
             <a
                 href="#"
