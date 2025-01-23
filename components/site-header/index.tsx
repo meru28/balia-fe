@@ -17,7 +17,7 @@ const Header = () => {
     }, []);
 
     return (
-        <header className={scroll ? "border-grid fixed top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60" : "fixed top-0 z-50 w-full"}>
+        <header className={scroll ? "border-grid fixed top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60" : "bg-background/20 fixed top-0 z-50 w-full"}>
             <div className="container-wrapper">
                 <div className="flex h-14 items-center justify-center max-w-screen-xl mx-auto">
                     <MainNav scroll={scroll} />
