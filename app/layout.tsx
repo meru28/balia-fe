@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-
+import SiteHeader from "../components/site-header";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -15,8 +15,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className="antialiased"
+        className="min-h-svh bg-background font-sans antialiased"
       >
+      <SiteHeader />
         {children}
       </body>
     </html>
