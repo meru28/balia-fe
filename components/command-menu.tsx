@@ -5,9 +5,9 @@ import { useRouter } from "next/navigation"
 import { type DialogProps } from "@radix-ui/react-dialog"
 import { File } from "lucide-react"
 
-import { docsConfig } from "@/config/docs"
+import { docsConfig } from "../config/docs"
 import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
+import { Button } from "../components/ui/button"
 
 import {
     CommandDialog,
