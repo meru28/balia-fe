@@ -20,10 +20,10 @@ FROM node:23
 WORKDIR /app
 
 # Copy dependencies and build artifacts from the builder stage
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package.json ./package.json
-COPY --from=builder /app/yarn.lock ./yarn.lock
-COPY --from=builder /app/.next ./.next
+COPY --from=builder /src/app/node_modules ./node_modules
+COPY --from=builder /src/app/package.json ./package.json
+COPY --from=builder /src/app/yarn.lock ./yarn.lock
+COPY --from=builder /src/app/.next ./.next
 
 EXPOSE 3000
 CMD ["yarn", "start"]
