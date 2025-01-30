@@ -25,6 +25,7 @@ COPY --from=builder /src/app/node_modules ./node_modules
 COPY --from=builder /src/app/package.json ./package.json
 COPY --from=builder /src/app/yarn.lock ./yarn.lock
 COPY --from=builder /src/app/.next ./.next
+COPY --from=builder /src/app/public ./public
 
 EXPOSE 3000
 CMD ["yarn", "start"]
