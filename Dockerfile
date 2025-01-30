@@ -1,10 +1,11 @@
 # Stage 1: Build
 FROM node:23 AS builder
 
-WORKDIR /app
+WORKDIR /src/app
 
 # Copy package files and install dependencies
 COPY package.json yarn.lock ./
+RUN rm -rf ./next
 RUN rm -rf node_modules && yarn cache clean
 RUN yarn install --frozen-lockfile
 
@@ -17,7 +18,7 @@ RUN yarn build || { echo "Build failed. Check the application code or configurat
 # Stage 2: Serve
 FROM node:23
 
-WORKDIR /app
+WORKDIR /src/app
 
 # Copy dependencies and build artifacts from the builder stage
 COPY --from=builder /src/app/node_modules ./node_modules
