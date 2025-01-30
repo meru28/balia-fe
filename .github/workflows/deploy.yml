@@ -23,8 +23,8 @@ jobs:
       # Step 3: Build Docker Image
       - name: Build and Push Docker Image
         run: |
-          docker build --build-arg NODE_ENV=production -t ${{ secrets.DOCKER_USERNAME }}/next-app:latest .
-          docker push ${{ secrets.DOCKER_USERNAME }}/next-app:latest
+          docker build --build-arg NODE_ENV=production -t ${{ secrets.DOCKER_USERNAME }}/balia-fe:latest .
+          docker push ${{ secrets.DOCKER_USERNAME }}/balia-fe:latest
 
   deploy:
     runs-on: ubuntu-latest
@@ -41,20 +41,20 @@ jobs:
           port: 22
           script: |
             # Pull the latest Docker image
-            docker pull ${{ secrets.DOCKER_USERNAME }}/next-app:latest
+            docker pull ${{ secrets.DOCKER_USERNAME }}/balia-fe:latest
             
             # Stop and remove the current container (if it exists)
-            docker stop next-app || true
-            docker rm next-app || true
+            docker stop balia-fe || true
+            docker rm balia-fe || true
             
             # Remove older images except the latest
-            docker images --filter=reference="${{ secrets.DOCKER_USERNAME }}/next-app" --format "{{.ID}} {{.Tag}}" \
+            docker images --filter=reference="${{ secrets.DOCKER_USERNAME }}/balia-fe" --format "{{.ID}} {{.Tag}}" \
             | grep -v "latest" | awk '{print $1}' | xargs -r docker rmi
             
             # Run the latest container
-            docker run -d --name next-app \
+            docker run -d --name balia-fe \
             -p 8082:3000 \
             -e NODE_ENV=production \
             -e NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }} \
             -e SECRET_KEY=${{ secrets.SECRET_KEY }} \
-            ${{ secrets.DOCKER_USERNAME }}/next-app:latest
+            ${{ secrets.DOCKER_USERNAME }}/balia-fe:latest
