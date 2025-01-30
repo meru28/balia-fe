@@ -14,7 +14,7 @@ const MobileMenu = () => {
   const navItems = [
     {
       name: "Home",
-      path: "#",
+      path: "/",
       accordion: null
     },
     {
