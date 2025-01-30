@@ -5,8 +5,8 @@ WORKDIR /src/app
 
 # Copy package files and install dependencies
 COPY package.json yarn.lock ./
-RUN rm -rf ./next
-RUN rm -rf node_modules && yarn cache clean
+RUN rm -rf ./.next/
+RUN rm -rf ./node_modules/ && yarn cache clean
 RUN yarn install --frozen-lockfile
 
 # Copy the rest of the application files
