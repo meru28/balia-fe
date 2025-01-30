@@ -1,5 +1,6 @@
 {
-  "name": "broccoli",
+  "name": "balia",
+  "author": "Meru",
   "version": "0.1.0",
   "private": true,
   "scripts": {
