@@ -72,7 +72,7 @@ const Header = () => {
           <div
             className={headerSize === "lg" ? "container-fluid" : "container"}
           >
-            <div className="row">
+            <div className="tw-flex tw-justify-between tw-items-center tw-h-[100px]">
               {/* logo */}
               <Logo />
               {/* navbar */}

@@ -86,10 +86,10 @@ const Products3 = ({
                     data-bs-toggle="tab"
                     href="#liton_tab_3_1"
                   >
-                    Women
+                    Handbag
                   </Link>
                   <Link data-bs-toggle="tab" href="#liton_tab_3_2" className="">
-                    Man
+                    Home
                   </Link>
                   <Link data-bs-toggle="tab" href="#liton_tab_3_3" className="">
                     Accessories
@@ -140,16 +140,17 @@ const Products3 = ({
                   <div className="ltn__product-tab-content-inner">
                     <div className="row ltn__tab-product-slider-one-active slick-arrow-1">
                       {/* <!-- ltn__product-item --> */}
-                      {/*{driedProducts1?.map((product, idx) => (*/}
-                      {/*  <div className="col-lg-12" key={idx}>*/}
-                      {/*    <ProductCardPrimary product={product} />*/}
-                      {/*    {isDouble ? (*/}
-                      {/*      <ProductCardPrimary product={driedProducts2[idx]} />*/}
-                      {/*    ) : (*/}
-                      {/*      ""*/}
-                      {/*    )}*/}
-                      {/*  </div>*/}
-                      {/*))}*/}
+                      {driedProducts?.map((product, idx) => (
+                       <div className="col-lg-12" key={idx}>
+                          <ProductCardPrimary product={product} />
+                          {isDouble ? (
+                            <ProductCardPrimary product={driedProducts2[idx]}
+                            />
+                          ) : (
+                            ""
+                          )}
+                       </div>
+                      ))}
                     </div>
                   </div>
                 </div>

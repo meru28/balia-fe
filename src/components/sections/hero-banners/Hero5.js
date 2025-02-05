@@ -7,7 +7,7 @@ const Hero5 = () => {
       <div className="ltn__slide-animation-active">
         {/* <!-- HTML5 VIDEO --> */}
         <video style={{ minHeight: "100%" }} autoPlay muted loop id="myVideo">
-          <source src="https://cdn.shopify.com/s/files/1/0332/6420/5963/files/jewelry_video.mp4?v=14944919741897558918" type="video/mp4" />
+          <source src="/media/Video.mp4" type="video/mp4" />
         </video>
 
         {/* <!-- ltn__slide-item --> */}

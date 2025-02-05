@@ -7,7 +7,7 @@ const Shop = () => {
       isNotHeaderTop={true}
       isHeaderRight={true}
       isTextWhite={true}
-      isNavbarAppointmentBtn={true}
+      isNavbarAppointmentBtn={false}
     >
       <ShopMain isSidebar="primary" />
     </PageWrapper>

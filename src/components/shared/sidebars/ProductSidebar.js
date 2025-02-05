@@ -30,10 +30,10 @@ const ProductSidebar = () => {
       <ProductSizes />
 
       {/* <!-- Color Widget --> */}
-      <ProductColors />
+      {/*<ProductColors />*/}
 
       {/* <!-- Banner Widget --> */}
-      <SidebarBanner image={"/img/banner/banner-2.jpg"} />
+      {/*<SidebarBanner image={"/img/banner/banner-2.jpg"} />*/}
     </aside>
   );
 };

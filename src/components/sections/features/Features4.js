@@ -40,11 +40,11 @@ const Features4 = ({ type, mb }) => {
                         height={50}
                         alt="#"
                         priority={false}
-                        class="tw-filter tw-grayscale"
                       />
                     </div>
                     <div className="ltn__feature-info">
                       <h4>Handmade</h4>
+
                       <p>We ensure the product quality that is our main goal</p>
                     </div>
                   </div>
@@ -53,15 +53,15 @@ const Features4 = ({ type, mb }) => {
                   <div className="ltn__feature-item ltn__feature-item-8">
                     <div className="ltn__feature-icon">
                       <Image
-                        src={"/img/icons/icon-img/14.png"}
+                        src={"/img/icons/icon-img/delivery-04.png"}
                         width={51}
                         height={50}
                         alt="#"
                         priority={false}
-                        class="tw-filter tw-grayscale"
                       />
                     </div>
                     <div className="ltn__feature-info">
+
                       <h4>Free home delivery</h4>
                       <p>
                         We ensure the product quality that you can trust easily

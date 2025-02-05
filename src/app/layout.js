@@ -1,11 +1,24 @@
-import { Open_Sans, Rajdhani } from "next/font/google";
+import localFont from "next/font/local";
+import { Rajdhani } from "next/font/google";
 import "@/assets/css/font-icons.css";
 import "@/assets/css/plugins.css";
 import "./globals.css";
 import "@/assets/css/responsive.css";
 import Script from "next/script";
 import { Suspense } from "react";
-const open_sans = Open_Sans({
+const open_sans = localFont({
+  src: [
+    {
+      path: "../../public/fonts/GlacialIndifference-Regular.otf",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../../public/fonts/GlacialIndifference-Bold.otf",
+      weight: "700",
+      style: "bold",
+    },
+  ],
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700", "800"],
   display: "swap",
