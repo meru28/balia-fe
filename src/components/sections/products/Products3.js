@@ -144,7 +144,7 @@ const Products3 = ({
                        <div className="col-lg-12" key={idx}>
                           <ProductCardPrimary product={product} />
                           {isDouble ? (
-                            <ProductCardPrimary product={driedProducts2[idx]}
+                            <ProductCardPrimary product={driedProducts[idx]}
                             />
                           ) : (
                             ""
