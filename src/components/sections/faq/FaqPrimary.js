@@ -71,15 +71,6 @@ const FaqPrimary = () => {
               </div>
             </div>
           </div>
-          <div className="col-lg-4">
-            <aside className="sidebar-area ltn__right-sidebar">
-              {/* <!-- Newsletter Widget --> */}
-              <SidebarNewsletter />
-
-              {/* <!-- Banner Widget --> */}
-              <SidebarBanner />
-            </aside>
-          </div>
         </div>
       </div>
     </div>

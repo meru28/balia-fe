@@ -24,6 +24,12 @@ const open_sans = localFont({
   display: "swap",
   variable: "--ltn__body-font",
 });
+const brittany = localFont({
+  src: "../../public/fonts/BrittanySignatureScript.ttf",
+  weight: "400",
+  style: "normal",
+  variable: "--brittany-font",
+});
 const rajdhani = Rajdhani({
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700"],
@@ -41,7 +47,7 @@ export default function RootLayout({ children }) {
     <html
       lang="en"
       suppressHydrationWarning={true}
-      className={`${rajdhani.variable} ${open_sans.variable}`}
+      className={`${rajdhani.variable} ${open_sans.variable} ${brittany.variable}`}
     >
       <body className={open_sans.className}>
         <Suspense fallback={<div></div>}>

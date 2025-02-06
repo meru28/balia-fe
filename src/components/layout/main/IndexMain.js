@@ -20,7 +20,7 @@ const IndexMain = () => {
       <FeaturedProducts />
       <Video />
       {/* <Testimonials3 /> */}
-      <Blogs2 type={2} pb="pb-70" title="Leatest Blog" />
+      <Blogs2 type={2} pb="pb-70" title="Latest Blog" />
       <Features4 />
     </main>
   );

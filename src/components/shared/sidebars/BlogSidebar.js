@@ -13,23 +13,23 @@ const BlogSidebar = () => {
   return (
     <aside className="sidebar-area blog-sidebar ltn__right-sidebar">
       {/* <!-- Author Widget --> */}
-      <BlogAuthor />
+      {/* <BlogAuthor /> */}
       {/* <!-- Search Widget --> */}
       <SidebarSearch />
       {/* <!-- Popular Post Widget --> */}
-      <PopularBlog />
+      {/* <PopularBlog /> */}
       {/* <!-- Menu Widget (Category) --> */}
       <BlogCategories />
       {/* <!-- Social Media Widget --> */}
-      <SidebarSocials />
+      {/* <SidebarSocials /> */}
       {/* <!-- Popular Post Widget (Twitter Post) --> */}
       <TwitterFeeds />
       {/* <!-- Instagram Widget --> */}
       <InstagramFeeds />
       {/* <!-- Tagcloud Widget --> */}
-      <BlogTags />
+      {/* <BlogTags /> */}
       {/* <!-- Banner Widget --> */}
-      <SidebarBanner image={"/img/banner/banner-4.jpg"} />
+      {/* <SidebarBanner image={"/img/banner/banner-4.jpg"} /> */}
     </aside>
   );
 };

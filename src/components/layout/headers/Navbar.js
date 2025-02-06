@@ -31,18 +31,18 @@ const Navbar = () => {
     },
     {
       name: "Our Story",
-      path: "#",
+      path: "/our-story",
       dropdown: null,
     },
     {
       name: "Shop",
-      path: "#",
+      path: "/shop",
       dropdown: null,
       isNestedDropdown: null,
     },
     {
       name: "Edits",
-      path: "#",
+      path: "/edits",
       dropdown: null,
     },
     {

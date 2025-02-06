@@ -15,11 +15,8 @@ const FooterServices2 = () => {
               <Link href="/wishlist">Customer Support</Link>
             </li>
             <li>
-              <Link href="/about">Terms & Conditions</Link>
+              <Link href="#">Terms & Conditions</Link>
             </li>
-            {/*<li>*/}
-            {/*  <Link href="/about">Promotional Offers</Link>*/}
-            {/*</li>*/}
           </ul>
         </div>
       </div>

@@ -11,8 +11,8 @@ const FaqMain = () => {
     <main>
       <HeroPrimary title={"Frequently asked questions"} text={"FAQ"} />
       <FaqPrimary />
-      <CounterUp2 />
-      <Blogs2 type={2} pb="pb-70" />
+      {/* <CounterUp2 /> */}
+      {/* <Blogs2 type={2} pb="pb-70" /> */}
       <Features4 />
     </main>
   );

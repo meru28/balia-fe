@@ -9,10 +9,10 @@ const FooterCompany = () => {
         <div className="footer-menu">
           <ul>
             <li>
-              <Link href="/about">About</Link>
+              <Link href="/our-story">Our Story</Link>
             </li>
             <li>
-              <Link href="/blogs">Blog</Link>
+              <Link href="/edits">Edits</Link>
             </li>
             <li>
               <Link href="/shop">All Products</Link>

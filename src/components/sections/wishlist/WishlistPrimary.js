@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 const WishlistPrimary = () => {
   const { wishlistProducts } = useWishlistContext();
   const [isClient, setIsClient] = useState(false);
-  const iswishlistProducts = wishlistProducts?.length ? true : false;
+  const iswishlistProducts = !!wishlistProducts?.length;
   useEffect(() => {
     setIsClient(true);
   }, []);
@@ -29,9 +29,9 @@ const WishlistPrimary = () => {
                           </td>
                         </tr>
                       ) : (
-                        wishlistProducts?.map((product, idx) => (
+                        wishlistProducts?.map((product) => (
                           <CartProduct
-                            key={idx}
+                            key={product.id}
                             product={product}
                             isWishlist={true}
                           />

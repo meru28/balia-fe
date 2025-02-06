@@ -32,8 +32,6 @@ const Footer = () => {
                   <FooterServices2 />
                   <FooterCustomerCare />
                   <FooterNewsletter />
-              
-             
             </div>
           </div>
         </div>
