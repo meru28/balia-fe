@@ -97,35 +97,6 @@ const ProductCardPrimary = ({ product, isShowDisc }) => {
         </div>
       </div>
       <div className="product-info">
-        {/*<div className="product-ratting">*/}
-        {/*  <ul>*/}
-        {/*    <li>*/}
-        {/*      <Link href="#">*/}
-        {/*        <i className="fas fa-star"></i>*/}
-        {/*      </Link>*/}
-        {/*    </li>{" "}*/}
-        {/*    <li>*/}
-        {/*      <Link href="#">*/}
-        {/*        <i className="fas fa-star"></i>*/}
-        {/*      </Link>*/}
-        {/*    </li>{" "}*/}
-        {/*    <li>*/}
-        {/*      <Link href="#">*/}
-        {/*        <i className="fas fa-star"></i>*/}
-        {/*      </Link>*/}
-        {/*    </li>{" "}*/}
-        {/*    <li>*/}
-        {/*      <Link href="#">*/}
-        {/*        <i className="fas fa-star-half-alt"></i>*/}
-        {/*      </Link>*/}
-        {/*    </li>{" "}*/}
-        {/*    <li>*/}
-        {/*      <Link href="#">*/}
-        {/*        <i className="far fa-star"></i>*/}
-        {/*      </Link>*/}
-        {/*    </li>*/}
-        {/*  </ul>*/}
-        {/*</div>*/}
         <h2 className="product-title">
           <Link href={`/products/${id}`}>{title}</Link>
         </h2>

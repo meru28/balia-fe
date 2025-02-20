@@ -13,7 +13,7 @@ const FeaturedProducts = () => {
         <div className="row">
           <div className="col-lg-12">
             <div className="section-title-area ltn__section-title-2 text-center">
-              <h1 className="section-title">Featured Products</h1>
+              <h1 className="section-title">Our Bestsellers</h1>
             </div>
           </div>
         </div>

@@ -11,7 +11,7 @@ import Testimonials3 from "@/components/sections/testimonils/Testimonials3";
 const AboutMain = () => {
   return (
     <main>
-      <HeroPrimary title="About Us" text="About Us" bg="/img/bg/5.jpg" />
+      <HeroPrimary title="About Us" text="About Us" bg="/img/bg/fashion-thing.png" />
       <About5 pt={"pt-0"} />
       <Services4 />
       <Team1 />

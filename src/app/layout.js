@@ -6,6 +6,7 @@ import "./globals.css";
 import "@/assets/css/responsive.css";
 import Script from "next/script";
 import { Suspense } from "react";
+import ClientSessionProvider from "@/providers/ClientSessionProvider";
 const open_sans = localFont({
   src: [
     {
@@ -50,8 +51,11 @@ export default function RootLayout({ children }) {
       className={`${rajdhani.variable} ${open_sans.variable} ${brittany.variable}`}
     >
       <body className={open_sans.className}>
+      <ClientSessionProvider>
         <Suspense fallback={<div></div>}>
-          {children}
+
+            {children}
+
 
           <Script src="/plugins.js" />
           <Script
@@ -59,6 +63,7 @@ export default function RootLayout({ children }) {
             async
           />
         </Suspense>
+      </ClientSessionProvider>
       </body>
     </html>
   );

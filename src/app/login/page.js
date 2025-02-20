@@ -8,7 +8,7 @@ const Login = () => {
       isNotHeaderTop={true}
       isHeaderRight={true}
       isTextWhite={true}
-      isNavbarAppointmentBtn={true}
+      isNavbarAppointmentBtn={false}
     >
       <LoginMain />
     </PageWrapper>

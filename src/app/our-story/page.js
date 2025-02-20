@@ -8,7 +8,7 @@ const About = () => {
       isNotHeaderTop={true}
       isHeaderRight={true}
       isTextWhite={true}
-      isNavbarAppointmentBtn={true}
+      isNavbarAppointmentBtn={false}
     >
       <AboutMain />
     </PageWrapper>

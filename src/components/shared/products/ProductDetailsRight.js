@@ -42,24 +42,24 @@ const ProductDetailsRight = ({ product }) => {
     purchaseDate: purchaseDateMilliseconds,
   };
 
-  useEffect(() => {
-    const currentDate = Date.now();
-    const calanderFormat = moment(currentDate).format("YYYY-MM-DD");
-    setPurchaseDate(calanderFormat);
-    const inputParent = inputRef.current;
-    const input = inputParent.querySelector("input");
-
-    setTimeout(() => {
-      const increament = inputParent.querySelector(".inc");
-      const decreament = inputParent.querySelector(".dec");
-      increament.addEventListener("click", () => {
-        setQuantity(parseInt(input.value));
-      });
-      decreament.addEventListener("click", () => {
-        setQuantity(parseInt(input.value));
-      });
-    }, 500);
-  }, []);
+  // useEffect(() => {
+  //   const currentDate = Date.now();
+  //   const calanderFormat = moment(currentDate).format("YYYY-MM-DD");
+  //   setPurchaseDate(calanderFormat);
+  //   const inputParent = inputRef.current;
+  //   const input = inputParent.querySelector("input");
+  //
+  //   setTimeout(() => {
+  //     const increament = inputParent.querySelector(".inc");
+  //     const decreament = inputParent.querySelector(".dec");
+  //     increament.addEventListener("click", () => {
+  //       setQuantity(parseInt(input.value));
+  //     });
+  //     decreament.addEventListener("click", () => {
+  //       setQuantity(parseInt(input.value));
+  //     });
+  //   }, 500);
+  // }, []);
   return (
     <div className="modal-product-info shop-details-info pl-0" id="details">
       {/* ratings */}

@@ -12,7 +12,7 @@ const IndexMain = () => {
   return (
     <main>
       <Hero5 />
-      <Products3 isDouble={false} title={"Our Products"} pt={" pt-85"} />
+      <Products3 isDouble={false} title={""} pt={" pt-85"} />
         <div className="tw-max-w-6xl tw-flex tw-justify-center tw-mx-auto tw-pb-[140px]">
           <OfferCard2 />
         </div>

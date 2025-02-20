@@ -68,7 +68,7 @@ const PageWrapper = ({
         </CartContextProvider>
       )}
 
-      <Preloader />
+      {/*<Preloader />*/}
     </div>
   );
 };

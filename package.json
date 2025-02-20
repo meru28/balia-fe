@@ -13,11 +13,13 @@
     "@tailwindcss/postcss": "^4.0.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "file-loader": "^6.2.0",
     "framer-motion": "^12.0.5",
     "lucide-react": "^0.474.0",
     "moment": "^2.30.1",
     "motion": "^12.0.5",
     "next": "14.2.14",
+    "next-auth": "^4.24.11",
     "nodemailer": "^6.9.15",
     "react": "^18",
     "react-dom": "^18",
@@ -32,6 +34,5 @@
     "eslint-config-next": "14.2.14",
     "postcss": "^8.5.1",
     "tailwindcss": "^3.4.17"
-  },
-  "packageManager": "yarn@4.6.0+sha512.5383cc12567a95f1d668fbe762dfe0075c595b4bfff433be478dbbe24e05251a8e8c3eb992a986667c1d53b6c3a9c85b8398c35a960587fbd9fa3a0915406728"
+  }
 }

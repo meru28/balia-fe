@@ -8,7 +8,7 @@ const Register = () => {
       isNotHeaderTop={true}
       isHeaderRight={true}
       isTextWhite={true}
-      isNavbarAppointmentBtn={true}
+      isNavbarAppointmentBtn={false}
     >
       <RegisterMain />
     </PageWrapper>

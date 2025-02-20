@@ -13,7 +13,7 @@ const HeroPrimary = ({ text, title, item, type, mb, isCapitalize, bg }) => {
       }  ltn__breadcrumb-color-white bg-overlay-theme-black-90 bg-image ${
         mb ? mb : ""
       }`}
-      data-bs-bg={bg ? bg : "/img/bg/9.jpg"}
+      data-bs-bg={bg ? bg : "/img/bg/fashion-thing.png"}
     >
       <div className="container">
         <div className="row">
@@ -21,7 +21,7 @@ const HeroPrimary = ({ text, title, item, type, mb, isCapitalize, bg }) => {
             <div className="ltn__breadcrumb-inner ltn__breadcrumb-inner-2 justify-content-between">
               <div className="section-title-area ltn__section-title-2">
                 <h6 className="section-subtitle ltn__secondary-color">
-                  {"//"} Welcome to our company
+                  {"//"} Welcome to balia
                 </h6>
                 <h1
                   className={`section-title white-color ${

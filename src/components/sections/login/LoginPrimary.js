@@ -1,7 +1,36 @@
+'use client'
+
 import Link from "next/link";
 import React from "react";
+import { signIn } from "next-auth/react"
+import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation"
 
 const LoginPrimary = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState(null);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl") || "/";
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setError(null);
+
+    const result = await signIn("credentials", {
+      email,
+      password,
+      redirect: false,
+    });
+
+    if (result?.error) {
+      setError("Email atau password salah!");
+    } else {
+      router.push(callbackUrl);
+    }
+  };
+
   return (
     <div className="ltn__login-area pb-65">
       <div className="container">
@@ -22,13 +51,24 @@ const LoginPrimary = () => {
         <div className="row">
           <div className="col-lg-6">
             <div className="account-login-inner">
-              <form action="#" className="ltn__form-box contact-form-box">
-                <input type="text" name="email" placeholder="Email*" />
+              <form onSubmit={handleLogin} className="ltn__form-box contact-form-box">
+                <input
+                  type="email"
+                   name="email"
+                   placeholder="Email*"
+                   value={email}
+                   onChange={(e) => setEmail(e.target.value)}
+                   required
+                />
                 <input
                   type="password"
                   name="password"
                   placeholder="Password*"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
                 />
+                {error && <p className="text-danger">{error}</p>}
                 <div className="btn-wrapper mt-0">
                   <button
                     className="theme-btn-1 btn btn-block w-100"

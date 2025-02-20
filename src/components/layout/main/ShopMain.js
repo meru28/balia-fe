@@ -114,7 +114,7 @@ const ShopMain = ({ title, isSidebar, text, currentTapId }) => {
             : "Shop"
         }
         text={text ? text : "Shop"}
-        type={isSidebar === "primary" ? 2 : 3}
+        type={3}
         isCapitalize={brand ? true : false}
       />
       <CommonContext

@@ -1,4 +1,5 @@
 "use client";
+import { useSession, signIn } from "next-auth/react";
 import useSweetAlert from "@/hooks/useSweetAlert";
 import addItemsToLocalstorage from "@/libs/addItemsToLocalstorage";
 import getItemsFromLocalstorage from "@/libs/getItemsFromLocalstorage";
@@ -9,40 +10,43 @@ const cart3 = "/img/product/3.png";
 const cart4 = "/img/product/4.png";
 
 const demoProducts = [
-  {
-    id: 1,
-    title: "Wheel Bearing Retainer",
-    image: cart1,
-    price: 65,
-    quantity: 1,
-  },
-  {
-    id: 2,
-    title: "Brake Conversion Kit",
-    image: cart2,
-    price: 85,
-    quantity: 1,
-  },
-  {
-    id: 3,
-    title: "OE Replica Wheels",
-    image: cart3,
-    price: 92,
-    quantity: 1,
-  },
-  {
-    id: 4,
-    title: "Shock Mount Insulator",
-    image: cart4,
-    price: 68,
-    quantity: 1,
-  },
+  // {
+  //   id: 1,
+  //   title: "Wheel Bearing Retainer",
+  //   image: cart1,
+  //   price: 65,
+  //   quantity: 1,
+  // },
+  // {
+  //   id: 2,
+  //   title: "Brake Conversion Kit",
+  //   image: cart2,
+  //   price: 85,
+  //   quantity: 1,
+  // },
+  // {
+  //   id: 3,
+  //   title: "OE Replica Wheels",
+  //   image: cart3,
+  //   price: 92,
+  //   quantity: 1,
+  // },
+  // {
+  //   id: 4,
+  //   title: "Shock Mount Insulator",
+  //   image: cart4,
+  //   price: 68,
+  //   quantity: 1,
+  // },
 ];
 const cartContext = createContext(null);
+
 const CartContextProvider = ({ children }) => {
+  const { data: session } = useSession(); // Cek status login
   const [cartStatus, setCartStatus] = useState(null);
   const [cartProducts, setCartProducts] = useState([]);
-  const creteAlert = useSweetAlert();
+  const createAlert = useSweetAlert();
+
   useEffect(() => {
     const cartProductFromLocalStorage = getItemsFromLocalstorage("cart");
 
@@ -51,8 +55,15 @@ const CartContextProvider = ({ children }) => {
       addItemsToLocalstorage("cart", demoProducts);
     } else [setCartProducts(cartProductFromLocalStorage)];
   }, []);
+
   // add  product = localstorage cart
   const addProductToCart = (currentProduct, isDecreament, isTotalQuantity) => {
+    if (!session) {
+      createAlert("warning", "You need to login first!");
+      signIn(); // Arahkan ke halaman login
+      return;
+    }
+
     const { id: currentId, title: currentTitle } = currentProduct;
 
     const modifyableProduct = cartProducts?.find(
@@ -75,10 +86,10 @@ const CartContextProvider = ({ children }) => {
       );
 
       if (previousQuantity < currentQuantity) {
-        // creteAlert("success", "Success! Quantity increased.");
+        // createAlert("success", "Success! Quantity increased.");
         setCartStatus("incresed");
       } else if (previousQuantity > currentQuantity) {
-        // creteAlert("success", "Success! Quantity decreased.");
+        // createAlert("success", "Success! Quantity decreased.");
         setCartStatus("decreased");
       }
     } else {
@@ -101,16 +112,16 @@ const CartContextProvider = ({ children }) => {
             : product
         );
         if (isDecreament) {
-          // creteAlert("success", "Success! Quantity decreased.");
+          // createAlert("success", "Success! Quantity decreased.");
           setCartStatus("decreased");
         } else {
-          // creteAlert("success", "Success! Quantity increased.");
+          // createAlert("success", "Success! Quantity increased.");
           setCartStatus("increased");
         }
       } else {
         currentProducts = [...cartProducts, currentProduct];
 
-        // creteAlert("success", "Success! added to cart.");
+        // createAlert("success", "Success! added to cart.");
         setCartStatus("added");
       }
     }
@@ -120,12 +131,18 @@ const CartContextProvider = ({ children }) => {
 
   // delete product = localstorage cart
   const deleteProductFromCart = (currentId, currentTitle) => {
+    if (!session) {
+      createAlert("warning", "You need to login first!");
+      signIn();
+      return;
+    }
+
     const currentProducts = cartProducts?.filter(
       ({ id, title }) => id !== currentId || title !== currentTitle
     );
     setCartProducts(currentProducts);
     addItemsToLocalstorage("cart", currentProducts);
-    creteAlert("success", "Success! deleted from cart.");
+    createAlert("success", "Success! deleted from cart.");
     setCartStatus("deleted");
   };
   return (

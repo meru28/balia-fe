@@ -28,22 +28,6 @@ const Products3 = ({
   const driedProducts = getAllProducts()?.filter(
     ({ collection }) => makePath(collection) === makePath("Dried Foods")
   );
-
-
-  // const driedProducts1 = driedProducts?.slice(0, 6);
-  // const driedProducts2 = driedProducts?.slice(6, 12);
-  // const breadProducts = getAllProducts()?.filter(
-  //   ({ collection }) => makePath(collection) === makePath("Bread & Cake")
-  // );
-  //
-  // const breadProducts1 = breadProducts?.slice(0, 6);
-  // const breadProducts2 = breadProducts?.slice(6, 12);
-  // const fishProducts = getAllProducts()?.filter(
-  //   ({ collection }) => makePath(collection) === makePath("Fish & Meat")
-  // );
-  // const fishProducts1 = fishProducts?.slice(0, 6);
-  // const fishProducts2 = fishProducts?.slice(6, 12);
-
   return (
     <section>
       <div
@@ -64,7 +48,7 @@ const Products3 = ({
                 }`}
               >
                 <h1 className="section-title">
-                  {title ? title : "Our Products"}
+                  {title ? title : ""}
                 </h1>
                 {desc ? (
                   <p>
@@ -89,7 +73,7 @@ const Products3 = ({
                     Handbag
                   </Link>
                   <Link data-bs-toggle="tab" href="#liton_tab_3_2" className="">
-                    Home
+                    Home & Living
                   </Link>
                   <Link data-bs-toggle="tab" href="#liton_tab_3_3" className="">
                     Accessories
