@@ -3,10 +3,15 @@ import Image from "next/image";
 import Link from "next/link";
 import { useCartContext } from "@/providers/CartContext";
 import controlModal from "@/libs/controlModal";
+import { useSession } from "next-auth/react";
 
 const CartStatusModal = ({ product }) => {
   const { id, title, image } = product;
   const { cartStatus } = useCartContext();
+  const { data: session } = useSession();
+
+  if (!session) return null;
+
   return (
     <div className="ltn__modal-area ltn__add-to-cart-modal-area">
       <div className="modal fade" id="add_to_cart_modal" tabIndex="-1">

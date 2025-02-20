@@ -4,9 +4,14 @@ import React from "react";
 import Link from "next/link";
 import { useWishlistContext } from "@/providers/WshlistContext";
 import controlModal from "@/libs/controlModal";
+import { useSession } from "next-auth/react";
+
 const WishlistStatusModal = ({ product }) => {
   const { id, title, image } = product;
   const { wishlistStatus } = useWishlistContext();
+  const { data: session } = useSession();
+
+  if (!session) return null;
 
   return (
     <div className="ltn__modal-area ltn__add-to-cart-modal-area">

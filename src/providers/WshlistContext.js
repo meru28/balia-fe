@@ -28,8 +28,12 @@ const WishlistContextProvider = ({ children }) => {
   // add  product from localstorage cart
   const addProductToWishlist = (currentProduct) => {
     if (!session) {
-      createAlert("warning", "You need to login first!");
-      signIn(); // Arahkan ke halaman login
+      createAlert("warning", "You need to login first!", { timeout: 3000 });
+      setTimeout(() => {
+        signIn().then(() => {
+          // Handle post sign-in actions if needed
+        });
+      }, 2000)
       return;
     }
 

@@ -1,44 +1,12 @@
 "use client";
-import { useSession, signIn } from "next-auth/react";
+import {signIn, useSession} from "next-auth/react";
 import useSweetAlert from "@/hooks/useSweetAlert";
 import addItemsToLocalstorage from "@/libs/addItemsToLocalstorage";
 import getItemsFromLocalstorage from "@/libs/getItemsFromLocalstorage";
-import { createContext, useContext, useEffect, useState } from "react";
-const cart1 = "/img/product/1.png";
-const cart2 = "/img/product/2.png";
-const cart3 = "/img/product/3.png";
-const cart4 = "/img/product/4.png";
+import {createContext, useContext, useEffect, useState} from "react";
 
-const demoProducts = [
-  // {
-  //   id: 1,
-  //   title: "Wheel Bearing Retainer",
-  //   image: cart1,
-  //   price: 65,
-  //   quantity: 1,
-  // },
-  // {
-  //   id: 2,
-  //   title: "Brake Conversion Kit",
-  //   image: cart2,
-  //   price: 85,
-  //   quantity: 1,
-  // },
-  // {
-  //   id: 3,
-  //   title: "OE Replica Wheels",
-  //   image: cart3,
-  //   price: 92,
-  //   quantity: 1,
-  // },
-  // {
-  //   id: 4,
-  //   title: "Shock Mount Insulator",
-  //   image: cart4,
-  //   price: 68,
-  //   quantity: 1,
-  // },
-];
+
+const demoProducts = [];
 const cartContext = createContext(null);
 
 const CartContextProvider = ({ children }) => {
@@ -59,8 +27,12 @@ const CartContextProvider = ({ children }) => {
   // add  product = localstorage cart
   const addProductToCart = (currentProduct, isDecreament, isTotalQuantity) => {
     if (!session) {
-      createAlert("warning", "You need to login first!");
-      signIn(); // Arahkan ke halaman login
+      createAlert("warning", "You need to login first!", { timeout: 3000 });
+      setTimeout(() => {
+        signIn().then(() => {
+          // Handle post sign-in actions if needed
+        });
+      }, 2000)
       return;
     }
 
@@ -93,7 +65,7 @@ const CartContextProvider = ({ children }) => {
         setCartStatus("decreased");
       }
     } else {
-      const isAlreadyExist = modifyableProduct ? true : false;
+      const isAlreadyExist = !!modifyableProduct;
 
       if (isAlreadyExist) {
         currentProducts = cartProducts?.map((product) =>
@@ -160,7 +132,6 @@ const CartContextProvider = ({ children }) => {
   );
 };
 export const useCartContext = () => {
-  const value = useContext(cartContext);
-  return value;
+  return useContext(cartContext);
 };
 export default CartContextProvider;
