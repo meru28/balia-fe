@@ -55,7 +55,7 @@ const LoginPrimary = () => {
                 <input
                   type="text"
                    name="email"
-                   placeholder="Email*"
+                   placeholder="Username or Email*"
                    value={email}
                    onChange={(e) => setEmail(e.target.value)}
                    required

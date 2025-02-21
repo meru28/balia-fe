@@ -1,7 +1,37 @@
+'use client'
+
 import Link from "next/link";
 import React from "react";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import api from '@/utils/axiosInstance'
+import { toast } from "sonner"
 
 const RegisterPrimary = () => {
+  const [formData, setFormData] = useState({ username: "", email: "", firstName: "", roles: ["ROLE_ADMIN"], mobileNumber: "" });
+  const [error, setError] = useState(null);
+  const router = useRouter();
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError(null);
+
+    try {
+      await api.post("auth/signup", formData);
+      toast("Registration successful! Please check your email to verify your account.")
+      setTimeout(() => {
+        router.push("/");
+      }, 4000);
+    } catch (err) {
+      setError("Registration failed!");
+    }
+  };
+
+
   return (
     <div className="ltn__login-area pb-110">
       <div className="container">
@@ -22,19 +52,38 @@ const RegisterPrimary = () => {
         <div className="row">
           <div className="col-lg-6 offset-lg-3">
             <div className="account-login-inner">
-              <form action="#" className="ltn__form-box contact-form-box">
-                <input type="text" name="firstname" placeholder="First Name" />
-                <input type="text" name="lastname" placeholder="Last Name" />
-                <input type="text" name="email" placeholder="Email*" />
+              <form onSubmit={handleSubmit} className="ltn__form-box contact-form-box">
                 <input
-                  type="password"
-                  name="password"
-                  placeholder="Password*"
+                  type="text"
+                  name="username"
+                  value={formData.username}
+                  onChange={handleChange}
+                  placeholder="Username"
+                  required
                 />
                 <input
-                  type="password"
-                  name="confirmpassword"
-                  placeholder="Confirm Password*"
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  placeholder="Email*"
+                  required
+                />
+                <input
+                  type="text"
+                  name="firstName"
+                  value={formData.firstName}
+                  onChange={handleChange}
+                  placeholder="First Name"
+                  required
+                />
+                <input
+                  type="text"
+                  name="mobileNumber"
+                  value={formData.mobileNumber}
+                  onChange={handleChange}
+                  placeholder="Mobile Phone Number"
+                  required
                 />
                 <label className="checkbox-inline">
                   <input type="checkbox" /> I consent to Herboil processing my

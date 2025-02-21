@@ -7,6 +7,7 @@ import "@/assets/css/responsive.css";
 import Script from "next/script";
 import { Suspense } from "react";
 import ClientSessionProvider from "@/providers/ClientSessionProvider";
+import { Toaster } from "@/components/ui/sonner"
 const open_sans = localFont({
   src: [
     {
@@ -55,7 +56,7 @@ export default function RootLayout({ children }) {
         <Suspense fallback={<div></div>}>
 
             {children}
-
+            <Toaster />
 
           <Script src="/plugins.js" />
           <Script
