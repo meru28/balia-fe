@@ -12,7 +12,7 @@ export async function POST(req) {
     );
 
     return NextResponse.json(response.data);
-  } catch (error: any) {
+  } catch (error) {
     return NextResponse.json(
       { message: error.response?.data?.message || "Registration failed" },
       { status: error.response?.status || 500 }
