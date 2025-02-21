@@ -1,7 +1,12 @@
+'use client'
+
 import Link from "next/link";
 import React from "react";
+import { useSession } from "next-auth/react"
 
 const AccountPrimary = () => {
+  const { data: session } = useSession()
+
   return (
     <div className="liton__wishlist-area pb-70">
       <div className="container">
@@ -44,8 +49,8 @@ const AccountPrimary = () => {
                       >
                         <div className="ltn__myaccount-tab-content-inner">
                           <p>
-                            Hello <strong>UserName</strong> (not{" "}
-                            <strong>UserName</strong>?{" "}
+                            Hello <strong>{session?.user?.id}</strong> (not{" "}
+                            <strong>{session?.user?.id}</strong>?{" "}
                             <small>
                               <Link href="/login">Log out</Link>
                             </small>{" "}

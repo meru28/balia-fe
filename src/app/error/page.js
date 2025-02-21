@@ -8,7 +8,7 @@ const Error = ({ title, pathName }) => {
       isNotHeaderTop={true}
       isHeaderRight={true}
       isTextWhite={true}
-      isNavbarAppointmentBtn={true}
+      isNavbarAppointmentBtn={false}
     >
       <NotFoundMain title={title} pathName={pathName} />
     </PageWrapper>

@@ -7,12 +7,14 @@ import React from "react";
 import HeaderCurrency from "./HeaderCurrency";
 import countTotalPrice from "@/libs/countTotalPrice";
 import HeaderCartShow from "./HeaderCartShow";
+import { useSession, signOut } from "next-auth/react";
 
 const HeaderRight = () => {
   const { headerStyle } = useHeaderContex();
   const { cartProducts } = useCartContext();
   const totalProduct = cartProducts?.length;
   const totalPrice = countTotalPrice(cartProducts);
+  const { data: session } = useSession(); // get authentication status
   return (
     <div
       className={`ltn__header-options  ${
@@ -47,18 +49,32 @@ const HeaderRight = () => {
               <i className="icon-user"></i>
             </Link>
             <ul>
-              <li>
-                <Link href="/login">Sign in</Link>
-              </li>
-              <li>
-                <Link href="/register">Register</Link>
-              </li>
-              <li>
-                <Link href="/account">My Account</Link>
-              </li>
-              <li>
-                <Link href="#">Wishlist</Link>
-              </li>
+              {!session ? ( // If not logged in, show login & register
+                <>
+                  <li>
+                    <Link href="/login">Sign in</Link>
+                  </li>
+                  <li>
+                    <Link href="/register">Register</Link>
+                  </li>
+                </>
+              ) : (// If logged in, show account and logout
+                <>
+                  <li>
+                    <Link href="/account">My Account</Link>
+                  </li>
+                  <li>
+                    <Link href="/wishlist">Wishlist</Link>
+                  </li>
+                  <li>
+                    <button
+                      onClick={() => signOut()}
+                    >
+                      Logout
+                    </button>
+                  </li>
+                </>
+                )}
             </ul>
           </li>
         </ul>

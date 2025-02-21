@@ -19,7 +19,7 @@ const LoginPrimary = () => {
     setError(null);
 
     const result = await signIn("credentials", {
-      email,
+      username: email,
       password,
       redirect: false,
     });
@@ -53,7 +53,7 @@ const LoginPrimary = () => {
             <div className="account-login-inner">
               <form onSubmit={handleLogin} className="ltn__form-box contact-form-box">
                 <input
-                  type="email"
+                  type="text"
                    name="email"
                    placeholder="Email*"
                    value={email}

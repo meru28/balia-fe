@@ -6,38 +6,67 @@ export const authOptions = {
     CredentialsProvider({
       name: "Credentials",
       credentials: {
-        email: { label: "Email", type: "email", placeholder: "example@example.com" },
+        username: { label: "Username or Email", type: "text" },
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        const res = await fetch("https://api.balia.ae/backend/v1/api/auth/signin", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(credentials),
-        });
+        try {
+          const res = await fetch("https://api.balia.ae/backend/v1/api/auth/signin", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              username: credentials.username,
+              password: credentials.password,
+            }),
+          });
 
-        const user = await res.json();
+          if (!res.ok) {
+            console.log('invalid credentials')
+            throw new Error("Invalid credentials");
+          }
 
-        if (!res.ok) throw new Error(user.message || "Login failed");
+          const user = await res.json();
 
-        return { ...user.user, token: user.token };
+          if (!user || !user.accessToken) {
+            throw new Error("Invalid response from server");
+          }
+
+          return {
+            id: user.username, // Assuming username is unique, otherwise, use actual id if available
+            name: user.firstName, // Map firstName to name
+            email: user.email || "no-email@example.com", // Ensure email is not empty
+            accessToken: user.accessToken,
+            roles: user.roles,
+          };
+        } catch (error) {
+          console.error("Login error:", error);
+          throw new Error("Login failed. Please try again.");
+        }
       },
     }),
   ],
   secret: process.env.NEXTAUTH_SECRET, // Tambahkan ke .env.local
-  session: {
-    strategy: "jwt",
-  },
+  // session: {
+  //   strategy: "jwt",
+  // },
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
+        token.name = user.name;
+        token.email = user.email;
+        token.accessToken = user.accessToken; // Store the access token
+        token.roles = user.roles;
       }
       return token;
     },
     async session({ session, token }) {
       if (session.user) {
         session.user.id = token.id;
+        session.user.name = token.name;
+        session.user.email = token.email;
+        session.user.accessToken = token.accessToken; // Include the token in session
+        session.user.roles = token.roles;
       }
       return session;
     },
