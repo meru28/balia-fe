@@ -68,7 +68,7 @@ const HeaderRight = () => {
                   </li>
                   <li>
                     <button
-                      onClick={() => signOut()}
+                      onClick={() => signOut({callbackUrl: "https://balia.ae" })}
                     >
                       Logout
                     </button>
