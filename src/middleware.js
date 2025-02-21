@@ -3,7 +3,6 @@ import {NextResponse} from "next/server";
 
 export default withAuth(
   function middleware(req) {
-  const { pathname } = req.nextUrl;
   const isLoggedIn = req.nextauth.token;
 
   if (!isLoggedIn) {
