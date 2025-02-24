@@ -15,6 +15,11 @@ export default withAuth(
     return NextResponse.redirect(new URL("/unauthorized", req.url));
   }
 
+  const isAuthPage = ["/login", "/register"].includes(req.nextUrl.pathname);
+  if (isAuthPage && token) {
+    return NextResponse.redirect(new URL("/", req.url));
+  }
+
   return NextResponse.next();
 },
 {
@@ -29,6 +34,8 @@ export const config = {
     "/checkout/:path*",
     "/cart/:path*",
     "/account/:path*",
-    "/blogs-grid/:path*"
+    "/blogs-grid/:path*",
+    "/login",
+    "/register"
   ],
 };
