@@ -174,8 +174,8 @@ font-family: 'Roboto', sans-serif;
     margin-right: -0px;
   }
   .ltn__custom-gutter > [class*="col-"] {
-    padding-right: 0px;
-    padding-left: 0px;
+    padding-right: 0;
+    padding-left: 0;
   }
 }
 
@@ -15906,11 +15906,3 @@ input.cart-plus-minus-box {
     --chart-5: 340 75% 55%;
   }
 }
-/*@layer base {*/
-/*  * {*/
-/*    @apply border-border;*/
-/*  }*/
-/*  body {*/
-/*    @apply bg-background text-foreground;*/
-/*  }*/
-/*}*/

@@ -24,7 +24,7 @@ const RegisterPrimary = () => {
       await api.post("auth/signup", formData);
       toast("Registration successful! Please check your email to verify your account.")
       setTimeout(() => {
-        router.push("/");
+        router.push("/check-email");
       }, 4000);
     } catch (err) {
       setError("Registration failed!");
