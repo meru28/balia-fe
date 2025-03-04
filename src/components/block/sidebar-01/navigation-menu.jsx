@@ -1,4 +1,4 @@
-"use client";;
+"use client"
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
@@ -81,7 +81,7 @@ const NavigationMenu = ({
   return (
     (<nav>
       {menuItems.map((section, index) => (
-        <div className="tw-flex tw-flex-col tw-gap-4 tw-mb-4">
+        <div className="tw-flex tw-flex-col tw-gap-4 tw-mb-4" key={index}>
           <ul className="tw-space-y-1">
             {section.map((item) => (
               <NavigationLink
