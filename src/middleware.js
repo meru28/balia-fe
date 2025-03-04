@@ -36,6 +36,5 @@ export const config = {
     "/account/:path*",
     "/blogs-grid/:path*",
     "/login",
-    "/register"
   ],
 };

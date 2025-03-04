@@ -6,7 +6,7 @@ import "./globals.css";
 import "@/assets/css/responsive.css";
 import Script from "next/script";
 import { Suspense } from "react";
-import ClientSessionProvider from "@/providers/ClientSessionProvider";
+import SessionAndQueryProvider from "@/providers/ClientSessionProvider"
 import { Toaster } from "@/components/ui/sonner"
 const open_sans = localFont({
   src: [
@@ -44,7 +44,7 @@ export const metadata = {
   description: "Balia - Summer is here. Always",
 };
 
-export default function RootLayout({ children }) {
+export default function RootLayout({ children, session }) {
   return (
     <html
       lang="en"
@@ -52,19 +52,17 @@ export default function RootLayout({ children }) {
       className={`${rajdhani.variable} ${open_sans.variable} ${brittany.variable}`}
     >
       <body className={open_sans.className}>
-      <ClientSessionProvider>
-        <Suspense fallback={<div></div>}>
-
+        <SessionAndQueryProvider session={session}>
+          <Suspense fallback={<div></div>}>
             {children}
-            <Toaster />
-
-          <Script src="/plugins.js" />
-          <Script
-            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCeeHDCOXmUMja1CFg96RbtyKgx381yoBU"
-            async
-          />
-        </Suspense>
-      </ClientSessionProvider>
+            <Script src="/plugins.js" />
+            <Script
+              src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCeeHDCOXmUMja1CFg96RbtyKgx381yoBU"
+              async
+            />
+          </Suspense>
+          <Toaster />
+      </SessionAndQueryProvider>
       </body>
     </html>
   );

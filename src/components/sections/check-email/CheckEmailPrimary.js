@@ -3,13 +3,17 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Mail, ArrowRight, RefreshCw } from 'lucide-react';
-import Link from 'next/link';
+import { Mail, RefreshCw } from 'lucide-react';
+import api from '@/utils/axiosInstance';
+import {useSearchParams} from "next/navigation";
 
 export default function CheckEmail() {
   const [countdown, setCountdown] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const COOLDOWN_TIME = 45; // 45 seconds
+  const [error, setError] = useState(null);
+  const searchParams = useSearchParams();
+  const email = searchParams.get('email');
 
   useEffect(() => {
     if (countdown > 0) {
@@ -20,9 +24,23 @@ export default function CheckEmail() {
     }
   }, [countdown]);
 
-  const handleResendEmail = () => {
+  const handleResendEmail = async () => {
     setIsLoading(true);
     // Simulate email sending
+
+    try {
+      await api.post('/auth/resend-email', { email }) // Replace or pass the email dynamically if available
+        .then(() => {
+          setCountdown(COOLDOWN_TIME);
+          setIsLoading(false);
+        })
+        .catch((error) => {
+          console.error('Failed to resend email:', error);
+          setIsLoading(false);
+        });
+    } catch (err) {
+      setError('Resend email failed!');
+    }
     setTimeout(() => {
       setIsLoading(false);
       setCountdown(COOLDOWN_TIME);
@@ -59,8 +77,8 @@ export default function CheckEmail() {
                         Didn&apos;t receive the email? Check your spam folder or request a new verification link.
                       </p>
                     </div>
-                    <div className="tw-flex tw-flex-col tw-gap-2">
-                      <div className="tw-relative">
+                    <div className="tw-flex tw-flex-col">
+                      <div className="tw-relative -tw-mt-2">
                         <Button
                           variant=""
                           className={`!tw-bg-yellow-500 tw-w-full !tw-group tw-relative tw-overflow-hidden disabled:tw-cursor-not-allowed`}
@@ -84,12 +102,6 @@ export default function CheckEmail() {
                           </div>
                         </Button>
                       </div>
-                      <Link href="/login" className="tw-w-full">
-                        <button className="theme-btn-3 btn reverse-color btn-block !tw-flex !tw-items-center !tw-justify-center tw-w-full">
-                          Back to login
-                          <ArrowRight className="tw-ml-2 tw-h-4 tw-w-4" />
-                        </button>
-                      </Link>
                     </div>
                   </CardContent>
                 </div>
