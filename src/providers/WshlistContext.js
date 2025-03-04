@@ -1,9 +1,9 @@
 "use client";
 import useSweetAlert from "@/hooks/useSweetAlert";
-import { useSession, signIn } from "next-auth/react";
+import {signIn, useSession} from "next-auth/react";
 import addItemsToLocalstorage from "@/libs/addItemsToLocalstorage";
 import getItemsFromLocalstorage from "@/libs/getItemsFromLocalstorage";
-import { createContext, useContext, useEffect, useState } from "react";
+import {createContext, useContext, useEffect, useState} from "react";
 import getAllProducts from "@/libs/getAllProducts";
 
 const wishlistContext = createContext(null);
@@ -15,7 +15,7 @@ const WishlistContextProvider = ({ children }) => {
   useEffect(() => {
     const demoProducts = getAllProducts()
       ?.slice(0, 0)
-      ?.map((product, idx) => ({ ...product, quantity: 1 }));
+      ?.map((product) => ({ ...product, quantity: 1 }));
 
     const wishlistProductFromLocalStorage =
       getItemsFromLocalstorage("wishlist");
@@ -43,7 +43,7 @@ const WishlistContextProvider = ({ children }) => {
       ({ id, title }) => id === currentId && title === currentTitle
     );
 
-    const isAlreadyExist = modifyableProduct ? true : false;
+    const isAlreadyExist = !!modifyableProduct;
 
     if (isAlreadyExist) {
       // createAlert("error", "Failed ! Already exist in wishlist.");
@@ -73,6 +73,15 @@ const WishlistContextProvider = ({ children }) => {
     createAlert("success", "Success! deleted from wishlist.");
     setWishlistStatus("deleted");
   };
+
+  const isProductInWishlist = (currentProduct) => {
+    const modifyableProduct = wishlistProducts?.find(
+      ({ id, title }) => id === currentProduct.id && title === currentProduct.title
+    );
+
+    return !!modifyableProduct;
+  };
+
   return (
     <wishlistContext.Provider
       value={{
@@ -81,6 +90,7 @@ const WishlistContextProvider = ({ children }) => {
         addProductToWishlist,
         deleteProductFromWishlist,
         wishlistStatus,
+        isProductInWishlist
       }}
     >
       {children}
@@ -88,7 +98,6 @@ const WishlistContextProvider = ({ children }) => {
   );
 };
 export const useWishlistContext = () => {
-  const value = useContext(wishlistContext);
-  return value;
+  return useContext(wishlistContext);
 };
 export default WishlistContextProvider;

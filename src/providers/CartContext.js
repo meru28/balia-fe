@@ -36,10 +36,17 @@ const CartContextProvider = ({ children }) => {
       return;
     }
 
-    const { id: currentId, title: currentTitle } = currentProduct;
+    const { id: currentId, title: currentTitle, size: currentSize } = currentProduct;
+
+    // Check if size is selected
+    if (!currentSize) {
+      createAlert("warning", "Please select a size first!", { timeout: 3000 });
+      return;
+    }
 
     const modifyableProduct = cartProducts?.find(
-      ({ id, title }) => id === currentId && title === currentTitle
+      ({ id, title, size }) => id === currentId && title === currentTitle &&
+        size === currentSize
     );
     const previousQuantity = modifyableProduct?.quantity;
     const currentQuantity = currentProduct?.quantity;
@@ -49,6 +56,7 @@ const CartContextProvider = ({ children }) => {
       currentProducts = cartProducts?.map((product) =>
         product.id === currentId &&
         product?.title === currentTitle &&
+        product?.size === currentSize &&
         isTotalQuantity
           ? {
               ...product,
@@ -71,13 +79,15 @@ const CartContextProvider = ({ children }) => {
         currentProducts = cartProducts?.map((product) =>
           product.id === currentId &&
           product?.title === currentTitle &&
+          product?.size === currentSize &&
           isDecreament
             ? {
                 ...product,
                 quantity: product.quantity - currentProduct?.quantity,
               }
-            : product.id === currentId && product?.title === currentTitle
-            ? {
+            : product.id === currentId && product?.title === currentTitle &&
+              product?.size === currentSize
+              ? {
                 ...product,
                 quantity: product.quantity + currentProduct?.quantity,
               }
@@ -102,16 +112,24 @@ const CartContextProvider = ({ children }) => {
   };
 
   // delete product = localstorage cart
-  const deleteProductFromCart = (currentId, currentTitle) => {
+  const deleteProductFromCart = (currentId, currentTitle, currentSize) => {
     if (!session) {
       createAlert("warning", "You need to login first!");
       signIn();
       return;
     }
 
-    const currentProducts = cartProducts?.filter(
-      ({ id, title }) => id !== currentId || title !== currentTitle
+    console.log("Trying to delete:", { currentId, currentTitle, currentSize });
+    console.log("Current cart before deletion:", cartProducts);
+
+    const currentProducts = cartProducts.filter(product =>
+      product.id !== currentId ||
+      product.title !== currentTitle ||
+      product.size !== currentSize
     );
+
+    console.log("Cart after deletion:", currentProducts);
+
     setCartProducts(currentProducts);
     addItemsToLocalstorage("cart", currentProducts);
     createAlert("success", "Success! deleted from cart.");

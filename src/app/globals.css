@@ -15922,13 +15922,18 @@ input.cart-plus-minus-box {
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 }
+
+@layer components {
+  .border-border {
+    @apply border-[var(--border-color)];
+  }
+}
+
 /*
     ---break---
 */
 /*@layer base {*/
-/*  * {*/
-/*    @apply border-border outline-ring/50;*/
-/*  }*/
+
 /*  body {*/
 /*    @apply bg-background text-foreground;*/
 /*  }*/

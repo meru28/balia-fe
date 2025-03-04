@@ -6,33 +6,30 @@ import { useCartContext } from "@/providers/CartContext";
 import { useWishlistContext } from "@/providers/WshlistContext";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useCommonContext } from "@/providers/CommonContext";
 import moment from "moment";
-import countCommentLength from "@/libs/countCommentLength";
-import modifyNumber from "@/libs/modifyNumber";
 const ProductDetailsRight = ({ product }) => {
   // destructure current product
-  const { id, title, price, reviews, disc, size, color } = product;
+  const { id, title, price, disc, size, color } = product;
   // current Date
 
   // hooks
   const value = useCommonContext();
   const { addProductToCart } = useCartContext();
-  const { addProductToWishlist } = useWishlistContext();
+  const { addProductToWishlist, isProductInWishlist, deleteProductFromWishlist } = useWishlistContext();
   // dom referance
   const inputRef = useRef(null);
   // states
   const [quantity, setQuantity] = useState(1);
   const [currentColor, setCurrentColor] = useState(color);
-  const [currentSize, setCurrentSize] = useState(size?.toLowerCase());
+  const [currentSize, setCurrentSize] = useState(size?.toUpperCase());
   const [purchaseDate, setPurchaseDate] = useState(null);
   // varriables
   const { type } = value ? value : {};
   const { netPrice } = countDiscount(price, disc);
   const netPriceModified = modifyAmount(netPrice);
   const priceModified = modifyAmount(price);
-  const reviewsLength = countCommentLength(reviews);
   const purchaseDateMilliseconds = moment(purchaseDate)?.valueOf();
   const productToSave = {
     ...product,
@@ -40,6 +37,21 @@ const ProductDetailsRight = ({ product }) => {
     size: currentSize,
     quantity,
     purchaseDate: purchaseDateMilliseconds,
+  };
+
+  const isInWishlist = isProductInWishlist(product);
+
+  const handleWishlistToggle = () => {
+    if (isInWishlist) {
+      deleteProductFromWishlist(id, title);
+    } else {
+      addProductToWishlist(productToSave);
+    }
+  };
+
+// Function to set the selected size
+  const handleSetSelectedSize = (size) => {
+    setCurrentSize(size);
   };
 
   // useEffect(() => {
@@ -122,7 +134,27 @@ const ProductDetailsRight = ({ product }) => {
         </ul>
       </div>
       {/* countdown */}
-
+      
+      {/* size selection */}
+      <div className="space-y-2">
+        <h5 className="text-lg font-semibold">Available Sizes:</h5>
+        <div className="flex gap-2">
+          {["S", "M", "L", "XL"].map((size) => (
+            <button
+              key={size}
+              onClick={() => handleSetSelectedSize(size)}
+              className={`tw-px-4 tw-py-2 tw-transition tw-border tw-border-black ${
+                currentSize === size
+                  ? "tw-bg-gray-900 tw-text-white"
+                  : "tw-bg-white tw-text-black"
+              }`}
+            >
+              {size}
+            </button>
+          ))}
+        </div>
+      </div>
+      
       {/* add to cart */}
       <div className="ltn__product-details-menu-2">
         <ul>
@@ -165,7 +197,7 @@ const ProductDetailsRight = ({ product }) => {
             <Link
               onClick={(e) => {
                 e.preventDefault();
-                addProductToWishlist(productToSave);
+                handleWishlistToggle();
               }}
               href="#"
               className=""
@@ -173,20 +205,14 @@ const ProductDetailsRight = ({ product }) => {
               data-bs-toggle="modal"
               data-bs-target="#liton_wishlist_modal"
             >
-              <i className="far fa-heart"></i> <span>Add to Wishlist</span>
+              <i className={`${isInWishlist ? 'fas' : 'far'} fa-heart`}
+                 style={{ color: isInWishlist ? '#ff0000' : 'inherit' }}
+              />
+              <span>
+                {isInWishlist ? 'Remove from Wishlist' : 'Add to Wishlist'}
+              </span>
             </Link>
           </li>{" "}
-          <li>
-            <Link
-              href="#"
-              className=""
-              title="Compare"
-              data-bs-toggle="modal"
-              data-bs-target="#quick_view_modal"
-            >
-              <i className="fas fa-exchange-alt"></i> <span>Compare</span>
-            </Link>
-          </li>
         </ul>
       </div>
       <hr />

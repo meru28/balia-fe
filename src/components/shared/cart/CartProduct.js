@@ -19,7 +19,7 @@ const CartProduct = ({
   setIsUpdate,
   isWishlist,
 }) => {
-  const { id, title, price, quantity: quantity1, image, disc, color } = product;
+  const { id, title, price, quantity: quantity1, image, disc, size } = product;
   // dom referance
   const inputRef = useRef(null);
   // hooks
@@ -32,7 +32,6 @@ const CartProduct = ({
   const totalPrice = countTotalPrice([{ ...product, quantity }]);
   const netPriceModified = modifyAmount(netPrice);
   const totalPiceModified = modifyAmount(totalPrice);
-  const isQuantiy = quantity > 1;
 
   //   get quantity
   useEffect(() => {
@@ -72,7 +71,7 @@ const CartProduct = ({
         onClick={() =>
           isWishlist
             ? deleteProductFromWishlist(id, title)
-            : deleteProductFromCart(id, title)
+            : deleteProductFromCart(id, title, size)
         }
       >
         x
@@ -86,6 +85,9 @@ const CartProduct = ({
         <h4>
           <Link href={`/products/${id}`}>{sliceText(title, 30)}</Link>
         </h4>
+      </td>
+      <td className="cart-product-info">
+        <span>Size: {size}</span>
       </td>
       <td className="cart-product-price">${netPriceModified}</td>
       {isWishlist ? (
