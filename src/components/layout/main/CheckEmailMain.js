@@ -5,7 +5,6 @@ import React from "react";
 const VerificationMain = () => {
   return (
     <main>
-      {/*<HeroPrimary title="Check Your Email" text="Check Your Email" />*/}
       <CheckEmailPrimary />
       <Features4 />
     </main>

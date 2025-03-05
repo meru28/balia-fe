@@ -9,14 +9,14 @@ export async function POST(req) {
 
     if (!email) {
       return NextResponse.json(
-        { message: "Email tidak boleh kosong" },
+        {message: "Email cannot be empty" },
         { status: 400 }
       );
     }
 
     const response = await axios.post(
-      `${process.env.NEXT_PUBLIC_API_URL}/auth/verify/resend`,
-      { email },
+      `${process.env.NEXT_PUBLIC_API_URL}/auth/verify/resend?email=${encodeURIComponent(email)}`,
+      null,
       {
         headers: {
           "Content-Type": "application/json"
@@ -32,7 +32,7 @@ export async function POST(req) {
     // Tangani error yang mungkin terjadi
     return NextResponse.json(
       {
-        message: error.response?.data?.message || "Gagal mengirim ulang email"
+        message: error.response?.data?.message || "Failed to resend email"
       },
       {
         status: error.response?.status || 500

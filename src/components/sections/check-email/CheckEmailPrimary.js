@@ -4,16 +4,18 @@ import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Mail, RefreshCw } from 'lucide-react';
-import api from '@/utils/axiosInstance';
 import {useSearchParams} from "next/navigation";
+import { useResendEmailMutation } from "@/hooks/useResendEmailMutation";
+import {toast} from "sonner";
 
 export default function CheckEmail() {
   const [countdown, setCountdown] = useState(0);
-  const [isLoading, setIsLoading] = useState(false);
   const COOLDOWN_TIME = 45; // 45 seconds
   const [error, setError] = useState(null);
   const searchParams = useSearchParams();
   const email = searchParams.get('email');
+
+  const { mutate: resendEmail, isPending } = useResendEmailMutation();
 
   useEffect(() => {
     if (countdown > 0) {
@@ -24,31 +26,26 @@ export default function CheckEmail() {
     }
   }, [countdown]);
 
-  const handleResendEmail = async () => {
-    setIsLoading(true);
+  const handleResendEmail = async (e) => {
     // Simulate email sending
+    e.preventDefault();
+    setError(null)
 
-    try {
-      await api.post('/auth/resend-email', { email }) // Replace or pass the email dynamically if available
-        .then(() => {
-          setCountdown(COOLDOWN_TIME);
-          setIsLoading(false);
-        })
-        .catch((error) => {
-          console.error('Failed to resend email:', error);
-          setIsLoading(false);
-        });
-    } catch (err) {
-      setError('Resend email failed!');
-    }
+    resendEmail(email, {
+      onSuccess: () => {
+        toast("Resend Email Success Please Check Your Email")
+      },
+      onError: (error) => {
+        setError(error?.response?.data?.message || error?.message || 'Resend email failed!')
+      }
+    })
     setTimeout(() => {
-      setIsLoading(false);
       setCountdown(COOLDOWN_TIME);
     }, 1000);
   };
 
   const progress = ((COOLDOWN_TIME - countdown) / COOLDOWN_TIME) * 100;
-  const isDisabled = countdown > 0 || isLoading;
+  const isDisabled = countdown > 0 || isPending;
 
   return (
     <div className="ltn__login-area mb-120">
@@ -94,7 +91,7 @@ export default function CheckEmail() {
                             />
                           )}
                           <div className="tw-relative tw-z-10 tw-flex tw-items-center tw-justify-center">
-                            <RefreshCw className={`tw-mr-4 tw-h-4 tw-w-4 ${isLoading ? '!tw-animate-spin' : '!tw-group-hover:animate-spin'}`} />
+                            <RefreshCw className={`tw-mr-4 tw-h-4 tw-w-4 ${isPending ? '!tw-animate-spin' : '!tw-group-hover:animate-spin'}`} />
                             {isDisabled
                               ? `Resend available in ${countdown}s`
                               : 'Resend verification email'

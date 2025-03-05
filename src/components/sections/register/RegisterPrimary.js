@@ -57,13 +57,13 @@ const RegisterPrimary = () => {
 
     register(formData, {
       onSuccess: () => {
-        setTimeout(() => {
-          router.push(`/check-email?email=${encodeURIComponent(formData.email)}`);
-        }, 3000);
+        router.push(`/check-email?email=${encodeURIComponent(formData.email)}`);
       },
+      onError: (error) => {
+        setError(error?.response?.data?.message || "Something went wrong");
+      }
     });
   };
-
 
   return (
     <div className="ltn__login-area pb-110">
@@ -76,8 +76,8 @@ const RegisterPrimary = () => {
                 Your Account
               </h1>
               <p>
-                Lorem ipsum dolor, sit amet consectetur adipisicing elit. <br />
-                Sit aliquid, Non distinctio vel iste.
+                Discover the latest trends in fashion! <br/>
+                Create an account and step into your style journey today.
               </p>
             </div>
           </div>
@@ -125,12 +125,12 @@ const RegisterPrimary = () => {
                     onChange={handleCheckboxChange}
                   /> By clicking {`"create account"`}, I
                   consent to the privacy policy.
-                  { isLoading }
                 </label>
                 <div className="btn-wrapper">
                   <button
                     className="theme-btn-1 btn reverse-color btn-block"
                     type="submit"
+                    disabled={isLoading}
                   >
                     {isLoading ? (
                       <div className="tw-flex tw-justify-center tw-items-center">

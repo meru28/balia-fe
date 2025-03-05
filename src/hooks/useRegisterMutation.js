@@ -1,21 +1,24 @@
 import { useMutation } from '@tanstack/react-query';
-import api from '@/utils/axiosInstance'; // Axios config Anda
-import { useToast } from "@/hooks/use-toast"; // Toast hook
+import { toast } from "sonner"
+import {apiService} from "@/services/api.service";
 
 const useRegisterMutation = () => {
-  const { toast } = useToast();
-
-  return useMutation({
-    mutationFn: (data) => api.post('auth/signup', data), // POST request
+  const mutation = useMutation({
+    mutationFn: (data) => apiService.registerUser(data),
     onSuccess: (data) => {
-      // Handle success, misalnya tampilkan pesan
       toast("Registration successful! Please check your email to verify your account.");
     },
     onError: (error) => {
-      // Handle error, misalnya tampilkan error
       toast(error?.response?.data?.message || "Registration failed!");
     },
   });
+
+  return {
+    mutate: mutation.mutate,
+    isLoading: mutation.isPending,
+    isError: mutation.isError,
+    isSuccess: mutation.isSuccess,
+  }
 };
 
 export default useRegisterMutation;

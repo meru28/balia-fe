@@ -58,7 +58,7 @@ export default function VerificationPrimary() {
         <div className="row">
           <div className="col-lg-8 offset-lg-2">
             <div className="account-login-inner section-bg-1">
-              <div className="tw-flex tw-items-center tw-justify-center tw-p-2">
+              <div className="tw-flex tw-items-center tw-justify-center tw-p-2 tw-mt-56">
                 <div className="tw-w-full tw-max-w-md tw-py-5">
                   <CardHeader className="tw-space-y-4">
                     <div className="tw-flex tw-justify-center">
