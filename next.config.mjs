@@ -2,11 +2,12 @@
 const nextConfig = {
   reactStrictMode: false,
   images: {
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'yourdomain.com',
-        pathname: '**',
+        hostname: 'images.unsplash.com',
+        pathname: '/photo-**',
       },
     ],// Add your image domains here
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],

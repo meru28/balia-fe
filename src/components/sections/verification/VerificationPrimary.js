@@ -12,11 +12,14 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { KeyRound } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 import {useSearchParams} from "next/navigation";
-import {useEffect} from "react";
+import React, {useEffect} from "react";
+import {toast} from "sonner";
+import Spinner from '@/components/ui/Spinner'
+import useVerifyUserMutation from "@/hooks/useVerifyUserMutation";
 
 const formSchema = z
   .object({
@@ -32,12 +35,11 @@ const formSchema = z
 export default function VerificationPrimary() {
   const code = useSearchParams()?.get("code");
 
-  useEffect(() => {
-    if (code) {
-      console.log(code); // Access your query parameters here
-    }
-  }, [code]);
-  const { toast } = useToast();
+  // useEffect(() => {
+  //   if (code) {
+  //     console.log(code); // Access your query parameters here
+  //   }
+  // }, [code]);
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -47,9 +49,19 @@ export default function VerificationPrimary() {
     },
   });
 
+  const { mutate, isPending } = useVerifyUserMutation()
+
   function onSubmit(values) {
-    toast.success('Password created successfully!');
-    console.log(values);
+    const data = { code, password: values.password }
+    mutate({ code, password: values.password }, {
+      onSuccess: (response) => {
+        toast.success('Password created successfully!');
+        router.push('/login')
+      },
+      onError: (error) => {
+        toast.error(error?.response?.data?.message || error?.message || 'Failed to create password!');
+      }
+    })
   }
 
   return (
@@ -62,7 +74,7 @@ export default function VerificationPrimary() {
                 <div className="tw-w-full tw-max-w-md tw-py-5">
                   <CardHeader className="tw-space-y-4">
                     <div className="tw-flex tw-justify-center">
-                      <div className="tw-bg-primary/10 tw-p-3 tw-rounded-full">
+                      <div className="tw-bg-primary/10 tw-p-3 tw-rounded-full tw-animate-bounce">
                         <KeyRound className="tw-w-6 tw-h-6 tw-text-primary" />
                       </div>
                     </div>
@@ -107,8 +119,15 @@ export default function VerificationPrimary() {
                             </FormItem>
                           )}
                         />
-                        <button type="submit" className="theme-btn-1 btn reverse-color btn-block tw-w-full">
-                          Create Password
+                        <button type="submit" className="theme-btn-1 btn reverse-color btn-block tw-w-full" disabled={isPending}>
+                          {isPending ? (
+                            <div className="tw-flex tw-justify-center tw-items-center">
+                              <Spinner/>
+                              Please Wait...
+                            </div>
+                          ) : (
+                            "Create Password"
+                          )}
                         </button>
                       </form>
                     </Form>

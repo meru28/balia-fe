@@ -1,16 +1,11 @@
 import axios from "axios";
 import { NextResponse } from "next/server";
+import {apiService} from "@/services/api.service";
 
 export async function POST(req) {
   try {
     const { username, email, firstName, roles, mobileNumber } = await req.json();
-
-    const response = await axios.post(
-      `${process.env.NEXT_PUBLIC_API_URL}/auth/signup`,
-      { username, email, firstName, roles, mobileNumber },
-      { headers: { "Content-Type": "application/json" } }
-    );
-
+    const response = await apiService.registerUser({username, email, firstName, roles, mobileNumber})
     return NextResponse.json(response.data);
   } catch (error) {
     return NextResponse.json(

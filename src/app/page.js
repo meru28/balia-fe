@@ -9,7 +9,7 @@ export default function Home() {
         isHeaderRight={true}
         isTextWhite={true}
         isNavbarAppointmentBtn={false}>
-      {/*<PromoPopup />*/}
+      <PromoPopup />
       <IndexMain />
     </PageWrapper>
   );

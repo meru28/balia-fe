@@ -32,9 +32,9 @@ export const authOptions = {
           }
 
           return {
-            id: user.username, // Assuming username is unique, otherwise, use actual id if available
-            name: user.firstName, // Map firstName to name
-            email: user.email || "no-email@example.com", // Ensure email is not empty
+            id: user.username,
+            name: user.firstName,
+            email: user.email,
             accessToken: user.accessToken,
             roles: user.roles,
           };

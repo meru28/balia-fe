@@ -1,5 +1,5 @@
 // app/api/resend-email/route.ts
-import axios from "axios";
+import apiClient from "@/utils/axiosInstance";
 import { NextResponse } from "next/server";
 
 export async function POST(req) {
@@ -14,7 +14,7 @@ export async function POST(req) {
       );
     }
 
-    const response = await axios.post(
+    const response = await apiClient.post(
       `${process.env.NEXT_PUBLIC_API_URL}/auth/verify/resend?email=${encodeURIComponent(email)}`,
       null,
       {
@@ -23,7 +23,6 @@ export async function POST(req) {
         }
       }
     );
-
     return NextResponse.json(response.data, {
       status: 200
     });

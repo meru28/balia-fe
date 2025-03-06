@@ -60,7 +60,8 @@ const RegisterPrimary = () => {
         router.push(`/check-email?email=${encodeURIComponent(formData.email)}`);
       },
       onError: (error) => {
-        setError(error?.response?.data?.message || "Something went wrong");
+        console.log(error);
+        setError(error?.message);
       }
     });
   };

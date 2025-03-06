@@ -17,8 +17,8 @@ const OfferCard2 = () => {
         initial="hidden"
         whileInView="visible"
         viewport={{
-          once: true, // Animasi hanya dipicu 1x
-          amount: 0.3, // Animasi dipicu ketika 30% elemen terlihat
+          once: true,
+          amount: 0.3,
         }}
         transition={{ duration: 0.5 }}
         className="tw-grid tw-grid-cols-1 lg:tw-grid-cols-6 tw-gap-4 tw-mx-auto tw-w-full"
@@ -39,8 +39,8 @@ const OfferCard2 = () => {
           </div>
           <Image
             src="/img/gallery/2.webp"
-            width={500}
-            height={500}
+            width={400}
+            height={400}
             alt="linear demo image"
             className="tw-absolute -tw-right-10 lg:-tw-right-[40%] tw-grayscale tw-filter -tw-bottom-10 tw-object-contain tw-rounded-2xl" />
         </WobbleCard>
@@ -74,8 +74,8 @@ const OfferCard2 = () => {
           </div>
           <Image
             src="/img/gallery/3.webp"
-            width={500}
-            height={500}
+            width={300}
+            height={300}
             alt="linear demo image"
             className="tw-absolute -tw-right-10 md:-tw-right-[40%] lg:-tw-right-[20%] -tw-bottom-10 tw-object-contain tw-rounded-2xl" />
         </WobbleCard>

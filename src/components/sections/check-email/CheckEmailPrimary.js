@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Mail, RefreshCw } from 'lucide-react';
-import {useSearchParams} from "next/navigation";
+import {useSearchParams, useRouter} from "next/navigation";
 import { useResendEmailMutation } from "@/hooks/useResendEmailMutation";
 import {toast} from "sonner";
 
@@ -14,6 +14,7 @@ export default function CheckEmail() {
   const [error, setError] = useState(null);
   const searchParams = useSearchParams();
   const email = searchParams.get('email');
+  const router = useRouter()
 
   const { mutate: resendEmail, isPending } = useResendEmailMutation();
 
@@ -57,8 +58,8 @@ export default function CheckEmail() {
                 <div className="tw-w-full tw-max-w-md">
                   <CardHeader className="tw-space-y-4">
                     <div className="tw-flex tw-justify-center">
-                      <div className="tw-bg-primary/10 tw-p-4 tw-rounded-full">
-                        <Mail className="tw-w-8 tw-h-8 tw-text-primary tw-animate-bounce" />
+                      <div className="tw-bg-primary/10 tw-p-4 tw-rounded-full tw-animate-bounce">
+                        <Mail className="tw-w-8 tw-h-8 tw-text-primary" />
                       </div>
                     </div>
                     <div className="tw-space-y-2 tw-text-center">
@@ -97,6 +98,13 @@ export default function CheckEmail() {
                               : 'Resend verification email'
                             }
                           </div>
+                        </Button>
+                        <Button
+                          variant=""
+                          className="tw-bg-primary tw-text-white tw-w-full tw-mt-4"
+                          onClick={() => router.push('/')} // Navigasi ke homepage
+                        >
+                          Back to Homepage
                         </Button>
                       </div>
                     </div>

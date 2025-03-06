@@ -19,9 +19,9 @@ export const apiService = {
     }
   },
 
-  verifyEmail: async (code, password) => {
+  verifyUser: async ({code, password}) => {
     try {
-      const response = await apiClient.post(
+      const response = await apiClient.get(
         API_ROUTES.AUTH.VERIFY_USER,
         null,
         {
@@ -36,7 +36,7 @@ export const apiService = {
 
   registerUser: async ({ username, email, firstName, roles, mobileNumber }) => {
     try {
-      const response = await apiClient.post('/auth/signup', {
+      const response = await apiClient.post(API_ROUTES.AUTH.REGISTER, {
         username,
         email,
         firstName,

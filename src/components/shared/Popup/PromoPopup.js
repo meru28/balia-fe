@@ -1,100 +1,118 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import {Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle} from "@/components/ui/dialog";
-import { Checkbox } from "@/components/ui/checkbox";
-import { X } from "lucide-react";
+import { useState, useEffect } from 'react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
+import { X, MessageSquare } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import Image from 'next/image';
 
-const PromoPopup = () => {
+export default function PopupDialog() {
   const [isOpen, setIsOpen] = useState(false);
-  const [dontShowAgain, setDontShowAgain] = useState(false);
-  const [isFloating, setIsFloating] = useState(false);
-
-  // Fungsi untuk mengecek apakah 2 hari telah berlalu
-  const shouldShowPopup = () => {
-    const disableTimestamp = localStorage.getItem("disablePopup");
-    if (!disableTimestamp) return true;
-    const lastDisabled = new Date(disableTimestamp);
-    const now = new Date();
-    const diffTime = now.getTime() - lastDisabled.getTime();
-    const diffDays = diffTime / (1000 * 3600 * 24);
-    return diffDays >= 2;
-  };
+  const [isMinimized, setIsMinimized] = useState(false);
+  const [disableFor24h, setDisableFor24h] = useState(false);
 
   useEffect(() => {
-    if (shouldShowPopup()) {
-      const handleScroll = () => {
-        setIsOpen(true);
-        window.removeEventListener("scroll", handleScroll);
-      };
-      window.addEventListener("scroll", handleScroll);
-      return () => window.removeEventListener("scroll", handleScroll);
+    // Check if popup was disabled within last 24h
+    const disabledUntil = localStorage.getItem('popupDisabledUntil');
+    if (disabledUntil && new Date(disabledUntil) > new Date()) {
+      return;
     }
-  }, []);
+
+    // Show popup after scrolling 100px
+    const handleScroll = () => {
+      if (window.scrollY > 100 && !isMinimized) {
+        setIsOpen(true);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [isMinimized]);
 
   const handleClose = () => {
-    if (dontShowAgain) {
-      localStorage.setItem("disablePopup", new Date().toISOString());
+    if (disableFor24h) {
+      const disableUntil = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
+      localStorage.setItem('popupDisabledUntil', disableUntil);
     }
     setIsOpen(false);
-    setIsFloating(false);
-  };
-
-  const handleMinimize = () => {
-    setIsOpen(false);
-    setIsFloating(true);
+    setIsMinimized(true);
   };
 
   return (
     <>
-      {/* Popup utama */}
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent className="tw-max-w-sm tw-rounded-lg tw-p-6 tw-bg-white tw-shadow-lg" disabled={true}>
-          <DialogClose asChild>
-            <button
-              onClick={handleMinimize}
-              className="tw-absolute tw-top-2 tw-right-2 tw-text-gray-600 hover:tw-text-gray-900"
-            >
-              <X size={20} />
-            </button>
-          </DialogClose>
+        <DialogContent className="sm:tw-max-w-[425px] !tw-p-0" hideCloseButton>
           <DialogHeader>
-            <DialogTitle>Selamat Datang!</DialogTitle>
-          </DialogHeader>
-          <p className="tw-text-gray-600">Ini adalah popup yang muncul saat Anda pertama kali mengunjungi situs ini.</p>
-          <div className="tw-flex tw-items-center tw-space-x-2 tw-mt-4">
-            <Checkbox
-              id="dont-show-again"
-              checked={dontShowAgain}
-              onCheckedChange={(checked) => setDontShowAgain(checked)}
+            <Image
+              src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&q=80"
+              alt="Fashion model"
+              width={800} // Ganti sesuai kebutuhan
+              height={400} // Ganti sesuai kebutuhan
+              className="tw-w-full tw-h-64 tw-object-cover tw-rounded-lg"
             />
-            <label htmlFor="dont-show-again" className="tw-text-sm tw-text-gray-700">
-              Jangan tampilkan lagi selama 2 hari
-            </label>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="tw-absolute tw-right-4 tw-top-4 tw-bg-white tw-rounded-full"
+              onClick={handleClose}
+            >
+              <X className="tw-h-4 tw-w-4" />
+            </Button>
+          </DialogHeader>
+          <div className="tw-space-y-6 tw-p-6">
+            <h1 className="tw-text-center">Don&rsquo;t miss out</h1>
+            <p className="tw-text-lg tw-text-center">
+              Be the first one to get the new product at early bird prices.
+            </p>
+            <input
+              type="email"
+              placeholder="Email *"
+              className="tw-w-full tw-px-4 tw-py-2 tw-border tw-rounded-md"
+            />
+            <Button className="tw-w-full" onClick={handleClose}>
+              Keep me updated
+            </Button>
+            <div className="tw-flex tw-items-center tw-space-x-2">
+              <Checkbox
+                id="disable24h"
+                checked={disableFor24h}
+                onCheckedChange={(checked) => setDisableFor24h(checked)}
+              />
+              <label
+                htmlFor="disable24h"
+                className="tw-text-sm tw-font-medium tw-leading-none peer-disabled:tw-cursor-not-allowed peer-disabled:tw-opacity-70"
+              >
+                Don&rsquo;t show this popup for 24 hours
+              </label>
+            </div>
+            <button
+              className="tw-text-center tw-w-full tw-text-sm tw-text-gray-500 tw-underline"
+              onClick={handleClose}
+            >
+              Not interested
+            </button>
           </div>
-          <button
-            className="w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-md transition"
-            onClick={handleClose}
-          >
-            Tutup
-          </button>
         </DialogContent>
       </Dialog>
 
-      {/* Floating Popup di kiri bawah */}
-      {isFloating && (
-        <div className="fixed bottom-4 left-4 bg-white p-3 rounded-lg shadow-lg flex items-center space-x-2">
-          <p className="text-sm font-medium text-gray-700">Popup tersedia</p>
-          <button
-            className="bg-blue-600 text-white px-3 py-1 text-sm rounded-md hover:bg-blue-700"
-            onClick={() => setIsOpen(true)}
-          >
-            Buka
-          </button>
-        </div>
+      {/* Minimized button */}
+      {isMinimized && !isOpen && (
+        <Button
+          className={cn(
+            'tw-fixed tw-bottom-4 tw-left-4 tw-shadow-lg tw-transition-all tw-duration-300',
+            'hover:tw-shadow-xl hover:tw-scale-105 tw-animate-bounce tw-z-[9999]'
+          )}
+          onClick={() => {
+            setIsOpen(true);
+            setIsMinimized(false);
+          }}
+        >
+          <MessageSquare className="tw-h-4 tw-w-4 tw-mr-2" />
+          New Offer
+        </Button>
       )}
     </>
   );
-};
-
-export default PromoPopup;
+}
