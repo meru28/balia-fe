@@ -3,75 +3,76 @@ import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
 import {
-  Bell,
   ChevronDownIcon,
   CircleDollarSign,
-  HandCoins,
-  HelpCircle,
-  HomeIcon,
-  Package,
-  Settings,
   ShoppingCart,
-  TicketSlash,
-  User,
 } from "lucide-react";
 import { useState } from "react";
 
 const menuItems = [[
+  // {
+  //   name: "Home",
+  //   url: "/",
+  //   icon: HomeIcon,
+  // },
   {
-    name: "Home",
-    url: "/",
-    icon: HomeIcon,
-  },
-  {
-    name: "Products",
-    url: "/products",
+    name: "Product Management",
+    // url: "/products",
     icon: ShoppingCart,
-  },
-  {
-    name: "Payments",
-    icon: HandCoins,
     children: [
-      {
-        name: "Payments",
-        url: "/payment",
-        icon: CircleDollarSign,
-      },
-      {
-        name: "Refunds",
-        url: "/refunds",
-        icon: TicketSlash,
-      },
-    ],
+        {
+          name: "Add Product",
+          url: "/products-add",
+          icon: CircleDollarSign,
+        }
+      ],
   },
-  {
-    name: "Customers",
-    url: "/customers",
-    icon: User,
-  },
-], [
-  {
-    name: "Resources",
-    url: "/resources",
-    icon: Package,
-  },
-  {
-    name: "Notifications",
-    url: "/notifications",
-    icon: Bell,
-  },
-], [
-  {
-    name: "Support",
-    url: "/support",
-    icon: HelpCircle,
-  },
-  {
-    name: "Settings",
-    url: "/settings",
-    icon: Settings,
-  },
-]];
+  // {
+  //   name: "Payments",
+  //   icon: HandCoins,
+  //   children: [
+  //     {
+  //       name: "Payments",
+  //       url: "/payment",
+  //       icon: CircleDollarSign,
+  //     },
+  //     {
+  //       name: "Refunds",
+  //       url: "/refunds",
+  //       icon: TicketSlash,
+  //     },
+  //   ],
+  // },
+  // {
+  //   name: "Customers",
+  //   url: "/customers",
+  //   icon: User,
+  // },
+],
+//   [
+//   {
+//     name: "Resources",
+//     url: "/resources",
+//     icon: Package,
+//   },
+//   {
+//     name: "Notifications",
+//     url: "/notifications",
+//     icon: Bell,
+//   },
+// ], [
+//   {
+//     name: "Support",
+//     url: "/support",
+//     icon: HelpCircle,
+//   },
+//   {
+//     name: "Settings",
+//     url: "/settings",
+//     icon: Settings,
+//   },
+// ]
+];
 
 const NavigationMenu = ({
   isMinimized
@@ -114,14 +115,14 @@ const NavigationLink = ({
         <button
           onClick={() => setIsOpen(!isOpen)}
           className={
-            "tw-flex tw-w-full tw-items-center tw-group/nav-link tw-gap-4 tw-px-3 tw-py-2.5 hover:tw-bg-primary/80 tw-rounded-md hover:tw-text-primary-foreground"
+            "tw-flex tw-w-44 tw-items-center tw-group/nav-link tw-gap-1 tw-px-0 tw-py-2.5 hover:tw-bg-primary/80 tw-rounded-md hover:tw-text-primary-foreground"
           }>
           <item.icon
-            className="tw-text-foreground/70 group/nav-link-hover:tw-text-primary-foreground tw-size-6" />
+            className="tw-text-foreground/70 group/nav-link-hover:tw-text-primary-foreground tw-size-5" />
           <span className={cn(isMinimized && "tw-hidden")}>{item.name}</span>
           <div className={cn(isMinimized && "tw-hidden", "tw-ml-auto")}>
             <ChevronDownIcon
-              className={`tw-w-4 tw-h-4 tw-transition-transform ${
+              className={`tw-w-3 tw-h-3 tw-transition-transform ${
                 isOpen ? "tw-rotate-180" : ""
               }`} />
           </div>
@@ -130,11 +131,11 @@ const NavigationLink = ({
         <a
           href={item.url}
           className={cn(
-            "tw-flex tw-items-center tw-group/nav-link tw-gap-4 tw-px-3 tw-py-2.5 hover:tw-bg-primary/80 tw-rounded-md hover:tw-text-primary-foreground",
+            "tw-flex tw-items-center tw-group/nav-link tw-gap-4 tw-px-1 tw-py-2.5 hover:tw-bg-primary/70 tw-rounded-md hover:tw-text-primary-foreground",
             currentPathname === item.url && "tw-bg-primary"
           )}>
           <item.icon
-            className="tw-text-foreground/70 group/nav-link-hover:tw-text-primary-foreground tw-size-6" />
+            className="tw-text-foreground/70 group/nav-link-hover:tw-text-white tw-size-4" />
           <span className={cn(isMinimized && "tw-hidden")}>{item.name}</span>
         </a>
       )}

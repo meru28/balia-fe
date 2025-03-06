@@ -42,8 +42,8 @@ const LoginPrimary = () => {
                 To Your Account
               </h1>
               <p>
-                Lorem ipsum dolor, sit amet consectetur adipisicing elit. <br />
-                Sit aliquid, Non distinctio vel iste.
+                Discover the latest trends in fashion and elevate your style. <br/>
+                Shop now for unique looks and timeless pieces.
               </p>
             </div>
           </div>
