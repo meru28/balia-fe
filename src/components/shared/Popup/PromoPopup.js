@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { X, MessageSquare } from 'lucide-react';
@@ -43,7 +43,7 @@ export default function PopupDialog() {
   return (
     <>
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent className="sm:tw-max-w-[425px] !tw-p-0" hideCloseButton>
+        <DialogContent className="sm:tw-max-w-[425px] !tw-p-0 tw-z-[9999]" hideCloseButton>
           <DialogHeader>
             <Image
               src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&q=80"
