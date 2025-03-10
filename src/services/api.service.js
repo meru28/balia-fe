@@ -54,12 +54,7 @@ export const apiService = {
   },
   
   addProduct: async (metadata, files) => {
-    // console.log('Files untuk upload:', files ? files.map(f => ({
-    //   name: f.name,
-    //   type: f.type,
-    //   size: `${Math.round(f.size / 1024)} KB`
-    // })) : 'Tidak ada file');
-
+    console.log('files', files)
     const formData = new FormData();
     const requiredMetadata = {
       name: metadata.name || '',
@@ -77,34 +72,13 @@ export const apiService = {
     };
     formData.append('metadata', JSON.stringify(requiredMetadata))
 
-    const fileArray = [];
-
-    if (files && files.length > 0) {
-      files.forEach(file => {
-        fileArray.push(file);
-      });
-    }
-
-    // Append semua file ke formData sekaligus
-    fileArray.forEach(file => {
-      formData.append('files', file);
-    });
-
-
-    // Debugging function to check the contents of formData
-    const checkFormDataContents = (formData) => {
-      for (const pair of formData.entries()) {
-        console.log(`${pair[0]}:`, pair[1]);
-      }
-    };
-
-    // Call the function to log formData contents
-    checkFormDataContents(formData);
+    files.forEach(file => formData.append('files', file.name))
 
     try {
       const response = await apiClient.post(API_ROUTES.PRODUCT.ADD_PRODUCT, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
+          "Accept": "application/json, text/plain, */*"
         }
       });
       return response.data;

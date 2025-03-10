@@ -63,9 +63,9 @@ const HeaderRight = () => {
                   <li>
                     <Link href="/account">My Account</Link>
                   </li>
-                  <li>
-                    <Link href="/wishlist">Wishlist</Link>
-                  </li>
+                  {/*<li>*/}
+                  {/*  <Link href="/wishlist">Wishlist</Link>*/}
+                  {/*</li>*/}
                   <li>
                     <button
                       onClick={() => signOut({callbackUrl: "https://balia.ae" })}

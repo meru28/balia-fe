@@ -79,20 +79,20 @@ const ProductCardPrimary = ({ product, isShowDisc }) => {
                 <i className="fas fa-shopping-cart"></i>
               </Link>
             </li>{" "}
-            <li>
-              <Link
-                onClick={(e) => {
-                  e.preventDefault();
-                  addProductToWishlist({ ...product, quantity: 1 });
-                }}
-                href="#"
-                title="Wishlist"
-                data-bs-toggle="modal"
-                data-bs-target="#liton_wishlist_modal"
-              >
-                <i className="far fa-heart"></i>
-              </Link>
-            </li>
+            {/*<li>*/}
+            {/*  <Link*/}
+            {/*    onClick={(e) => {*/}
+            {/*      e.preventDefault();*/}
+            {/*      addProductToWishlist({ ...product, quantity: 1 });*/}
+            {/*    }}*/}
+            {/*    href="#"*/}
+            {/*    title="Wishlist"*/}
+            {/*    data-bs-toggle="modal"*/}
+            {/*    data-bs-target="#liton_wishlist_modal"*/}
+            {/*  >*/}
+            {/*    <i className="far fa-heart"></i>*/}
+            {/*  </Link>*/}
+            {/*</li>*/}
           </ul>
         </div>
       </div>

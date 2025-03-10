@@ -192,28 +192,28 @@ const ProductDetailsRight = ({ product }) => {
       </div>
       {/* add to wishlist and compare */}
       <div className="ltn__product-details-menu-3">
-        <ul>
-          <li>
-            <Link
-              onClick={(e) => {
-                e.preventDefault();
-                handleWishlistToggle();
-              }}
-              href="#"
-              className=""
-              title="Wishlist"
-              data-bs-toggle="modal"
-              data-bs-target="#liton_wishlist_modal"
-            >
-              <i className={`${isInWishlist ? 'fas' : 'far'} fa-heart`}
-                 style={{ color: isInWishlist ? '#ff0000' : 'inherit' }}
-              />
-              <span>
-                {isInWishlist ? 'Remove from Wishlist' : 'Add to Wishlist'}
-              </span>
-            </Link>
-          </li>{" "}
-        </ul>
+        {/*<ul>*/}
+        {/*  <li>*/}
+        {/*    <Link*/}
+        {/*      onClick={(e) => {*/}
+        {/*        e.preventDefault();*/}
+        {/*        handleWishlistToggle();*/}
+        {/*      }}*/}
+        {/*      href="#"*/}
+        {/*      className=""*/}
+        {/*      title="Wishlist"*/}
+        {/*      data-bs-toggle="modal"*/}
+        {/*      data-bs-target="#liton_wishlist_modal"*/}
+        {/*    >*/}
+        {/*      <i className={`${isInWishlist ? 'fas' : 'far'} fa-heart`}*/}
+        {/*         style={{ color: isInWishlist ? '#ff0000' : 'inherit' }}*/}
+        {/*      />*/}
+        {/*      <span>*/}
+        {/*        {isInWishlist ? 'Remove from Wishlist' : 'Add to Wishlist'}*/}
+        {/*      </span>*/}
+        {/*    </Link>*/}
+        {/*  </li>{" "}*/}
+        {/*</ul>*/}
       </div>
       <hr />
       {/* socials */}
