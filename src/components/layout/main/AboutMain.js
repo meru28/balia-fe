@@ -18,7 +18,7 @@ const AboutMain = () => {
       <Testimonials3 pt="pt-115" />
       <Faq2 />
       <CallToAction1 />
-      <Blogs2 type={2} pb={"pb-70"} />
+      {/*<Blogs2 type={2} pb={"pb-70"} />*/}
       <Features4 />
     </main>
   );

@@ -15,16 +15,16 @@ const ProductSidebar = () => {
       {<ProductCategories />}
 
       {/* <!-- Price Filter Widget --> */}
-      <PriceRange />
+      {/*<PriceRange />*/}
 
       {/* <!-- Top Rated Product Widget --> */}
-      <SidebarTopRatedProducs />
+      {/*<SidebarTopRatedProducs />*/}
 
       {/* <!-- Search Widget --> */}
-      <SidebarSearch />
+      {/*<SidebarSearch />*/}
 
       {/* <!-- Tagcloud Widget --> */}
-      <ProductTags />
+      {/*<ProductTags />*/}
 
       {/* <!-- Size Widget --> */}
       <ProductSizes />

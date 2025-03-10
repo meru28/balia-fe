@@ -96,7 +96,7 @@ const ProductDetailsPrimary = () => {
             <div className="col-lg-4">
               <aside className="sidebar ltn__shop-sidebar ltn__right-sidebar">
                 {/* <!-- Top Rated Product Widget --> */}
-                <SidebarTopRatedProducs />
+                {/*<SidebarTopRatedProducs />*/}
 
                 {/* <!-- Banner Widget --> */}
                 {/*<SidebarBanner*/}

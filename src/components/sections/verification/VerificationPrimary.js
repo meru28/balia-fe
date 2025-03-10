@@ -14,8 +14,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { KeyRound } from 'lucide-react';
-import { useToast } from "@/hooks/use-toast";
-import {useSearchParams} from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation"
 import React, {useEffect} from "react";
 import {toast} from "sonner";
 import Spinner from '@/components/ui/Spinner'
@@ -35,12 +34,6 @@ const formSchema = z
 export default function VerificationPrimary() {
   const code = useSearchParams()?.get("code");
 
-  // useEffect(() => {
-  //   if (code) {
-  //     console.log(code); // Access your query parameters here
-  //   }
-  // }, [code]);
-
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -51,12 +44,13 @@ export default function VerificationPrimary() {
 
   const { mutate, isPending } = useVerifyUserMutation()
 
+  const router = useRouter()
   function onSubmit(values) {
     const data = { code, password: values.password }
     mutate({ code, password: values.password }, {
       onSuccess: (response) => {
         toast.success('Password created successfully!');
-        router.push('/login')
+        router.push('/')
       },
       onError: (error) => {
         toast.error(error?.response?.data?.message || error?.message || 'Failed to create password!');

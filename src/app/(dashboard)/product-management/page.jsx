@@ -7,7 +7,7 @@ export default function ProductsPage() {
     <div className="tw-mx-auto">
       <div className="tw-flex tw-justify-between tw-mb-6">
         <h1 className="tw-text-3xl tw-font-bold">Products</h1>
-        <Link href="/products/add">
+        <Link href="/product-management/add">
           <Button>
             <PlusCircle className="tw-mr-2 tw-h-4 tw-w-4" />
             Add Product
@@ -20,7 +20,7 @@ export default function ProductsPage() {
         <p className="tw-text-muted-foreground tw-mb-4">
           Get started by adding your first product
         </p>
-        <Link href="/products/add">
+        <Link href="/product-management/add">
           <Button>
             <PlusCircle className="tw-mr-2 tw-h-4 tw-w-4" />
             Add Product

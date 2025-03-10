@@ -14,6 +14,9 @@ import { Separator } from "@/components/ui/separator";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { ImagePlus, Save, X } from "lucide-react";
 import Image from "next/image";
+import useProductAddMutation from '@/hooks/useProductAddMutation'
+import {toast} from "sonner";
+import {useRouter} from "next/navigation";
 
 const productSchema = z.object({
   name: z.string().min(3, { message: "Product name must be at least 3 characters" }),
@@ -33,9 +36,6 @@ export default function AddProductPage() {
     { id: 1, file: null, preview: null },
     { id: 2, file: null, preview: null },
     { id: 3, file: null, preview: null },
-    { id: 4, file: null, preview: null },
-    { id: 5, file: null, preview: null },
-    { id: 6, file: null, preview: null },
   ]);
 
   const form = useForm({
@@ -54,17 +54,38 @@ export default function AddProductPage() {
     },
   });
 
+  const router = useRouter()
+  const { mutate: addProduct, isPending } = useProductAddMutation()
   function onSubmit(data) {
-    // Filter out null images
-    const productImages = images.filter(img => img.file !== null).map(img => img.file);
-
-    // Combine form data with images
-    const productData = {
-      ...data,
-      images: productImages,
+    const metadata = {
+      name: data.name,
+      sku: data.sku,
+      price: data.price,
+      currency: "AED",
+      stock: data.stock,
+      status: data.isActive,
+      size: data.size,
+      shortDescription: data.description,
+      mCategories: {"id": 1},
+      sustainabilityFeature: "Natural woven/Handmade",
+      material: "Rattan/Leather"
     };
 
-    console.log("Product data submitted:", productData);
+    const validImages = images.filter(img => img.file !== null);
+
+    const files = validImages.map(img => img.file);
+
+    addProduct({ metadata, files }, {
+      onSuccess: (response) => {
+        toast.success(`Product ${data.name} was Added`);
+        router.push('/product-management')
+      },
+      onError: (error) => {
+        toast.error(error?.response?.data?.message || error?.message || 'Failed to create password!');
+      }
+    })
+
+    console.log("Product data submitted:", metadata, files);
     // Here you would typically send this data to your API
   }
 
@@ -72,32 +93,38 @@ export default function AddProductPage() {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       const preview = URL.createObjectURL(file);
+      const img = new window.Image();
 
-      const newImages = [...images];
-      const index = newImages.findIndex(img => img.id === id);
-      if (index !== -1) {
-        newImages[index].file = file;
-        newImages[index].preview = preview;
-        setImages(newImages);
-      }
+      img.onload = () => {
+        const newImages = [...images];
+        const index = newImages.findIndex(img => img.id === id);
+        if (index !== -1) {
+          newImages[index].file = file;
+          newImages[index].preview = preview;
+          newImages[index].width = img.width;
+          newImages[index].height = img.height;
+          setImages(newImages);
+        }
+      };
+
+      img.src = preview;
     }
   };
 
   const handleImageDelete = (id, e) => {
-    // Prevent the click event from bubbling up to the parent elements
-    e.stopPropagation();
+    if (e) e.stopPropagation();
 
-    const newImages = [...images];
-    const index = newImages.findIndex(img => img.id === id);
-    if (index !== -1) {
-      // If there's a preview URL, revoke it to free up memory
-      if (newImages[index].preview) {
-        URL.revokeObjectURL(newImages[index].preview);
-      }
-      newImages[index].file = null;
-      newImages[index].preview = null;
-      setImages(newImages);
-    }
+    setImages(prevImages => {
+      return prevImages.map(img => {
+        if (img.id === id) {
+          if (img.preview) {
+            URL.revokeObjectURL(img.preview);
+          }
+          return { id: img.id, file: null, preview: null, width: null, height: null };
+        }
+        return img;
+      });
+    });
   };
 
   return (
@@ -169,47 +196,41 @@ export default function AddProductPage() {
               <div>
                 <h3 className="tw-text-lg tw-font-medium tw-mb-4">Product Images</h3>
                 <div className="tw-grid tw-grid-cols-2 md:tw-grid-cols-3 tw-gap-4">
-                  {images.map((image) => (
-                    <div key={image.id} className="tw-relative">
-                      <div className={`tw-border-2 tw-border-dashed tw-rounded-lg tw-p-4 tw-h-40 tw-flex tw-flex-col tw-items-center tw-justify-center tw-overflow-hidden ${image.file ? 'tw-border-primary' : 'tw-border-border'}`}>
-                        {image.file && image.preview ? (
-                          <div className="tw-relative tw-w-full tw-h-full">
-                            <Image
-                              src={image.preview}
-                              alt={`Product image ${image.id}`}
-                              className="tw-object-contain tw-w-full tw-h-full"
-                            />
-                            <div className="tw-absolute tw-inset-0 tw-flex tw-items-center tw-justify-center tw-bg-black tw-bg-opacity-40">
-                              <button
-                                type="button"
-                                onClick={(e) => handleImageDelete(image.id, e)}
-                                className="tw-w-10 tw-h-10 tw-flex tw-items-center tw-justify-center tw-bg-destructive tw-text-destructive-foreground tw-rounded-full tw-shadow-lg hover:tw-bg-destructive/90 tw-transition-colors"
-                                aria-label="Remove image"
-                              >
-                                <X className="tw-h-6 tw-w-6" />
-                              </button>
-                            </div>
+                  {images.map(image => (
+                    <div key={image.id} className="tw-relative tw-bg-gray-100 tw-border tw-rounded-md tw-flex tw-items-center tw-justify-center tw-h-32">
+                      {image.preview ? (
+                        <>
+                          <Image
+                            src={image.preview}
+                            alt="Product image"
+                            width={image.width || 100}
+                            height={image.height || 100}
+                            className="tw-object-contain tw-h-full tw-w-full"
+                          />
+                          <div className="tw-absolute tw-inset-0 tw-flex tw-items-center tw-justify-center tw-bg-black tw-bg-opacity-40">
+                            <button
+                              type="button"
+                              onClick={(e) => handleImageDelete(image.id)}
+                              className="tw-w-10 tw-h-10 tw-flex tw-items-center tw-justify-center tw-bg-destructive tw-text-destructive-foreground tw-rounded-full tw-shadow-lg hover:tw-bg-destructive/90 tw-transition-colors"
+                              aria-label="Remove image"
+                            >
+                              <X className="tw-h-6 tw-w-6" />
+                            </button>
                           </div>
-                        ) : (
-                          <>
-                            <ImagePlus className="tw-h-10 tw-w-10 tw-text-muted-foreground tw-mb-2" />
-                            <p className="tw-text-sm tw-text-muted-foreground">Upload image</p>
-                          </>
-                        )}
-                        <input
-                          type="file"
-                          accept="image/*"
-                          className="tw-absolute tw-inset-0 tw-w-full tw-h-full tw-opacity-0 tw-cursor-pointer"
-                          onChange={(e) => handleImageChange(image.id, e)}
-                          onClick={(e) => {
-                            // If there's already an image, prevent the file dialog from opening
-                            // when clicking the delete button
-                            if (image.file && (e.target).closest('button')) {
-                              e.preventDefault();
-                            }
-                          }}
-                        />
-                      </div>
+                        </>
+                      ) : (
+                        <label htmlFor={`image-upload-${image.id}`} className="tw-cursor-pointer tw-flex tw-flex-col tw-items-center tw-justify-center tw-w-full tw-h-full">
+                          <ImagePlus className="tw-w-6 tw-h-6 tw-text-gray-400" />
+                          <span className="tw-mt-2 tw-text-sm tw-text-gray-500">Add Image</span>
+                          <input
+                            id={`image-upload-${image.id}`}
+                            type="file"
+                            className="tw-hidden"
+                            accept="image/*"
+                            onChange={(e) => handleImageChange(image.id, e)}
+                          />
+                        </label>
+                      )}
                     </div>
                   ))}
                 </div>

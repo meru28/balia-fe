@@ -17,15 +17,15 @@ const menuItems = [[
   // },
   {
     name: "Product Management",
-    // url: "/products",
+    url: "/product-management",
     icon: ShoppingCart,
-    children: [
-        {
-          name: "Add Product",
-          url: "/products-add",
-          icon: CircleDollarSign,
-        }
-      ],
+    // children: [
+    //     {
+    //       name: "Add Product",
+    //       url: "/products-add",
+    //       icon: CircleDollarSign,
+    //     }
+    //   ],
   },
   // {
   //   name: "Payments",
@@ -131,8 +131,8 @@ const NavigationLink = ({
         <a
           href={item.url}
           className={cn(
-            "tw-flex tw-items-center tw-group/nav-link tw-gap-4 tw-px-1 tw-py-2.5 hover:tw-bg-primary/70 tw-rounded-md hover:tw-text-primary-foreground",
-            currentPathname === item.url && "tw-bg-primary"
+            "tw-flex tw-items-center tw-w-60 tw-group/nav-link tw-gap-4 tw-px-1 tw-py-2.5 hover:tw-bg-primary/70 tw-rounded-md hover:tw-text-primary-foreground",
+            currentPathname === item.url && "tw-bg-amber-100"
           )}>
           <item.icon
             className="tw-text-foreground/70 group/nav-link-hover:tw-text-white tw-size-4" />

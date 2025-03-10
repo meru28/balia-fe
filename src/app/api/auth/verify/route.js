@@ -9,7 +9,7 @@ export async function POST(req) {
     return NextResponse.json(response.data);
   } catch (error) {
     return NextResponse.json(
-      { message: error.response?.data?.message || "Registration failed" },
+      { message: error.response?.data?.message || "Verify failed" },
       { status: error.response?.status || 500 }
     );
   }

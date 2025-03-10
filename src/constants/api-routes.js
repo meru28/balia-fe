@@ -5,4 +5,7 @@ export const API_ROUTES = {
     REGISTER: '/auth/signup',
     VERIFY_USER: '/auth/verify',
   },
+  PRODUCT: {
+    ADD_PRODUCT: '/master/m-products'
+  }
 };
