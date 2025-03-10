@@ -24,7 +24,7 @@ const OfferCard2 = () => {
         className="tw-grid tw-grid-cols-1 lg:tw-grid-cols-6 tw-gap-4 tw-mx-auto tw-w-full"
       >
         <WobbleCard
-          containerClassName="tw-col-span-1 lg:tw-col-span-3 tw-h-full !tw-bg-gray-900 tw-min-h-[500px] lg:tw-min-h-[300px]"
+          containerClassName="tw-col-span-1 lg:tw-col-span-3 tw-h-full !tw-bg-black tw-min-h-[500px] lg:tw-min-h-[300px]"
           className="">
           <div className="tw-max-w-xs">
             <h2
