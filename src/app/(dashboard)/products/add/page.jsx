@@ -128,7 +128,7 @@ export default function AddProductPage() {
   };
 
   return (
-    <div className="tw-container tw-mx-auto tw-py-10">
+    <div className="tw-container tw-mx-auto">
       <h1 className="tw-text-3xl tw-font-bold tw-mb-6">Add New Product</h1>
 
       <Form {...form}>

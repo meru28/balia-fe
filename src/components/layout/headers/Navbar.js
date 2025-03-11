@@ -11,18 +11,18 @@ const homeImage9 = "/img/home-demos/home-9.jpg";
 const homeImage10 = "/img/home-demos/home-10.jpg";
 const homeImage11 = "/img/home-demos/home-11.jpg";
 
-const dropdownBannerImage1 = "/img/banner/menu-banner-1.png";
-import HomeDropdown from "./HomeDropdown";
-import CommonDropdown from "./CommonDropdown";
-import PagesDropdown from "./PagesDropdown";
 import NavItem from "./NavItem";
 import Link from "next/link";
 import { useHeaderContex } from "@/providers/HeaderContex";
+import { useSession } from "next-auth/react";
 import Logo from "./Logo";
 
 const Navbar = () => {
+  const { data: session } = useSession();
   const { headerStyle, headerSize, isNavbarAppointmentBtn, isTextWhite } =
     useHeaderContex();
+  console.log("User Role:", session?.user?.roles);
+
   const navItemsRaw = [
     {
       name: "Home",
@@ -55,11 +55,18 @@ const Navbar = () => {
       path: "/contact",
       dropdown: null,
     },
+    ...(session?.user?.roles[0] === "ROLE_ADMIN" ? [{
+      name: "Dashboard",
+      path: "/products",
+      dropdown: null,
+    }] : [])
+
   ];
   const navItems = navItemsRaw?.map((navItem, idx) => ({
     ...navItem,
     dropdown: null,
   }));
+
   return (
     <div
       className={`col header-menu-column ${

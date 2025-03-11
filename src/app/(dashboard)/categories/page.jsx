@@ -2,15 +2,15 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { PlusCircle } from "lucide-react";
 
-export default function ProductsPage() {
+export default function CategoriesPage() {
   return (
     <div className="tw-mx-auto">
       <div className="tw-flex tw-justify-between tw-mb-6">
-        <h1 className="tw-text-3xl tw-font-bold">Products</h1>
-        <Link href="/product-management/add">
+        <h1 className="tw-text-3xl tw-font-bold">Categories</h1>
+        <Link href="/products/add">
           <Button>
             <PlusCircle className="tw-mr-2 tw-h-4 tw-w-4" />
-            Add Product
+            Add Categories
           </Button>
         </Link>
       </div>
@@ -20,10 +20,10 @@ export default function ProductsPage() {
         <p className="tw-text-muted-foreground tw-mb-4">
           Get started by adding your first product
         </p>
-        <Link href="/product-management/add">
+        <Link href="/products/add">
           <Button>
             <PlusCircle className="tw-mr-2 tw-h-4 tw-w-4" />
-            Add Product
+            Add Categories
           </Button>
         </Link>
       </div>

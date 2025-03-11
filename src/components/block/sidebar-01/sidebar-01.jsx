@@ -24,7 +24,6 @@ const Sidebar1 = () => {
             className="tw-object-cover tw-h-20"
           />
       </div>
-      {/*<SearchInput isMinimized={isMinimized} />*/}
       <NavigationMenu isMinimized={isMinimized} />
     </aside>)
   );

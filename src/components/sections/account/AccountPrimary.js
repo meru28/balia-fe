@@ -50,7 +50,7 @@ const AccountPrimary = () => {
                         <div className="ltn__myaccount-tab-content-inner">
                           <p>
                             Hello <strong>{session?.user?.id}</strong> (not{" "}
-                            <strong>{session?.user?.id}</strong>?{" "}
+                            <strong>{session?.user?.roles}</strong>?{" "}
                             <small>
                               <Link href="/login">Log out</Link>
                             </small>{" "}

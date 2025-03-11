@@ -4,8 +4,11 @@ import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
 import {
   ChevronDownIcon,
-  CircleDollarSign,
+  Grid2x2Check,
   ShoppingCart,
+  HandHelping,
+  House,
+  FileText
 } from "lucide-react";
 import { useState } from "react";
 
@@ -16,17 +19,45 @@ const menuItems = [[
   //   icon: HomeIcon,
   // },
   {
-    name: "Product Management",
-    url: "/product-management",
-    icon: ShoppingCart,
-    // children: [
-    //     {
-    //       name: "Add Product",
-    //       url: "/products-add",
-    //       icon: CircleDollarSign,
-    //     }
-    //   ],
+    group: "Product Management",
+    items: [
+      {
+        name: "Products",
+        url: "/products",
+        icon: ShoppingCart,
+      },
+      {
+        name: "Categories",
+        url: "/categories",
+        icon: Grid2x2Check
+      }
+    ]
   },
+  {
+    group: "Promotional Management",
+    items: [
+      {
+        name: "Promo Popup",
+        url: "/promo-popup",
+        icon: HandHelping
+      }
+    ]
+  },
+  {
+    group: "Page Control",
+    items: [
+      {
+        name: "Home Pages",
+        url: "/home-pages",
+        icon: House
+      },
+      {
+        name: "Terms And Conditions",
+        url: "/term-conditions",
+        icon: FileText
+      }
+    ]
+  }
   // {
   //   name: "Payments",
   //   icon: HandCoins,
@@ -83,15 +114,28 @@ const NavigationMenu = ({
     (<nav>
       {menuItems.map((section, index) => (
         <div className="tw-flex tw-flex-col tw-gap-4 tw-mb-4" key={index}>
-          <ul className="tw-space-y-1">
-            {section.map((item) => (
-              <NavigationLink
-                isMinimized={isMinimized}
-                key={item.url}
-                item={item}
-                currentPathname={currentPathname} />
-            ))}
-          </ul>
+          {section.map((group, groupIndex) => (
+            <div key={groupIndex}>
+              {/* Tampilkan group title */}
+              {!isMinimized && group.group && (
+                <div className="tw-px-4 tw-mt-5 tw-text-xs tw-text-gray-400 tw-uppercase tw-font-semibold tw-mb-2">
+                  {group.group}
+                </div>
+              )}
+
+              <ul className="tw-space-y-1 tw-pl-0">
+                {group.items.map((item) => (
+                  <NavigationLink
+                    isMinimized={isMinimized}
+                    key={item.url}
+                    item={item}
+                    currentPathname={currentPathname}
+                  />
+                ))}
+              </ul>
+            </div>
+          ))}
+
           {index + 1 < menuItems.length && (
             <Separator className="tw-bg-transparent tw-border-t tw-border-dotted tw-border-foreground/30" />
           )}
@@ -109,8 +153,11 @@ const NavigationLink = ({
   currentPathname
 }) => {
   const [isOpen, setIsOpen] = useState(true);
+  const isActive = currentPathname === item.url ||
+    currentPathname.startsWith(item.url + '/');
+
   return (
-    (<li key={item.url} className="w-full">
+    (<li key={item.url} className="tw-w-full">
       {item.children ? (
         <button
           onClick={() => setIsOpen(!isOpen)}
@@ -131,11 +178,14 @@ const NavigationLink = ({
         <a
           href={item.url}
           className={cn(
-            "tw-flex tw-items-center tw-w-60 tw-group/nav-link tw-gap-4 tw-px-1 tw-py-2.5 hover:tw-bg-primary/70 tw-rounded-md hover:tw-text-primary-foreground",
-            currentPathname === item.url && "tw-bg-amber-100"
+            "tw-flex tw-items-center tw-w-60 tw-group/nav-link tw-gap-4 tw-p-5 tw-py-2.5 hover:tw-bg-primary/70 tw-rounded-md hover:tw-text-primary-foreground",
+            isActive && "tw-bg-neutral-300 tw-text-black"
           )}>
           <item.icon
-            className="tw-text-foreground/70 group/nav-link-hover:tw-text-white tw-size-4" />
+            className={cn(
+              "tw-text-foreground/70 group/nav-link-hover:tw-text-white tw-size-4",
+              isActive && "tw-text-black"
+            )} />
           <span className={cn(isMinimized && "tw-hidden")}>{item.name}</span>
         </a>
       )}
