@@ -13,14 +13,6 @@ export default function ProductsPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
 
-  const categories = [
-    { id: 85, name: 'Hand bags', slug: 'hand-bags', group: 'Bags', icon: '👜' },
-    { id: 88, name: 'Laptop bags', slug: 'laptop-bags', group: 'Bags', icon: '💼' },
-    { id: 86, name: 'Shoulder bags', slug: 'shoulder-bags', group: 'Bags', icon: '👝' },
-    { id: 84, name: 'Purse', slug: 'purse', group: 'Bags', icon: '👛' },
-    { id: 87, name: 'Wallet', slug: 'wallet', group: 'Bags', icon: '💰' },
-  ]
-
   const { data: products = [], isLoading, error } = useProductGetQuery('products',{ searchTerm, categoryId: selectedCategory });
 
   const handleCategoryChange = (categoryId) => {

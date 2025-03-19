@@ -108,7 +108,7 @@ export default function AddProductPage() {
     const files = validImages.map(img => img.file);
 
     addProduct({ metadata, files }, {
-      onSuccess: (response) => {
+      onSuccess: () => {
         toast.success(`Product ${data.name} was Added`);
       },
       onError: (error) => {

@@ -1,6 +1,6 @@
 // services/api.service.js
 import apiClient from '@/utils/axiosInstance';
-import { API_ROUTES } from '@/constants/api-routes';
+import {API_ROUTES} from '@/constants/api-routes';
 
 export const apiService = {
   resendEmail: async (email) => {
@@ -58,7 +58,7 @@ export const apiService = {
     formData.append('metadata', JSON.stringify(metadata))
 
     if (files && Array.isArray(files)) {
-      files.forEach((file, index) => {
+      files.forEach((file) => {
         formData.append(`files`, file);
       });
     }
@@ -82,10 +82,9 @@ export const apiService = {
 
   getProduct: async (params = {}) => {
     try {
-      const response = await apiClient.get(`${API_ROUTES.PRODUCT.GET_PRODUCT}`, {
+      return await apiClient.get(`${API_ROUTES.PRODUCT.GET_PRODUCT}`, {
         params: params,
       });
-      return response;
     } catch (error) {
       console.error('Get product error:', error);
       throw {
@@ -98,11 +97,9 @@ export const apiService = {
 
   getCategory: async (params = {}) => {
     try {
-      const { size, sort, id } = params;
-      const response = await apiClient.get(`${API_ROUTES.PRODUCT.GET_CATEGORY}`, {
+      return await apiClient.get(`${API_ROUTES.PRODUCT.GET_CATEGORY}`, {
         params: params
-      });
-      return response
+      })
     } catch (error) {
       console.error('Get category error:', error);
       throw {
