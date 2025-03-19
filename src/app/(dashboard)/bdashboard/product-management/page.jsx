@@ -1,7 +1,7 @@
 'use client'
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import {ChevronDown, Edit2, Plus, PlusCircle, Search, Trash2, X} from "lucide-react";
+import {ChevronDown, Edit2, Plus, Search, Trash2, X} from "lucide-react";
 import {Input} from "@/components/ui/input";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 import {useState} from "react";

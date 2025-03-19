@@ -5,8 +5,7 @@ import {
   ChevronRight,
   User,
   Settings,
-  LogOut,
-  Menu
+  LogOut
 } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
@@ -20,7 +19,6 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { useSession, signOut } from 'next-auth/react'
 

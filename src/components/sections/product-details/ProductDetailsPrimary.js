@@ -3,13 +3,10 @@ import getAllProducts from "@/libs/getAllProducts";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import SidebarTopRatedProducs from "@/components/shared/sidebars/widgets/SidebarTopRatedProducs";
-import SidebarBanner from "@/components/shared/sidebars/widgets/SidebarBanner";
 import { useProductContext } from "@/providers/ProductContext";
 import ProductDetailsRight from "@/components/shared/products/ProductDetailsRight";
 import { useCommonContext } from "@/providers/CommonContext";
 import ProductDetailsTab from "@/components/shared/products/ProductDetailsTab";
-import ProductDetailsTab2 from "@/components/shared/products/ProductDetailsTab2";
 const ProductDetailsPrimary = () => {
   // hooks
   const { isNotSidebar, type } = useCommonContext();

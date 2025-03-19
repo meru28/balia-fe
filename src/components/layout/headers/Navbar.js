@@ -1,16 +1,3 @@
-const Image = "next/image";
-const homeImage1 = "/img/home-demos/home-1.jpg";
-const homeImage2 = "/img/home-demos/home-2.jpg";
-const homeImage3 = "/img/home-demos/home-3.jpg";
-const homeImage4 = "/img/home-demos/home-4.jpg";
-const homeImage5 = "/img/home-demos/home-5.jpg";
-const homeImage6 = "/img/home-demos/home-6.jpg";
-const homeImage7 = "/img/home-demos/home-7.jpg";
-const homeImage8 = "/img/home-demos/home-8.jpg";
-const homeImage9 = "/img/home-demos/home-9.jpg";
-const homeImage10 = "/img/home-demos/home-10.jpg";
-const homeImage11 = "/img/home-demos/home-11.jpg";
-
 import NavItem from "./NavItem";
 import Link from "next/link";
 import { useHeaderContex } from "@/providers/HeaderContex";

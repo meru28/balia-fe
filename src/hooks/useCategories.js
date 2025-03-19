@@ -5,7 +5,6 @@ import {getSession} from "next-auth/react";
 import apiClient from '@/utils/axiosInstance'
 
 const fetchCategories = async () => {
-  const session = await getSession()
   try {
     const response = await apiClient.get(`${API_ROUTES.PRODUCT.GET_CATEGORY}`)
     if (response) {

@@ -14,7 +14,6 @@ import { cn } from "@/lib/utils";
  */
 const NumberWithLeadingZeroInput = ({
                                       field,
-                                      digits = 2,
                                       className = "",
                                       placeholder = "00",
                                       minVal = 0,
