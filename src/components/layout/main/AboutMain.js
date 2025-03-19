@@ -14,10 +14,10 @@ const AboutMain = () => {
       <HeroPrimary title="About Us" text="About Us" bg="/img/bg/fashion-thing.png" />
       <About5 pt={"pt-0"} />
       <Services4 />
-      <Team1 />
+      {/*<Team1 />*/}
       <Testimonials3 pt="pt-115" />
-      <Faq2 />
-      <CallToAction1 />
+      {/*<Faq2 />*/}
+      {/*<CallToAction1 />*/}
       {/*<Blogs2 type={2} pb={"pb-70"} />*/}
       <Features4 />
     </main>

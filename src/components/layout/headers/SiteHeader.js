@@ -1,6 +1,6 @@
 "use client"
 
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import {
   ChevronRight,
   User,
@@ -37,9 +37,30 @@ const SiteHeader = ({
   const { data: session } = useSession()
   const pathname = usePathname()
 
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50); // Ubah nilai sesuai kebutuhan
+    };
+
+    // Tambahkan event listener
+    window.addEventListener('scroll', handleScroll);
+
+    // Cleanup event listener
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
   const breadcrumbs = pathname.split('/').filter(Boolean)
   return (
-    <header className="tw-flex tw-items-center tw-justify-between tw-border-b tw-py-7 tw-bg-white tw-mb-5">
+    <header className={`tw-fixed tw-top-0 tw-right-0 tw-left-[265px] tw-z-30 tw-flex tw-items-center tw-justify-between tw-border-b tw-h-24 tw-transition-all tw-duration-300 ${
+      isScrolled
+        ? 'tw-bg-white/30 tw-backdrop-blur-lg tw-shadow-md'
+        : 'tw-bg-white tw-shadow-lg'
+    }`}
+    >
       {/* Breadcrumb */}
       <div className="tw-flex tw-items-center tw-px-5">
         <nav aria-label="Breadcrumb" className="tw-flex tw-items-center">
@@ -75,12 +96,6 @@ const SiteHeader = ({
 
       {/* Kanan Header */}
       <div className="tw-flex tw-items-center tw-space-x-4 tw-px-5">
-        {/* Notification */}
-        {/*<Button variant="ghost" size="icon">*/}
-        {/*  <Bell className="tw-h-5 tw-w-5" />*/}
-        {/*</Button>*/}
-
-        {/* User Dropdown */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="tw-relative tw-h-8 tw-w-8 tw-rounded-full">
@@ -123,6 +138,10 @@ const SiteHeader = ({
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
+        <div className="tw-flex tw-flex-col tw-space-y-1">
+          <span className="tw-text-lg">{session?.user?.name}</span>
+          <span className="tw-text-xs tw-text-gray-500">{session?.user?.roles}</span>
+        </div>
       </div>
     </header>
   )

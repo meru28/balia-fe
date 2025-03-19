@@ -23,12 +23,12 @@ const menuItems = [[
     items: [
       {
         name: "Products",
-        url: "/products",
+        url: "/bdashboard/product-management",
         icon: ShoppingCart,
       },
       {
         name: "Categories",
-        url: "/categories",
+        url: "/bdashboard/categories",
         icon: Grid2x2Check
       }
     ]
@@ -178,13 +178,13 @@ const NavigationLink = ({
         <a
           href={item.url}
           className={cn(
-            "tw-flex tw-items-center tw-w-60 tw-group/nav-link tw-gap-4 tw-p-5 tw-py-2.5 hover:tw-bg-primary/70 tw-rounded-md hover:tw-text-primary-foreground",
+            "tw-flex tw-items-center tw-w-60  tw-gap-4 tw-p-5 tw-py-2.5 hover:tw-bg-primary/70 tw-rounded-md hover:tw-text-primary-foreground",
             isActive && "tw-bg-neutral-300 tw-text-black"
           )}>
           <item.icon
             className={cn(
-              "tw-text-foreground/70 group/nav-link-hover:tw-text-white tw-size-4",
-              isActive && "tw-text-black"
+              "tw-text-foreground/70 hover:tw-text-white tw-size-4",
+              isActive && "tw-text-black hover:tw-text-white"
             )} />
           <span className={cn(isMinimized && "tw-hidden")}>{item.name}</span>
         </a>

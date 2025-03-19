@@ -8,6 +8,7 @@ import Script from "next/script";
 import { Suspense } from "react";
 import SessionAndQueryProvider from "@/providers/ClientSessionProvider"
 import { Toaster } from "@/components/ui/sonner"
+import TidioChat from "@/libs/TidioChat";
 const open_sans = localFont({
   src: [
     {
@@ -45,15 +46,18 @@ export const metadata = {
 };
 
 export default function RootLayout({ children, session }) {
+
   return (
     <html
       lang="en"
       suppressHydrationWarning={true}
       className={`${rajdhani.variable} ${open_sans.variable} ${brittany.variable}`}
     >
+
       <body className={open_sans.className}>
         <SessionAndQueryProvider session={session}>
           <Suspense fallback={<div></div>}>
+            <TidioChat />
             {children}
             <Script src="/plugins.js" />
             <Script

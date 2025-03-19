@@ -3,7 +3,7 @@
 import Link from "next/link";
 import React from "react";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import {useRouter, useSearchParams} from "next/navigation";
 import { toast } from "sonner"
 import useRegisterMutation from '@/hooks/useRegisterMutation';
 
@@ -31,7 +31,12 @@ const Spinner = () => (
 );
 
 const RegisterPrimary = () => {
-  const [formData, setFormData] = useState({ username: "", email: "", firstName: "", roles: ["ROLE_ADMIN"], mobileNumber: "" });
+  const searchParams = useSearchParams();
+
+  const [formData, setFormData] = useState({ username: "", email: "", firstName: "", roles: searchParams.get('isAdmin') === 'true'
+      ? ["ROLE_ADMIN"]
+      : ["ROLE_USER"]
+    , mobileNumber: "" });
   const [error, setError] = useState(null);
   const router = useRouter();
   const [isChecked, setIsChecked] = useState(false);

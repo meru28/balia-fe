@@ -53,7 +53,7 @@ const CartProduct = ({
       }, 500);
     }
   }, [isWishlist]);
-  // handle updated products
+  // handle updated product-management
   useEffect(() => {
     if (!isWishlist) {
       const newUptedProducts = [...updateProducts]?.map((product) =>

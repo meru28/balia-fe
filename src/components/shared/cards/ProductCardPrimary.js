@@ -21,17 +21,20 @@ const ProductCardPrimary = ({ product, isShowDisc }) => {
 
   return (
     <div
-      className="ltn__product-item ltn__product-item-3 text-center"
+      className="ltn__product-item ltn__product-item-3 text-center tw-overflow-hidden"
       onMouseEnter={() => setCurrentProduct(product)}
     >
-      <div className="product-img tw-max-h-[334.15px] tw-object-cover tw-overflow-hidden">
+      <div className="product-img tw-h-[334.15px] tw-max-w-[266.67px] tw-object-cover tw-overflow-hidden">
         <Link href={`/products/${id}`}>
           <Image
             src={image}
             alt="#"
-            width={1000}
-            height={1000}
-            // placeholder="blur"
+            fill
+            style={{
+              objectFit: 'cover', // memenuhi area dengan memotong gambar
+              objectPosition: 'center' // pusatkan gambar
+            }}
+            className="tw-h-full tw-w-full"
           />
         </Link>
         {status || isShowDisc ? (

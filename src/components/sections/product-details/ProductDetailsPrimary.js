@@ -14,7 +14,7 @@ const ProductDetailsPrimary = () => {
   // hooks
   const { isNotSidebar, type } = useCommonContext();
   const { setCurrentProduct } = useProductContext();
-  // products and filter current product
+  // product-management and filter current product
   const { id: currentId } = useParams();
   const products = getAllProducts();
   const product = products?.find(

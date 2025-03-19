@@ -16,8 +16,7 @@ const queryClient = new QueryClient({
 
 export default function SessionAndQueryProvider({ session, children }) {
 
-  console.log('DevTools package installed:', typeof ReactQueryDevtools)
-  console.log('React Query version:', QueryClient.version)
+  // console.log('React Query version:', QueryClient)
 
   return (
     <SessionProvider session={session}>

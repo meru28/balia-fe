@@ -57,7 +57,7 @@ const Navbar = () => {
     },
     ...(session?.user?.roles[0] === "ROLE_ADMIN" ? [{
       name: "Dashboard",
-      path: "/products",
+      path: "/bdashboard/product-management",
       dropdown: null,
     }] : [])
 

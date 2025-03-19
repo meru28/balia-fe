@@ -11,14 +11,14 @@ export default function DashboardLayout({children}) {
   }
 
   return (
-    <div className="tw-flex tw-gap-2">
+    <div className="tw-flex tw-over">
       <Sidebar1 />
-      <main className="tw-w-full">
+      <main className="tw-pt-24 tw-w-full tw-pl-[265px] tw-bg-gray-200 tw-min-h-screen tw-overflow-auto">
         <SiteHeader
           isMinimized={isMinimized}
           toggleSidebar={toggleSidebar}
         />
-        <div className="tw-p-10 tw-py-3">
+        <div className="">
           {children}
         </div>
       </main>

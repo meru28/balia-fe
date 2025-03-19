@@ -54,7 +54,6 @@ export const apiService = {
   },
   
   addProduct: async (metadata, files) => {
-    console.log('files', files)
     const formData = new FormData();
     const requiredMetadata = {
       name: metadata.name || '',
@@ -62,18 +61,24 @@ export const apiService = {
       price: metadata.price || 0,
       currency: metadata.currency || 'AED',
       stock: metadata.stock || 0,
-      status: metadata.status || 1,
+      status: 1,
       color: metadata.color || '',
       size: metadata.size || '',
       shortDescription: metadata.shortDescription || '',
       mCategories: metadata.mCategories || { id: 1 },
       sustainabilityFeature: metadata.sustainabilityFeature || '',
-      material: metadata.material || ''
+      material: metadata.material || '',
+      preOrder: 1
     };
     formData.append('metadata', JSON.stringify(requiredMetadata))
 
-    files.forEach(file => formData.append('files', file.name))
+    if (files && Array.isArray(files)) {
+      files.forEach((file, index) => {
+        formData.append(`files`, file);
+      });
+    }
 
+    console.log('FormData:', Array.from(formData.entries()));
     try {
       const response = await apiClient.post(API_ROUTES.PRODUCT.ADD_PRODUCT, formData, {
         headers: {
@@ -83,11 +88,26 @@ export const apiService = {
       });
       return response.data;
     } catch (error) {
-      // console.log('Add Product Error', error);
       throw {
         message: error.response?.data?.message || "Failed to add product",
         status: error.response?.status || 500
       }
     }
-  }
+  },
+
+
+  getCategory: async ({size, sort, id}) => {
+    try {
+      const response = await apiClient.get(`${API_ROUTES.PRODUCT.GET_CATEGORY}`, null, {
+        params: { size, sort, id }
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Get category error:', error);
+      throw {
+        message: error.response?.data?.message || "Failed to fetch category",
+        status: error.response?.status || 500
+      };
+    }
+  },
 };

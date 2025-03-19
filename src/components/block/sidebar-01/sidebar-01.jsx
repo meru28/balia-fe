@@ -12,7 +12,7 @@ const Sidebar1 = () => {
       onMouseEnter={() => setIsMinimized(false)}
       onMouseLeave={() => setIsMinimized(false)}
       className={cn(
-        "tw-flex tw-flex-col tw-w-fit tw-border tw-p-3 tw-rounded-lg tw-bg-stone-100 tw-cursor-pointer dark:tw-bg-stone-900 tw-h-svh tw-transition-all tw-duration-300 tw-sticky tw-top-0 tw-z-10",
+        "tw-fixed tw-left-0 tw-top-0 tw-bottom-0 tw-flex tw-flex-col tw-w-fit tw-border tw-p-3 tw-rounded-lg tw-bg-stone-100 tw-cursor-pointer dark:tw-bg-stone-900 tw-h-screen tw-transition-all tw-duration-300 tw-z-50",
         isMinimized ? "tw-w-[75px]" : "tw-w-[300px]"
       )}>
       <div className="tw-border-b-2 tw-border-stone-300 dark:tw-border-stone-700">

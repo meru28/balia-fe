@@ -32,10 +32,10 @@ const HotDeal3 = () => {
                   Stay Ahead of <br/> The Trends
                 </motion.h1>
               </div>
-              <div
-                className="ltn__countdown ltn__countdown-3 bg-white--"
-                data-countdown="2026/12/28"
-              ></div>
+              {/*<div*/}
+              {/*  className="ltn__countdown ltn__countdown-3 bg-white--"*/}
+              {/*  data-countdown="2026/12/28"*/}
+              {/*></div>*/}
               <div className="btn-wrapper animated">
                 <Link
                   href="/shop"

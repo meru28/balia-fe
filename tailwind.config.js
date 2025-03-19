@@ -5,7 +5,7 @@ const {
 module.exports = {
 	prefix: 'tw-',
 	content: [
-		"./app/**/*.{js,ts,jsx,tsx,mdx}",
+		"./src/app/**/*.{js,ts,jsx,tsx,mdx}",
 		"./pages/**/*.{js,ts,jsx,tsx,mdx}",
 		"./components/**/*.{js,ts,jsx,tsx,mdx}",
 
@@ -15,6 +15,9 @@ module.exports = {
 	darkMode: ["class", 'class'],
 	theme: {
     	extend: {
+				aspectRatio: {
+					'4/5': '4/5'
+				},
     		borderRadius: {
     			lg: 'var(--radius)',
     			md: 'calc(var(--radius) - 2px)',
