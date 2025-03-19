@@ -1,30 +1,21 @@
 import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query"
 import axios from 'axios'
-import {API_ROUTES} from "@/constants/api-routes";
-import {getSession} from "next-auth/react";
-import apiClient from '@/utils/axiosInstance'
+import {apiService} from "@/services/api.service";
 
-const fetchCategories = async () => {
-  try {
-    const response = await apiClient.get(`${API_ROUTES.PRODUCT.GET_CATEGORY}`)
-    if (response) {
-      return response
-    }
-    if (!response || !response.ok) {
-      throw new Error('Tidak ada data kategori')
-    }
-  } catch (error) {
-    throw new Error('Gagal mengambil kategori')
-  }
-}
-
-export const useCategories = (key, options = {}) => {
+export const useCategories = (queryKey, params = {}) => {
     return useQuery({
-      queryKey: [key],
+      queryKey: [queryKey, params],
       queryFn: async () => {
-        return await fetchCategories()
+        try {
+          const response = await apiService.getCategory(params)
+          return response || { data: []}
+        } catch (error) {
+          console.error("Error fetching categories:", error);
+          return { data: [] };
+        }
       },
-      ...options,
+      retry: 1,
+      staleTime: 5 * 60 * 1000,
     });
 }
 

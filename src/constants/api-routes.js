@@ -7,6 +7,7 @@ export const API_ROUTES = {
   },
   PRODUCT: {
     ADD_PRODUCT: '/master/m-product-management',
+    GET_PRODUCT: '/master/m-product/by-query',
     GET_CATEGORY: '/master/m-categories',
   }
 };

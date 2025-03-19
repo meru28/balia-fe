@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React from 'react'
 import {
   Select,
   SelectContent,
@@ -26,7 +26,6 @@ const CategorySelector = ({
                           }) => {
 
   const {data: categories = [], isLoading, error} = useCategories('categories');
-  const [selectedCategoryName, setSelectedCategoryName] = useState('');
 
   if (isLoading) {
     return (

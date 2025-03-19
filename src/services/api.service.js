@@ -55,22 +55,7 @@ export const apiService = {
   
   addProduct: async (metadata, files) => {
     const formData = new FormData();
-    const requiredMetadata = {
-      name: metadata.name || '',
-      sku: metadata.sku || '',
-      price: metadata.price || 0,
-      currency: metadata.currency || 'AED',
-      stock: metadata.stock || 0,
-      status: 1,
-      color: metadata.color || '',
-      size: metadata.size || '',
-      shortDescription: metadata.shortDescription || '',
-      mCategories: metadata.mCategories || { id: 1 },
-      sustainabilityFeature: metadata.sustainabilityFeature || '',
-      material: metadata.material || '',
-      preOrder: 1
-    };
-    formData.append('metadata', JSON.stringify(requiredMetadata))
+    formData.append('metadata', JSON.stringify(metadata))
 
     if (files && Array.isArray(files)) {
       files.forEach((file, index) => {
@@ -78,7 +63,6 @@ export const apiService = {
       });
     }
 
-    console.log('FormData:', Array.from(formData.entries()));
     try {
       const response = await apiClient.post(API_ROUTES.PRODUCT.ADD_PRODUCT, formData, {
         headers: {
@@ -96,12 +80,29 @@ export const apiService = {
   },
 
 
-  getCategory: async ({size, sort, id}) => {
+  getProduct: async (params = {}) => {
     try {
-      const response = await apiClient.get(`${API_ROUTES.PRODUCT.GET_CATEGORY}`, null, {
-        params: { size, sort, id }
+      const response = await apiClient.get(`${API_ROUTES.PRODUCT.GET_PRODUCT}`, {
+        params: params,
       });
-      return response.data;
+      return response;
+    } catch (error) {
+      console.error('Get product error:', error);
+      throw {
+        message: error.response?.data?.message || "Failed to fetch products",
+        status: error.response?.status || 500,
+      };
+    }
+  },
+
+
+  getCategory: async (params = {}) => {
+    try {
+      const { size, sort, id } = params;
+      const response = await apiClient.get(`${API_ROUTES.PRODUCT.GET_CATEGORY}`, {
+        params: params
+      });
+      return response
     } catch (error) {
       console.error('Get category error:', error);
       throw {

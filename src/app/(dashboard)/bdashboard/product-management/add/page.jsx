@@ -14,7 +14,7 @@ import { Separator } from "@/components/ui/separator";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import {ImagePlus, Loader2, Save, X} from "lucide-react";
 import Image from "next/image";
-import useProductAddMutation from '@/hooks/useProductAddMutation'
+import { useProductAddMutation } from '@/hooks/useProducts'
 import {toast} from "sonner";
 import {useRouter} from "next/navigation";
 import SizeSelector from "@/components/shared/size-selector/SizeSelector";
@@ -96,6 +96,7 @@ export default function AddProductPage() {
       dimensionLength: data.dimensionLength.toString(),
       dimensionHeight: data.dimensionHeight.toString(),
       longDescription: data.description,
+      shortDescription: data.description,
       mCategories: {"id": +data.category},
       sustainabilityFeature: data.sustainabilityFeature,
       material: data.material,
