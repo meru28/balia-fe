@@ -144,11 +144,11 @@ export default function ProductsPage() {
       header: () => {
         return (
           <div className="tw-p-0 tw-font-bold">
-            ID
+            No
           </div>
         )
       },
-      cell: ({row}) => <div className="tw-font-medium">{row.original.id}</div>,
+      cell: ({row}) => <div className="tw-font-medium">{row.index + 1}</div>,
       size: 60,
       enableResizing: false,
     },
