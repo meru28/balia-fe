@@ -55,7 +55,6 @@ jobs:
             docker run -d --name balia-fe \
             -p 8082:3000 \
             -e NODE_ENV=production \
-            -e NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }} \
             -e SECRET_KEY=${{ secrets.SECRET_KEY }} \
             -e NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }} \
             -e NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }} \
