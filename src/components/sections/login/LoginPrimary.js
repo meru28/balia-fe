@@ -10,6 +10,7 @@ const LoginPrimary = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || "/";
@@ -17,17 +18,25 @@ const LoginPrimary = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     setError(null);
+    setIsLoading(true);
 
-    const result = await signIn("credentials", {
-      username: email,
-      password,
-      redirect: false,
-    });
+    try {
+      const result = await signIn("credentials", {
+        username: email,
+        password,
+        redirect: false,
+      });
 
-    if (result?.error) {
-      setError("Email atau password salah!");
-    } else {
-      router.push(callbackUrl);
+      if (result?.error) {
+        setError("Email atau password salah!");
+      } else {
+        router.push(callbackUrl);
+      }
+    } catch (error) {
+      setError("Terjadi kesalahan saat login");
+      console.error("Login error:", error);
+    } finally {
+      setIsLoading(false); // Set loading menjadi false setelah proses selesai
     }
   };
 
@@ -73,8 +82,16 @@ const LoginPrimary = () => {
                   <button
                     className="theme-btn-1 btn btn-block w-100"
                     type="submit"
+                    disabled={isLoading}
                   >
-                    SIGN IN
+                    {isLoading ? (
+                      <span>
+                        <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                        SIGNING IN...
+                      </span>
+                    ) : (
+                      "SIGN IN"
+                    )}
                   </button>
                 </div>
                 <div className="go-to-btn mt-20">

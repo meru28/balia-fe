@@ -67,7 +67,7 @@ const SimpleCategorySelector = ({
         >
           <SelectTrigger className="tw-w-full tw-pr-8">
             <SelectValue placeholder="Select a category" className="tw-truncate">
-              {categories.find((category) => String(category.id) === String(selectedCategory))?.name || ''}
+              {categories?.find((category) => String(category.id) === String(selectedCategory))?.name || ''}
             </SelectValue>
           </SelectTrigger>
           <SelectContent position="popper" className="tw-max-h-[300px" align="start" sideOffset={4}>

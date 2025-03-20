@@ -8,7 +8,6 @@ const Navbar = () => {
   const { data: session } = useSession();
   const { headerStyle, headerSize, isNavbarAppointmentBtn, isTextWhite } =
     useHeaderContex();
-  console.log("User Role:", session?.user?.roles);
 
   const navItemsRaw = [
     {

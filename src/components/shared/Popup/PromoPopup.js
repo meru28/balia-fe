@@ -98,7 +98,7 @@ export default function PopupDialog() {
       </Dialog>
 
       {/* Minimized button */}
-      {isMinimized && !isOpen && (
+      {isMinimized && !isOpen && !localStorage.getItem('popupDisabledUntil') && (
         <Button
           className={cn(
             'tw-fixed tw-bottom-4 tw-left-4 tw-shadow-lg tw-transition-all tw-duration-300',
@@ -109,7 +109,7 @@ export default function PopupDialog() {
             setIsMinimized(false);
           }}
         >
-          <MessageSquare className="tw-h-4 tw-w-4 tw-mr-2" />
+          <MessageSquare className="tw-h-4 tw-w-4 tw-mr-2"/>
           New Offer
         </Button>
       )}

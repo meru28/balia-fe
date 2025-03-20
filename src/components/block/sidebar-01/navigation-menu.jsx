@@ -38,7 +38,7 @@ const menuItems = [[
     items: [
       {
         name: "Promo Popup",
-        url: "/promo-popup",
+        url: "/bdashboard/promo-popup",
         icon: HandHelping
       }
     ]

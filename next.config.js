@@ -15,6 +15,19 @@ const nextConfig = {
     disableStaticImages: true, // Disable static image imports
     loader: 'default', // Use the default loader
   },
+  async rewrites() {
+    return [
+      // {
+      //   // Pengecualian untuk NextAuth API routes
+      //   source: '/api/auth/:path*',
+      //   destination: 'https://api.balia.ae/backend/v1/api/auth/:path*',
+      // },
+      {
+        source: '/fire-backend/:path*',
+        destination: 'https://api.balia.ae/backend/v1/api/:path*',
+      },
+    ];
+  },
   webpack: (config) => {
     config.module.rules.push({
       test: /\.(png|jpe?g|gif|svg)$/i,
@@ -31,4 +44,4 @@ const nextConfig = {
   },
 };
 
-export default nextConfig;
+module.exports = nextConfig;

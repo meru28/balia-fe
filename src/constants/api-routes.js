@@ -6,7 +6,7 @@ export const API_ROUTES = {
     VERIFY_USER: '/auth/verify',
   },
   PRODUCT: {
-    ADD_PRODUCT: '/master/m-product-management',
+    ADD_PRODUCT: '/master/m-products',
     GET_PRODUCT: '/master/m-product/by-query',
     GET_CATEGORY: '/master/m-categories',
   }
