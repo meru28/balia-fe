@@ -1,7 +1,7 @@
 'use client'
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Edit2, Plus, Search, Trash2, Eye, ChevronUp, ChevronDown, ArrowUpDown, Maximize2} from "lucide-react";
+import { Edit2, Plus, Search, Trash2, Eye, ChevronUp, ChevronDown, ArrowUpDown} from "lucide-react";
 import {Input} from "@/components/ui/input";
 import {useEffect, useRef, useState} from "react";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
@@ -50,7 +50,7 @@ export default function ProductsPage() {
     },
   ];
 
-  const { data: products = [], isLoading, error } = useProductGetQuery('products',{ searchTerm, categoryId: selectedCategory });
+  const { data: products = [], isLoading } = useProductGetQuery('products',{ searchTerm, categoryId: selectedCategory });
 
   useEffect(() => {
     setIsMounted(true);
@@ -89,7 +89,7 @@ export default function ProductsPage() {
         const timer = setTimeout(() => {
           console.log("Starting tour now");
           setRunTour(true);
-        }, 3000); // Waktu tunggu lebih lama (3 detik)
+        }, 2000); // Waktu tunggu lebih lama (3 detik)
 
         return () => clearTimeout(timer);
       }
@@ -122,7 +122,7 @@ export default function ProductsPage() {
       accessorKey: 'id',
       header: () => {
         return (
-          <div className="tw-p-0 tw-font-bold column-header">
+          <div className="tw-p-0 tw-font-bold">
             ID
           </div>
         )
@@ -138,7 +138,7 @@ export default function ProductsPage() {
           <Button
             variant="ghost"
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-            className="tw-p-0 tw-font-bold column-header"
+            className="tw-p-0 tw-font-bold"
           >
             Name
             <div className="tw-ml-2">
@@ -356,7 +356,7 @@ export default function ProductsPage() {
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header, index) => (
                   <TableHead
-                    id="resize-indicator"
+                    id={index === 2 ? "resize-indicator" : undefined}
                     key={header.id}
                     style={{
                       width: header.getSize(),

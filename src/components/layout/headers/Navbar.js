@@ -48,7 +48,7 @@ const Navbar = () => {
     }] : [])
 
   ];
-  const navItems = navItemsRaw?.map((navItem, idx) => ({
+  const navItems = navItemsRaw?.map((navItem) => ({
     ...navItem,
     dropdown: null,
   }));
