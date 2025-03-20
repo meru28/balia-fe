@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Edit2, Plus, Search, Trash2, Eye, ChevronUp, ChevronDown, ArrowUpDown} from "lucide-react";
 import {Input} from "@/components/ui/input";
-import {useEffect, useRef, useState} from "react";
+import {useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState} from "react";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import Image from "next/image";
 import SimpleCategorySelector from "@/components/shared/categories/SimpleCategorySelector";
@@ -50,7 +50,8 @@ export default function ProductsPage() {
     },
   ];
 
-  const { data: products = [], isLoading } = useProductGetQuery('products',{ searchTerm, categoryId: selectedCategory });
+  const { data: products = [], isLoading } = useProductGetQuery('products',
+    { searchTerm, categoryId: selectedCategory }, { staleTime: 2 * 60 * 1000 });
 
   useEffect(() => {
     setIsMounted(true);
@@ -61,6 +62,10 @@ export default function ProductsPage() {
       window.localStorage.removeItem('tableTourCompleted');
       console.log("localStorage reset");
     }
+
+    return () => {
+      tourInitialized.current = false;
+    };
   }, []);
 
   useEffect(() => {
@@ -96,10 +101,26 @@ export default function ProductsPage() {
     }
   }, [isLoading, products, isMounted]);
 
+  useEffect(() => {
+    if (selectedCategory !== '') {
+      setRunTour(false);
+      if (typeof window !== 'undefined') {
+        window.localStorage.setItem('tableTourCompleted', 'true');
+      }
+    }
+  }, [selectedCategory]);
+
+  useLayoutEffect(() => {
+    if (isMounted && tableRef.current) {
+      // Sekarang kita yakin DOM elements sudah ada
+    }
+  }, [isMounted]);
+
+
   // Handle tour events
   const handleJoyrideCallback = (data) => {
     const { status, type, action } = data;
-    console.log('Joyride callback:', { status, type, action });
+    // console.log('Joyride callback:', { status, type, action });
 
     if ([STATUS.FINISHED, STATUS.SKIPPED].includes(status)) {
       // Tour selesai atau dilewati
@@ -112,10 +133,10 @@ export default function ProductsPage() {
     }
   };
 
-  const handleCategoryChange = (categoryId) => {
+  const handleCategoryChange = useCallback((categoryId) => {
     setSelectedCategory(categoryId);
     console.log("Kategori yang dipilih:", categoryId);
-  };
+  }, []);
 
   const columns = [
     {
@@ -285,9 +306,11 @@ export default function ProductsPage() {
     },
   ];
 
+  const tableData = useMemo(() => products?.data?.content || [], [products]);
+
   // Inisialisasi tabel
   const table = useReactTable({
-    data: products?.data?.content || [],
+    data: tableData,
     columns,
     state: {
       sorting,

@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, {useState, useEffect, useCallback, useMemo} from 'react'
 import {
   Select,
   SelectContent,
@@ -12,6 +12,7 @@ import { Label } from "@/components/ui/label"
 import { useCategories } from "@/hooks/useCategories";
 import { Skeleton } from "@/components/ui/skeleton";
 import { X } from "lucide-react";
+import { debounce } from 'lodash';
 
 const SimpleCategorySelector = ({
                                   value,
@@ -22,27 +23,54 @@ const SimpleCategorySelector = ({
   const { data: categories = [], isLoading, error } = useCategories('categories', {});
   const [selectedCategory, setSelectedCategory] = useState(value || '');
 
-  const unselectCategory = (e) => {
+  const unselectCategory = useCallback((e) => {
     e.stopPropagation(); // Menghindari Select terbuka ketika tombol X diklik
     setSelectedCategory('');
     if (onChange) {
       onChange('');
     }
-  };
+  }, [onChange]);
+
+  const debouncedOnChange = useMemo(() =>
+      debounce((newValue) => {
+        if (onChange) {
+          onChange(newValue);
+        }
+      }, 300),
+    [onChange]
+  );
+
+  // Handler untuk perubahan nilai
+  const handleValueChange = useCallback((newValue) => {
+    setSelectedCategory(newValue);
+    debouncedOnChange(newValue);
+  }, [debouncedOnChange]);
 
   useEffect(() => {
-    if (categories.length > 0 && onCategoriesLoaded) {
+    if (categories?.length > 0 && onCategoriesLoaded) {
       onCategoriesLoaded(categories);
     }
   }, [categories, onCategoriesLoaded]);
 
-  // Handler untuk perubahan nilai
-  const handleValueChange = (newValue) => {
-    setSelectedCategory(newValue);
-    if (onChange) {
-      onChange(newValue);
+  useEffect(() => {
+    return () => {
+      debouncedOnChange.cancel();
+    };
+  }, [debouncedOnChange]);
+
+  useEffect(() => {
+    if (value !== undefined && value !== selectedCategory) {
+      setSelectedCategory(value);
     }
-  };
+  }, [value]);
+
+  const selectedCategoryName = useMemo(() => {
+    if (!selectedCategory || !categories?.length) return '';
+    const found = categories.find(
+      (category) => String(category.id) === String(selectedCategory)
+    );
+    return found?.name || '';
+  }, [selectedCategory, categories]);
 
   if (isLoading) {
     return (
@@ -67,7 +95,7 @@ const SimpleCategorySelector = ({
         >
           <SelectTrigger className="tw-w-full tw-pr-8">
             <SelectValue placeholder="Select a category" className="tw-truncate">
-              {categories?.find((category) => String(category.id) === String(selectedCategory))?.name || ''}
+              {selectedCategoryName}
             </SelectValue>
           </SelectTrigger>
           <SelectContent position="popper" className="tw-max-h-[300px" align="start" sideOffset={4}>
@@ -97,4 +125,4 @@ const SimpleCategorySelector = ({
   );
 };
 
-export default SimpleCategorySelector;
+export default React.memo(SimpleCategorySelector);
