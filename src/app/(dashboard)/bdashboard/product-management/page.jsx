@@ -350,16 +350,16 @@ export default function ProductsPage() {
           <div className="tw-w-1 tw-h-6 tw-bg-emerald-500"/>
           <h1 className="tw-text-2xl md:tw-text-3xl tw-p-0 tw-m-0 tw-font-bold">Products</h1>
         </div>
-        <div className="tw-grid tw-grid-cols-1 sm:tw-grid-cols-3 tw-gap-3 tw-w-full md:tw-w-auto">
-          <div className="tw-relative tw-shadow tw-w-full">
-            <Search className="tw-absolute tw-left-3 tw-top-1/2 tw-h-4 tw-w-4 -tw-translate-y-1/2 tw-text-gray-400"/>
-            <Input
-              placeholder="Search by Name"
-              className="tw-pl-9 tw-bg-white"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </div>
+        <div className="tw-grid tw-grid-cols-1 sm:tw-grid-cols-2 tw-gap-3 tw-w-full md:tw-w-auto">
+          {/*<div className="tw-relative tw-shadow tw-w-full">*/}
+          {/*  <Search className="tw-absolute tw-left-3 tw-top-1/2 tw-h-4 tw-w-4 -tw-translate-y-1/2 tw-text-gray-400"/>*/}
+          {/*  <Input*/}
+          {/*    placeholder="Search by Name"*/}
+          {/*    className="tw-pl-9 tw-bg-white"*/}
+          {/*    value={searchTerm}*/}
+          {/*    onChange={(e) => setSearchTerm(e.target.value)}*/}
+          {/*  />*/}
+          {/*</div>*/}
           <div className="tw-relative tw-w-full tw-shadow">
             <SimpleCategorySelector
               value={selectedCategory}
