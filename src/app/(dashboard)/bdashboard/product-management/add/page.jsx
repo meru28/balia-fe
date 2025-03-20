@@ -109,7 +109,17 @@ export default function AddProductPage() {
 
     addProduct({ metadata, files }, {
       onSuccess: () => {
+        form.reset();
+
+        // Reset state images
+        setImages([
+          { id: 1, file: null, preview: null },
+          { id: 2, file: null, preview: null },
+          { id: 3, file: null, preview: null },
+        ]);
+
         toast.success(`Product ${data.name} was Added`);
+        router.push('/bdashboard/product-management')
       },
       onError: (error) => {
         toast.error(error?.response?.data?.message || error?.message || 'Failed to create password!');

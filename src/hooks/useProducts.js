@@ -1,9 +1,19 @@
 import {apiService} from "@/services/api.service";
-import {useMutation, useQuery} from '@tanstack/react-query';
+import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
 
 export const useProductAddMutation = () => {
+  const queryClient = useQueryClient();
+
   return useMutation({
-    mutationFn: async (data) => apiService.addProduct(data.metadata, data.files)
+    mutationFn: async (data) => apiService.addProduct(data.metadata, data.files),
+    onSuccess: () => {
+      // Invalidate dan refetch query products ketika penambahan berhasil
+      queryClient.invalidateQueries({ queryKey: ['products'] });
+
+      // Jika Anda memiliki beberapa jenis query produk yang perlu diinvalidasi
+      // queryClient.invalidateQueries({ queryKey: ['featuredProducts'] });
+      // queryClient.invalidateQueries({ queryKey: ['newArrivals'] });
+    }
   });
 }
 

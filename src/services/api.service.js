@@ -70,8 +70,8 @@ export const apiService = {
       material: metadata.material || '',
       preOrder: 1
     };
-    formData.append('metadata', JSON.stringify(requiredMetadata))
-    // formData.append('metadata', JSON.stringify(metadata))
+    // formData.append('metadata', JSON.stringify(requiredMetadata))
+    formData.append('metadata', JSON.stringify(metadata))
 
     if (files && Array.isArray(files)) {
       files.forEach((file) => {

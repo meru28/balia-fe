@@ -89,7 +89,7 @@ export default function ProductsPage() {
         const timer = setTimeout(() => {
           console.log("Starting tour now");
           setRunTour(true);
-        }, 2000); // Waktu tunggu lebih lama (3 detik)
+        }, 3000); // Waktu tunggu lebih lama (3 detik)
 
         return () => clearTimeout(timer);
       }
@@ -206,7 +206,10 @@ export default function ProductsPage() {
           </Button>
         )
       },
-      cell: ({ row }) => <div>{new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(row.original.price)}</div>,
+      cell: ({row}) => {
+        const currency = row.original.currency || 'AED'; // Default to 'IDR' if no currency is provided
+        return <div>{new Intl.NumberFormat('fr-AE', {style: 'currency', currency}).format(row.original.price)}</div>;
+      },
     },
     {
       accessorKey: 'stock',
