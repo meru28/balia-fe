@@ -226,7 +226,7 @@ export default function AddProductPage() {
                           <div className="tw-absolute tw-inset-0 tw-flex tw-items-center tw-justify-center tw-bg-black tw-bg-opacity-40">
                             <button
                               type="button"
-                              onClick={(e) => handleImageDelete(image.id)}
+                              onClick={() => handleImageDelete(image.id)}
                               className="tw-w-10 tw-h-10 tw-flex tw-items-center tw-justify-center tw-bg-destructive tw-text-destructive-foreground tw-rounded-full tw-shadow-lg hover:tw-bg-destructive/90 tw-transition-colors"
                               aria-label="Remove image"
                             >

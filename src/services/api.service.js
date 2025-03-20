@@ -55,22 +55,6 @@ export const apiService = {
   
   addProduct: async (metadata, files) => {
     const formData = new FormData();
-    const requiredMetadata = {
-      name: metadata.name || '',
-      sku: metadata.sku || '',
-      price: metadata.price || 0,
-      currency: metadata.currency || 'AED',
-      stock: metadata.stock || 0,
-      status: 1,
-      color: metadata.color || '',
-      size: metadata.size || '',
-      shortDescription: metadata.shortDescription || '',
-      mCategories: metadata.mCategories || { id: 1 },
-      sustainabilityFeature: metadata.sustainabilityFeature || '',
-      material: metadata.material || '',
-      preOrder: 1
-    };
-    // formData.append('metadata', JSON.stringify(requiredMetadata))
     formData.append('metadata', JSON.stringify(metadata))
 
     if (files && Array.isArray(files)) {

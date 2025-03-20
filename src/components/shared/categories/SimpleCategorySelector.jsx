@@ -62,7 +62,7 @@ const SimpleCategorySelector = ({
     if (value !== undefined && value !== selectedCategory) {
       setSelectedCategory(value);
     }
-  }, [value]);
+  }, [selectedCategory, value]);
 
   const selectedCategoryName = useMemo(() => {
     if (!selectedCategory || !categories?.length) return '';

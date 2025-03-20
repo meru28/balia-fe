@@ -6,6 +6,7 @@ import {Textarea} from "@/components/ui/textarea";
 import {Button} from "@/components/ui/button";
 import {ImageIcon} from "lucide-react";
 import {useRef, useState} from "react";
+import Image from "next/image";
 
 export default function PromoPopupPage() {
   const [popupContent, setPopupContent] = useState({
@@ -131,8 +132,10 @@ export default function PromoPopupPage() {
           <CardContent className="tw-space-y-4">
             <div className="tw-aspect-video tw-relative tw-bg-muted tw-rounded-lg tw-overflow-hidden">
               {imagePreview ? (
-                <img
+                <Image
                   src={imagePreview}
+                  width={100}
+                  height={100}
                   alt="Preview"
                   className="tw-object-cover tw-w-full tw-h-full"
                 />
