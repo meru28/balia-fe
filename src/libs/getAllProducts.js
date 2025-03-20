@@ -78,15 +78,12 @@ const getAllProducts = () => {
     productImage4,
   ];
 
-  const products = [...allProducts]?.map((product, idx) => ({
+  return [...allProducts]?.map((product, idx) => ({
     ...product,
-
     image: images[idx],
-    comments: comments?.filter(({ productId }) => productId === product?.id),
-    reviews: reviews?.filter(({ productId }) => productId === product?.id),
+    comments: comments?.filter(({productId}) => productId === product?.id),
+    reviews: reviews?.filter(({productId}) => productId === product?.id),
   }));
-
-  return products;
 };
 
 export default getAllProducts;
