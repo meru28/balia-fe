@@ -17,14 +17,9 @@ const nextConfig = {
   },
   async rewrites() {
     return [
-      // {
-      //   // Pengecualian untuk NextAuth API routes
-      //   source: '/api/auth/:path*',
-      //   destination: 'https://api.balia.ae/backend/v1/api/auth/:path*',
-      // },
       {
         source: '/fire-backend/:path*',
-        destination: 'https://api.balia.ae/backend/v1/api/:path*',
+        destination: `${process.env.API_URL}/:path*`,
       },
     ];
   },

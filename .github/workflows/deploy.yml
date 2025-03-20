@@ -59,6 +59,7 @@ jobs:
             -e SECRET_KEY=${{ secrets.SECRET_KEY }} \
             -e NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }} \
             -e NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }} \
+            -e API_URL=${{ secrets.API_URL }} \
             -e NEXTAUTH_URL=${{ secrets.NEXTAUTH_URL }} \
             -e NODE_ENV=${{ secrets.NODE_ENV }} \
             ${{ secrets.DOCKER_USERNAME }}/balia-fe:latest
