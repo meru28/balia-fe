@@ -15,17 +15,17 @@ const BlogSidebar = () => {
       {/* <!-- Author Widget --> */}
       {/* <BlogAuthor /> */}
       {/* <!-- Search Widget --> */}
-      <SidebarSearch />
+      {/*<SidebarSearch />*/}
       {/* <!-- Popular Post Widget --> */}
       {/* <PopularBlog /> */}
       {/* <!-- Menu Widget (Category) --> */}
-      <BlogCategories />
+      {/*<BlogCategories />*/}
       {/* <!-- Social Media Widget --> */}
       {/* <SidebarSocials /> */}
       {/* <!-- Popular Post Widget (Twitter Post) --> */}
-      <TwitterFeeds />
+      {/*<TwitterFeeds />*/}
       {/* <!-- Instagram Widget --> */}
-      <InstagramFeeds />
+      {/*<InstagramFeeds />*/}
       {/* <!-- Tagcloud Widget --> */}
       {/* <BlogTags /> */}
       {/* <!-- Banner Widget --> */}

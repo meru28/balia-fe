@@ -59,7 +59,7 @@ const BlogCardPrimaryLarge = ({ blog }) => {
         <div className="ltn__blog-gallery-active slick-arrow-1 slick-arrow-1-inner">
           {imageLarge?.map((imageUrl, idx) => (
             <div key={idx + 10000} className="ltn__blog-gallery-item">
-              <Link href={`/blogs/${id}`}>
+              <Link href={`/edits/${id}`}>
                 <Image src={imageUrl} alt="Image" width={2000} height={1000} />
               </Link>
             </div>
@@ -90,7 +90,7 @@ const BlogCardPrimaryLarge = ({ blog }) => {
         </div>
       ) : imageLarge ? (
         <div className="ltn__blog-img">
-          <Link href={`/blogs/${id}`}>
+          <Link href={`/edits/${id}`}>
             <Image src={imageLarge} alt="Image" width={2000} height={1000} />
           </Link>
         </div>
@@ -102,21 +102,21 @@ const BlogCardPrimaryLarge = ({ blog }) => {
         {/* blog title, category, quote */}
         {type === 2 ? (
           <blockquote>
-            <Link href={`/blogs/${id}`}>{title}</Link>
+            <Link href={`/edits/${id}`}>{title}</Link>
           </blockquote>
         ) : (
           <>
             <div className="ltn__blog-meta">
               <ul>
                 <li className="ltn__blog-category">
-                  <Link href={`/blogs?category=${makePath(category)}`}>
+                  <Link href={`/edits?category=${makePath(category)}`}>
                     {category}
                   </Link>
                 </li>
               </ul>
             </div>
             <h3 className="ltn__blog-title">
-              <Link href={`/blogs/${id}`}>{title}</Link>
+              <Link href={`/edits/${id}`}>{title}</Link>
             </h3>
           </>
         )}
@@ -126,13 +126,13 @@ const BlogCardPrimaryLarge = ({ blog }) => {
         >
           <ul>
             <li>
-              <Link href={`/blogs/${id}`}>
+              <Link href={`/edits/${id}`}>
                 <i className="far fa-eye"></i>
                 {views} Views
               </Link>
             </li>
             <li>
-              <Link href={`/blogs/${id}#comments`}>
+              <Link href={`/edits/${id}#comments`}>
                 <i className="far fa-comments"></i>
                 {totalComments ? totalComments : 0} Comments
               </Link>
@@ -154,7 +154,7 @@ const BlogCardPrimaryLarge = ({ blog }) => {
               <div className="ltn__blog-meta">
                 <ul>
                   <li className="ltn__blog-author">
-                    <Link href={`/blogs?author=${makePath(author?.name)}`}>
+                    <Link href={`/edits?author=${makePath(author?.name)}`}>
                       <Image src={author.image} alt="#" width={2000} height={1000}/>
                       By: {author?.name}
                     </Link>
@@ -162,7 +162,7 @@ const BlogCardPrimaryLarge = ({ blog }) => {
                 </ul>
               </div>
               <div className="ltn__blog-btn">
-                <Link href={`/blogs/${id}`}>
+                <Link href={`/edits/${id}`}>
                   <i className="fas fa-arrow-right"></i>Read more
                 </Link>
               </div>

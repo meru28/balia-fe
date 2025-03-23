@@ -59,7 +59,7 @@ const BlogDetailsPrimary = () => {
                 <div className="ltn__blog-meta">
                   <ul>
                     <li className="ltn__blog-category">
-                      <Link href={`/blogs?category=${makePath(category)}`}>
+                      <Link href={`/edits?category=${makePath(category)}`}>
                         {category}
                       </Link>
                     </li>
@@ -69,7 +69,7 @@ const BlogDetailsPrimary = () => {
                 <div className="ltn__blog-meta">
                   <ul>
                     <li className="ltn__blog-author">
-                      <Link href={`/blogs?author=${makePath(author?.name)}`}>
+                      <Link href={`/edits?author=${makePath(author?.name)}`}>
                         <Image
                           src={author?.image}
                           alt="#"
@@ -258,7 +258,7 @@ const BlogDetailsPrimary = () => {
                 >
                   <h6>Prev Post</h6>
                   <h3 className="ltn__blog-title">
-                    <Link href={`/blogs/${prevId ? prevId : 1}`}>
+                    <Link href={`/edits/${prevId ? prevId : 1}`}>
                       {prevTitle
                         ? sliceText(prevTitle, 12, true)
                         : "Tips On Minimalist"}
@@ -273,7 +273,7 @@ const BlogDetailsPrimary = () => {
                 >
                   <h6>Next Post</h6>
                   <h3 className="ltn__blog-title">
-                    <Link href={`/blogs/${nextId ? nextId : totalBlogs}`}>
+                    <Link href={`/edits/${nextId ? nextId : totalBlogs}`}>
                       {nextTitle
                         ? sliceText(nextTitle, 12, true)
                         : "Less Is More"}

@@ -11,8 +11,10 @@ const ContactMain = () => {
       <HeroPrimary title={"Contact Us"} text="Contact" />
       <Adress />
       <ContactPrimary />
-      <Map2 />
-      <Features4 />
+      {/*<Map2 />*/}
+      <div className="tw-mt-36">
+        <Features4 />
+      </div>
     </main>
   );
 };
