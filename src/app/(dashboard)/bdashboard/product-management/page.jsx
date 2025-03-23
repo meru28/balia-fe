@@ -499,7 +499,7 @@ export default function ProductsPage() {
             </TableBody>
           </Table>
         </div>
-        <div className="tw-flex tw-justify-between tw-items-center tw-py-2">
+        <div className="tw-flex tw-justify-between tw-items-center tw-pt-7">
           <div className="tw-flex tw-items-center tw-gap-4">
             <div className="tw-space-x-2">
             <span className="tw-text-sm tw-text-muted-foreground">

@@ -125,7 +125,7 @@ export function CategoryDatatable({ data, columns, onEdit, isLoading = false }) 
                   >
                     <div className="tw-flex tw-flex-col tw-items-center tw-justify-center tw-h-full">
                       <Loader2 className="tw-h-8 tw-w-8 tw-animate-spin tw-text-primary tw-mb-2" />
-                      <span className="tw-text-muted-foreground">Loading Category data...</span>
+                      <span className="tw-text-muted-foreground">Loading category data...</span>
                     </div>
                   </TableCell>
                 </TableRow>

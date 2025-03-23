@@ -1,7 +1,7 @@
 'use client'
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import {Plus, Edit2, Loader2} from "lucide-react";
+import {Plus, Edit2} from "lucide-react";
 import {useCallback, useMemo, useState} from "react";
 import { createColumnHelper } from "@tanstack/react-table";
 import {useCategories} from "@/hooks/useCategories";
@@ -23,7 +23,7 @@ export default function CategoriesPage() {
     columnHelper.accessor((row, index) => index + 1, {
       id: "no",
       header: "No",
-      cell: info => <span className="tw-font-medium">#{info.getValue()}</span>,
+      cell: info => <span className="tw-font-medium">{info.getValue()}</span>,
     }),
     columnHelper.accessor("name", {
       header: "Category Name",
