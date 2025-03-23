@@ -140,7 +140,7 @@ export default function AddCategoryPage() {
               />
             </CardContent>
             <CardFooter className="tw-gap-4">
-              <Button type="button" className=" !tw-bg-gray-200 tw-text-gray-800 hover:tw-bg-gray-300">
+              <Button type="button" className=" !tw-bg-gray-200 !tw-text-gray-800 hover:tw-bg-gray-300">
                 <Link href="/bdashboard/categories" className="tw-w-full tw-h-full tw-inline-block tw-text-inherit">
                   Cancel
                 </Link>
