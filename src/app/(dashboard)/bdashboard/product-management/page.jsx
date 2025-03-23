@@ -1,7 +1,8 @@
 'use client'
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Edit2, Plus, ChevronUp, ChevronDown, ArrowUpDown, Loader2} from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Edit2, Plus, ChevronUp, ChevronDown, ArrowUpDown, Loader2, Search} from "lucide-react";
 import {useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState} from "react";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import Image from "next/image";
@@ -9,7 +10,7 @@ import SimpleCategorySelector from "@/components/shared/categories/SimpleCategor
 import {useProductGetQuery} from "@/hooks/useProducts";
 import {
   flexRender,
-  getCoreRowModel,
+  getCoreRowModel, getFilteredRowModel, getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table';
@@ -51,6 +52,7 @@ export default function ProductsPage() {
 
   const { data: products = [], isLoading } = useProductGetQuery('products',
     { searchTerm, categoryId: selectedCategory }, { staleTime: 2 * 60 * 1000 });
+  const [globalFilter, setGlobalFilter] = useState('');
 
   useEffect(() => {
     setIsMounted(true);
@@ -350,12 +352,16 @@ export default function ProductsPage() {
     state: {
       sorting,
       columnResizing,
+      globalFilter
     },
     columnResizeMode: columnResizingMode,
     onSortingChange: setSorting,
     onColumnResizingChange: setColumnResizing,
     getSortedRowModel: getSortedRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
     getCoreRowModel: getCoreRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    onGroupingChange: setGlobalFilter,
   });
 
   return (
@@ -385,22 +391,7 @@ export default function ProductsPage() {
           <div className="tw-w-1 tw-h-6 tw-bg-emerald-500"/>
           <h1 className="tw-text-2xl md:tw-text-3xl tw-p-0 tw-m-0 tw-font-bold">Products</h1>
         </div>
-        <div className="tw-grid tw-grid-cols-1 sm:tw-grid-cols-2 tw-gap-3 tw-w-full md:tw-w-auto">
-          {/*<div className="tw-relative tw-shadow tw-w-full">*/}
-          {/*  <Search className="tw-absolute tw-left-3 tw-top-1/2 tw-h-4 tw-w-4 -tw-translate-y-1/2 tw-text-gray-400"/>*/}
-          {/*  <Input*/}
-          {/*    placeholder="Search by Name"*/}
-          {/*    className="tw-pl-9 tw-bg-white"*/}
-          {/*    value={searchTerm}*/}
-          {/*    onChange={(e) => setSearchTerm(e.target.value)}*/}
-          {/*  />*/}
-          {/*</div>*/}
-          <div className="tw-relative tw-w-full tw-shadow">
-            <SimpleCategorySelector
-              value={selectedCategory}
-              onChange={handleCategoryChange}
-            />
-          </div>
+        <div className="tw-flex tw-items-center tw-gap-4">
           <Link href="/bdashboard/product-management/add" className="tw-w-full">
             <Button className="tw-w-full tw-bg-emerald-500 hover:tw-bg-emerald-600">
               <Plus className="tw-mr-2 tw-h-4 tw-w-4"/> Add Product
@@ -408,8 +399,25 @@ export default function ProductsPage() {
           </Link>
         </div>
       </div>
-      <div className="tw-rounded-lg tw-border tw-border-gray-200 tw-bg-white tw-shadow-lg tw-overflow-hidden">
-        <div id="table-container" className="tw-relative tw-w-full tw-overflow-auto" ref={tableRef}>
+      <div className="tw-rounded-lg tw-border tw-border-gray-200 tw-bg-white tw-shadow-lg tw-overflow-hidden tw-space-y-4 tw-px-4 tw-pb-4">
+        <div className="tw-flex tw-items-center tw-justify-between tw-pt-4">
+          <div className="tw-relative tw-max-w-sm tw-shadow">
+            <Search className="tw-absolute tw-left-3 tw-top-1/2 tw-h-4 tw-w-4 -tw-translate-y-1/2 tw-text-gray-400"/>
+            <Input
+              placeholder="Search by Name"
+              className="tw-pl-9"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+          <div className="tw-relative tw-w-fit tw-shadow">
+            <SimpleCategorySelector
+              value={selectedCategory}
+              onChange={handleCategoryChange}
+            />
+          </div>
+        </div>
+        <div id="table-container" className="tw-relative tw-w-full tw-overflow-auto tw-border" ref={tableRef}>
           <Table className="tw-min-w-full">
           <TableHeader className="tw-bg-black">
             {table.getHeaderGroups().map((headerGroup) => (
@@ -490,6 +498,61 @@ export default function ProductsPage() {
               ))}
             </TableBody>
           </Table>
+        </div>
+        <div className="tw-flex tw-justify-between tw-items-center tw-py-2">
+          <div className="tw-flex tw-items-center tw-gap-4">
+            <div className="tw-space-x-2">
+            <span className="tw-text-sm tw-text-muted-foreground">
+              Data per page
+            </span>
+              <select
+                value={table.getState().pagination.pageSize}
+                onChange={(e) => {
+                  table.setPageSize(Number(e.target.value))
+                }}
+                className="tw-border tw-rounded-md tw-p-1"
+              >
+                {[2, 5, 10, 20, 30, 40, 50].map((pageSize) => (
+                  <option key={pageSize} value={pageSize}>
+                    {pageSize}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="tw-text-sm tw-text-gray-600">
+              Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
+            </div>
+          </div>
+          <div className="tw-flex tw-gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => table.previousPage()}
+              disabled={!table.getCanPreviousPage()}
+            >
+              Previous
+            </Button>
+
+            {Array.from({length: table.getPageCount()}, (_, i) => (
+              <Button
+                key={i}
+                variant={table.getState().pagination.pageIndex === i ? "default" : "outline"}
+                size="sm"
+                onClick={() => table.setPageIndex(i)}
+                className="tw-w-8 tw-h-8 tw-p-0"
+              >
+                {i + 1}
+              </Button>
+            ))}
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => table.nextPage()}
+              disabled={!table.getCanNextPage()}
+            >
+              Next
+            </Button>
+          </div>
         </div>
       </div>
     </div>

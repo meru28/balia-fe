@@ -24,7 +24,6 @@ export function CategoryDatatable({ data, columns, onEdit, isLoading = false }) 
 
   useEffect(() => {
     if (!selectedCategory) {
-      // Jika tidak ada kategori yang dipilih, tampilkan semua data
       setFilteredData(data);
     } else {
       // Filter data berdasarkan ID kategori yang dipilih
@@ -160,9 +159,9 @@ export function CategoryDatatable({ data, columns, onEdit, isLoading = false }) 
       <div className="tw-flex tw-items-center tw-justify-between tw-pt-7">
         <div className="tw-flex tw-items-center tw-gap-4">
           <div className="tw-space-x-2">
-          <span className="tw-text-sm tw-text-muted-foreground">
-            Data per page
-          </span>
+            <span className="tw-text-sm tw-text-muted-foreground">
+              Data per page
+            </span>
             <select
               value={table.getState().pagination.pageSize}
               onChange={(e) => {
