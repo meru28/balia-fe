@@ -12,6 +12,7 @@ import { Switch } from "@/components/ui/switch";
 import { Save } from "lucide-react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import CategorySelector from "@/components/shared/categories/CategorySelector";
+import Link from "next/link";
 
 const categorySchema = z.object({
   name: z.string().min(2, { message: "Category name must be at least 2 characters" }),
@@ -138,9 +139,14 @@ export default function AddCategoryPage() {
                 )}
               />
             </CardContent>
-            <CardFooter>
-              <Button type="submit" className="tw-w-full">
-                <Save className="tw-mr-2 tw-h-4 tw-w-4" />
+            <CardFooter className="tw-gap-4">
+              <Button type="button" className=" !tw-bg-gray-200 tw-text-gray-800 hover:tw-bg-gray-300">
+                <Link href="/bdashboard/categories" className="tw-w-full tw-h-full tw-inline-block tw-text-inherit">
+                  Cancel
+                </Link>
+              </Button>
+              <Button type="submit" className="">
+                <Save className="tw-mr-2 tw-h-4 tw-w-4"/>
                 {categoryType === "sub" ? "Save Subcategory" : "Save Category"}
               </Button>
             </CardFooter>
