@@ -47,13 +47,13 @@ const menuItems = [[
     group: "Page Control",
     items: [
       {
-        name: "Home Pages",
-        url: "/home-pages",
+        name: "Home Page",
+        url: "/bdashboard/home-page",
         icon: House
       },
       {
         name: "Terms And Conditions",
-        url: "/term-conditions",
+        url: "/bdashboard/term-and-conditions",
         icon: FileText
       }
     ]
