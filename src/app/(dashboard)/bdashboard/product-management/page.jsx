@@ -1,7 +1,7 @@
 'use client'
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Edit2, Plus, ChevronUp, ChevronDown, ArrowUpDown} from "lucide-react";
+import { Edit2, Plus, ChevronUp, ChevronDown, ArrowUpDown, Loader2} from "lucide-react";
 import {useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState} from "react";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import Image from "next/image";
@@ -408,7 +408,6 @@ export default function ProductsPage() {
           </Link>
         </div>
       </div>
-
       <div className="tw-rounded-lg tw-border tw-border-gray-200 tw-bg-white tw-shadow-lg tw-overflow-hidden">
         <div id="table-container" className="tw-relative tw-w-full tw-overflow-auto" ref={tableRef}>
           <Table className="tw-min-w-full">
@@ -454,7 +453,16 @@ export default function ProductsPage() {
             ))}
           </TableHeader>
             <TableBody>
-              {table.getRowModel().rows.length ? (
+              {isLoading ? (
+                  <TableRow>
+                    <TableCell colSpan={9} className="tw-h-64">
+                      <div className="tw-w-full tw-h-full tw-flex tw-flex-col tw-items-center tw-justify-center">
+                        <Loader2 className="tw-h-8 tw-w-8 tw-animate-spin tw-text-primary tw-mb-2" />
+                        <span>Loading product data...</span>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ) : ( table.getRowModel().rows.length ? (
                 table.getRowModel().rows.map((row, index) => (
                   <TableRow
                     key={row.id}
@@ -479,7 +487,7 @@ export default function ProductsPage() {
                     Tidak ada data.
                   </TableCell>
                 </TableRow>
-              )}
+              ))}
             </TableBody>
           </Table>
         </div>
