@@ -1,8 +1,7 @@
 'use client'
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Edit2, Plus, Search, Trash2, Eye, ChevronUp, ChevronDown, ArrowUpDown} from "lucide-react";
-import {Input} from "@/components/ui/input";
+import { Edit2, Plus, ChevronUp, ChevronDown, ArrowUpDown} from "lucide-react";
 import {useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState} from "react";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import Image from "next/image";
@@ -57,12 +56,6 @@ export default function ProductsPage() {
     setIsMounted(true);
     console.log("Component mounted");
 
-    // Hanya untuk pengujian - hapus untuk produksi
-    if (typeof window !== 'undefined') {
-      window.localStorage.removeItem('tableTourCompleted');
-      console.log("localStorage reset");
-    }
-
     return () => {
       tourInitialized.current = false;
     };
@@ -86,7 +79,7 @@ export default function ProductsPage() {
         : false;
 
       console.log("Tour completed status:", tourCompleted);
-
+      console.log(`Tour completed from localStorage: ${tourCompleted}`);
       if (!tourCompleted) {
         tourInitialized.current = true;
 
@@ -97,6 +90,9 @@ export default function ProductsPage() {
         }, 3000); // Waktu tunggu lebih lama (3 detik)
 
         return () => clearTimeout(timer);
+      } else {
+        tourInitialized.current = true;
+        setRunTour(false);
       }
     }
   }, [isLoading, products, isMounted]);
@@ -112,7 +108,6 @@ export default function ProductsPage() {
 
   useLayoutEffect(() => {
     if (isMounted && tableRef.current) {
-      // Sekarang kita yakin DOM elements sudah ada
     }
   }, [isMounted]);
 
@@ -122,14 +117,14 @@ export default function ProductsPage() {
     const { status, type, action } = data;
     // console.log('Joyride callback:', { status, type, action });
 
-    if ([STATUS.FINISHED, STATUS.SKIPPED].includes(status)) {
-      // Tour selesai atau dilewati
-      setRunTour(false);
 
-      // Simpan preference user hanya jika sudah di client-side
+    if ([STATUS.FINISHED, STATUS.SKIPPED].includes(status)) {
       if (isMounted && typeof window !== 'undefined') {
         window.localStorage.setItem('tableTourCompleted', 'true');
       }
+      // Tour selesai atau dilewati
+      setRunTour(false);
+
     }
   };
 
@@ -148,8 +143,9 @@ export default function ProductsPage() {
           </div>
         )
       },
-      cell: ({row}) => <div className="tw-font-medium">{row.index + 1}</div>,
-      size: 60,
+      cell: ({table, row}) => <div
+        className="tw-font-medium">{table.getSortedRowModel().rows.findIndex(r => r.id === row.id) + 1}</div>,
+      size: 40,
       enableResizing: false,
     },
     {
@@ -195,6 +191,17 @@ export default function ProductsPage() {
       cell: ({row}) => <div className="tw-font-bold">{row.original.mCategoriesName}</div>,
     },
     {
+      accessorKey: 'subCategory',
+      header: () => {
+        return (
+          <div className="tw-p-0 tw-font-bold column-header">
+            Sub Category
+          </div>
+        )
+      },
+      cell: ({row}) => <div className="tw-font-bold">{row.original.mCategoriesName}</div>,
+    },
+    {
       accessorKey: 'sku',
       header: () => {
         return (
@@ -228,8 +235,13 @@ export default function ProductsPage() {
         )
       },
       cell: ({row}) => {
-        const currency = row.original.currency || 'AED'; // Default to 'IDR' if no currency is provided
-        return <div>{new Intl.NumberFormat('fr-AE', {style: 'currency', currency}).format(row.original.price)}</div>;
+        const currency = row.original.currency || 'AED';
+        return <div>{new Intl.NumberFormat('fr-AE', {
+          style: 'currency',
+          currency,
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0
+        }).format(row.original.price)}</div>;
       },
     },
     {
@@ -279,6 +291,36 @@ export default function ProductsPage() {
         )
       },
       cell: ({ row }) => <div>{row.original.size}</div>,
+      size: 50,
+      enableResizing: false,
+    },
+    {
+      accessorKey: 'status',
+      header: ({column}) => {
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            className="tw-p-0 tw-font-bold column-header"
+          >
+            Status
+            <div className="tw-ml-2">
+              {column.getIsSorted() === "asc" ? (
+                <ChevronUp className="tw-h-4 tw-w-4"/>
+              ) : column.getIsSorted() === "desc" ? (
+                <ChevronDown className="tw-h-4 tw-w-4"/>
+              ) : (
+                <ArrowUpDown className="tw-h-4 tw-w-4"/>
+              )}
+            </div>
+          </Button>
+        );
+      },
+      cell: ({row}) => <div>{row.original.status === 1 ?
+        <span className="tw-bg-emerald-500 tw-text-white tw-px-2 tw-py-1 tw-rounded">Active</span> :
+        <span className="tw-bg-gray-400 tw-text-white tw-px-2 tw-py-1 tw-rounded">Inactive</span> }</div>,
+      size: 60,
+      enableResizing: false,
     },
     {
       id: 'actions',
@@ -291,17 +333,10 @@ export default function ProductsPage() {
                 <Edit2 className="tw-h-3.5 tw-w-3.5" />
               </Button>
             </Link>
-            <Link href={`/bdashboard/product-management/${row.original.id}/view`}>
-              <Button variant="outline" size="icon" className="tw-h-8 tw-w-8">
-                <Eye className="tw-h-3.5 tw-w-3.5" />
-              </Button>
-            </Link>
-            <Button variant="outline" size="icon" className="tw-h-8 tw-w-8 tw-text-red-500">
-              <Trash2 className="tw-h-3.5 tw-w-3.5" />
-            </Button>
           </div>
         )
       },
+      size: 60,
       enableResizing: false,
     },
   ];
@@ -390,7 +425,7 @@ export default function ProductsPage() {
                     }}
                     className={cn(
                       "select-none tw-text-white tw-font-medium tw-p-3",
-                      index === 0 && "tw-border-r-2 tw-border-gray-200",
+                      (index === 0 || index === 6 || index === 7 || index === 8) && "tw-border-r-2 tw-border-gray-200",
                       header.column.getCanSort() && "cursor-pointer"
                     )}
                   >

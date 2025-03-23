@@ -14,6 +14,10 @@ import { cn } from "@/lib/utils";
  */
 const NumberWithLeadingZeroInput = ({
                                       field,
+                                      value,
+                                      onChange,
+                                      onBlur,
+                                      name,
                                       className = "",
                                       placeholder = "00",
                                       minVal = 0,
@@ -21,6 +25,11 @@ const NumberWithLeadingZeroInput = ({
                                       useThousandSeparator = false,
                                       thousandSeparator = '.'
                                     }) => {
+  const fieldValue = field?.value ?? value;
+  const fieldOnChange = field?.onChange ?? onChange;
+  const fieldOnBlur = field?.onBlur ?? onBlur;
+  const fieldName = field?.name ?? name;
+
   const [displayValue, setDisplayValue] = useState('');
 
   // Format angka dengan leading zero
@@ -66,23 +75,25 @@ const NumberWithLeadingZeroInput = ({
     setDisplayValue(formattedValue);
 
     // Kirim nilai ke form
-    field.onChange(numberValue === '' ? null : numberValue);
+    if (fieldOnChange) {
+      field.onChange(numberValue === '' ? null : numberValue);
+    }
   };
 
   // Inisialisasi nilai tampilan saat komponen dibuat
   useEffect(() => {
-    if (field.value !== undefined && field.value !== null) {
-      setDisplayValue(formatWithLeadingZeros(field.value));
+    if (fieldValue !== undefined && fieldValue !== null) {
+      setDisplayValue(formatWithLeadingZeros(fieldValue));
     }
-  }, [field.value, useThousandSeparator]);
+  }, [fieldValue, useThousandSeparator]);
 
   return (
     <Input
       type="text"
       value={displayValue}
       onChange={handleInputChange}
-      onBlur={field.onBlur}
-      name={field.name}
+      onBlur={fieldOnBlur}
+      name={fieldName}
       placeholder={placeholder}
       className={cn("!tw-mb-0 !tw-border !tw-border-input !tw-rounded-lg !tw-py-0 !tw-h-9 placeholder:!tw-text-gray-400", className)}
     />

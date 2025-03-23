@@ -79,6 +79,31 @@ export const apiService = {
     }
   },
 
+  editProduct: async (metadata, files) => {
+    const formData = new FormData();
+    formData.append('metadata', JSON.stringify(metadata))
+
+    if (files && Array.isArray(files)) {
+      files.forEach((file) => {
+        formData.append(`files`, file);
+      });
+    }
+
+    try {
+      const response = await apiClient.put(API_ROUTES.PRODUCT.ADD_PRODUCT, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          "Accept": "application/json, text/plain, */*"
+        }
+      });
+      return response.data;
+    } catch (error) {
+      throw {
+        message: error.response?.data?.message || "Failed to add product",
+        status: error.response?.status || 500
+      }
+    }
+  },
 
   getProduct: async (params = {}) => {
     try {

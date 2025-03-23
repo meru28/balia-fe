@@ -17,6 +17,22 @@ export const useProductAddMutation = () => {
   });
 }
 
+export const useProductEditMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (data) => apiService.editProduct(data.metadata, data.files),
+    onSuccess: () => {
+      // Invalidate dan refetch query products ketika penambahan berhasil
+      queryClient.invalidateQueries({ queryKey: ['products'] });
+
+      // Jika Anda memiliki beberapa jenis query produk yang perlu diinvalidasi
+      // queryClient.invalidateQueries({ queryKey: ['featuredProducts'] });
+      // queryClient.invalidateQueries({ queryKey: ['newArrivals'] });
+    }
+  });
+}
+
 
 export const useProductGetQuery = (queryKey, params = {}) => {
   return useQuery({

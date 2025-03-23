@@ -1,6 +1,7 @@
 "use client";
 
-import {useState} from "react";
+import { useState, useEffect, use } from "react";
+import React from 'react';
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -12,16 +13,16 @@ import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import {ImagePlus, Loader2, Save, X} from "lucide-react";
+import {Car, ImagePlus, Loader2, Save, X} from "lucide-react";
 import Image from "next/image";
-import { useProductAddMutation } from '@/hooks/useProducts'
+import { useProductEditMutation, useProductGetQuery} from '@/hooks/useProducts';
+import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import SizeSelector from "@/components/shared/size-selector/SizeSelector";
 import CategorySelector from "@/components/shared/categories/CategorySelector";
-import PriceInput from '@/components/shared/price-input/PriceInput'
+import PriceInput from '@/components/shared/price-input/PriceInput';
 import NumberWithLeadingZeroInput from "@/components/shared/number-with-leading-zero-input/NumberWithLeadingZeroInput";
 import { RichTextEditor } from "@/components/ui/rich-text-editor";
-import {toast} from "sonner";
 
 const productSchema = z.object({
   name: z.string().min(3, { message: "Product name must be at least 3 characters" }),
@@ -39,13 +40,26 @@ const productSchema = z.object({
   dimensionHeight: z.coerce.number().positive({message: "Height must be a positive number"}),
   description: z.string().min(10, { message: "Description must be at least 10 characters" }),
   category: z.string().min(1, { message: "Please select a category" }),
+  subCategory: z.string().min(1, { message: "Please select a subcategory" }),
   sustainabilityFeature: z.string().min(10, { message: "Sustainability feature must be at least 10 characters" }),
   material: z.string().min(10, { message: "Material must be at least 10 characters" }),
   discountPercentage: z.coerce.number().int().min(0).max(100, { message: "Discount percentage must be between 0 and 100" }),
   isPreorder: z.boolean().default(false),
 });
 
-export default function AddProductPage() {
+export default function EditProductPage({ params }) {
+  const unwrappedParams = React.use(params);
+  const productId = unwrappedParams.id;
+
+  const { data: productData, isLoading: isLoadingProduct } = useProductGetQuery('products',
+    { productId: productId }
+  );
+
+  const product = productData?.data?.content && productData.data.content.length > 0 ? productData.data.content[0] : null;
+
+  const [selectedCategoryId, setSelectedCategoryId] = useState(null);
+  const [isFormReady, setIsFormReady] = useState(false);
+
   const [images, setImages] = useState([
     { id: 1, file: null, preview: null },
     { id: 2, file: null, preview: null },
@@ -57,7 +71,7 @@ export default function AddProductPage() {
     defaultValues: {
       name: "",
       sku: "",
-      price: 0,
+      price: "",
       currency: "AED",
       stock: 0,
       isActive: true,
@@ -70,6 +84,7 @@ export default function AddProductPage() {
       dimensionHeight: "",
       description: "",
       category: "",
+      subCategory: "",
       sustainabilityFeature: "",
       material: "",
       discountPercentage: 0,
@@ -77,10 +92,62 @@ export default function AddProductPage() {
     },
   });
 
-  const currency = form.watch('currency');
+  useEffect(() => {
+    if (product && !isLoadingProduct) {
+      // Prefill form with product data
+      form.reset({
+        name: product.name || "",
+        sku: product.sku || "",
+        price: product?.price || "",
+        currency: product?.currency || "AED",
+        stock: product.stock || 0,
+        isActive: product.isActive ?? true,
+        color: product.color || "",
+        size: product.size || "",
+        weight: product.weight || "",
+        weightUnit: product.weightUnit || "",
+        dimensionWidth: product.dimensionWidth || "",
+        dimensionLength: product.dimensionLength || "",
+        dimensionHeight: product.dimensionHeight || "",
+        description: product.description || "",
+        category: product.mCategoriesId.toString() || "",
+        subCategory: product.category || "",
+        sustainabilityFeature: product.sustainabilityFeature || "",
+        material: product.material || "",
+        discountPercentage: product.discountPercentage || 0,
+        isPreorder: product.isPreorder || false,
+      })
+      setTimeout(() => {
+        form.setValue("category", product.mCategoriesId.toString());
+        setSelectedCategoryId(product.mCategoriesId || null);
 
-  const router = useRouter()
-  const { mutate: addProduct, isPending } = useProductAddMutation()
+        setIsFormReady(true)
+      }, 100)
+
+      // Handle product images
+      if (product?.mProductImages && product?.mProductImages.length) {
+        const updatedImages = [...images];
+        product?.mProductImages.forEach((image, index) => {
+          if (index < 3) {
+            updatedImages[index].file = null;
+            updatedImages[index].preview = image.image || image;
+          }
+        });
+        setImages(updatedImages);
+      }
+    }
+  }, [product, isLoadingProduct, form]);
+
+  useEffect(() => {
+    if (isFormReady) {
+      console.log("Form values:", form.getValues());
+      console.log("Selected Category ID:", selectedCategoryId);
+    }
+  }, [isFormReady, form, selectedCategoryId]);
+
+  const router = useRouter();
+  const { mutate: editProduct, isPending } = useProductEditMutation();
+
   function onSubmit(data) {
     const metadata = {
       name: data.name,
@@ -88,95 +155,120 @@ export default function AddProductPage() {
       price: data.price,
       currency: data.currency,
       stock: data.stock,
-      status: data.isActive ? 1 : 0,
+      isActive: data.isActive ? 1 : 0,
       color: data.color,
       size: data.size,
-      weight: data.weight.toString(),
+      weight: data.weight,
       weightUnit: data.weightUnit,
-      dimensionWidth: data.dimensionWidth.toString(),
-      dimensionLength: data.dimensionLength.toString(),
-      dimensionHeight: data.dimensionHeight.toString(),
-      longDescription: data.description,
-      shortDescription: data.description,
-      mCategories: {"id": +data.category},
+      dimensionWidth: data.dimensionWidth,
+      dimensionLength: data.dimensionLength,
+      dimensionHeight: data.dimensionHeight,
+      description: data.description,
+      category: data.subCategory ? data.subCategory : data.category,
       sustainabilityFeature: data.sustainabilityFeature,
       material: data.material,
       discountPercentage: data.discountPercentage,
-      preOrder: data.isPreorder ? 1 : 0
+      isPreorder: data.isPreorder ? 1 : 0,
     };
+
+    console.log('metadata', metadata);
 
     const validImages = images.filter(img => img.file !== null);
     const files = validImages.map(img => img.file);
+    // Filter out images that have been uploaded
 
-    addProduct({ metadata, files }, {
+    editProduct({ metadata, files }, {
       onSuccess: () => {
         form.reset();
-
-        // Reset state images
         setImages([
           { id: 1, file: null, preview: null },
           { id: 2, file: null, preview: null },
           { id: 3, file: null, preview: null },
         ]);
-
-        toast.success(`Product ${data.name} was Added`);
-        router.push('/bdashboard/product-management')
+        toast.success('Product updated successfully');
+        router.push('/bdashboard/product-management');
       },
       onError: (error) => {
-        toast.error(error?.response?.data?.message || error?.message || 'Failed to create password!');
+        toast.error(`Error updating product: ${error.message}`);
       }
-    })
+    });
   }
 
-  const handleImageChange = (id, e) => {
-    console.log(e.target.files[0])
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-      const preview = URL.createObjectURL(file);
-      const img = new window.Image();
+  const handleImageChange = (e, imageId) => {
+    const file = e.target.files[0];
+    if (!file) return;
 
-      img.onload = () => {
-        const newImages = [...images];
-        const index = newImages.findIndex(img => img.id === id);
-        if (index !== -1) {
-          newImages[index].file = file;
-          newImages[index].preview = preview;
-          newImages[index].width = img.width;
-          newImages[index].height = img.height;
-          setImages(newImages);
-        }
-      };
-
-      img.src = preview;
-    }
-  };
-
-  const handleImageDelete = (id, e) => {
-    if (e) e.stopPropagation();
-
-    setImages(prevImages => {
-      return prevImages.map(img => {
-        if (img.id === id) {
-          if (img.preview) {
-            URL.revokeObjectURL(img.preview);
-          }
-          return { id: img.id, file: null, preview: null, width: null, height: null };
-        }
-        return img;
-      });
+    const updatedImages = images.map(img => {
+      if (img.id === imageId) {
+        return {
+          ...img,
+          file: file,
+          preview: URL.createObjectURL(file),
+        };
+      }
+      return img;
     });
+
+    setImages(updatedImages);
   };
+
+  const removeImage = (imageId) => {
+    const updatedImages = images.map(img => {
+      if (img.id === imageId) {
+        // Clear the image file and preview
+        if (img.preview) {
+          URL.revokeObjectURL(img.preview);
+        }
+        return {
+          ...img,
+          file: null,
+          preview: null,
+        };
+      }
+      return img;
+    });
+
+    setImages(updatedImages);
+  };
+
+  // Fungsi handler ketika kategori utama berubah
+  const handleCategoryChange = (categories) => {
+    // Simpan ID kategori yang dipilih
+    const categoryId = form.getValues("category");
+    setSelectedCategoryId(categoryId);
+
+    // Reset subCategory jika kategori utama berubah
+    form.setValue("subCategory", "");
+  };
+
+  if (isLoadingProduct) {
+    return (
+      <div className="tw-flex tw-items-center tw-justify-center tw-h-screen">
+        <Loader2 className="tw-h-8 tw-w-8 tw-animate-spin tw-text-primary" />
+        <span className="tw-ml-2">Loading product data...</span>
+      </div>
+    );
+  }
+
+  if (!product) {
+    return (
+      <div className="tw-flex tw-justify-center tw-items-center tw-h-96">
+        <span className="tw-ml-2">Product not found</span>
+      </div>
+    );
+  }
 
   return (
     <div className="tw-container tw-mx-auto tw-p-10 tw-py-5">
-      <h1 className="tw-text-3xl tw-font-bold tw-mb-6">Add New Product</h1>
+      <h1 className="tw-text-3xl tw-font-bold tw-mb-6">Edit Product</h1>
+
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="tw-space-y-8">
           <Card className="tw-shadow-lg">
             <CardHeader>
               <CardTitle>Product Information</CardTitle>
               <CardDescription>
-                Enter the basic information about your product.
+                Update the basic information of this product.
               </CardDescription>
             </CardHeader>
             <CardContent className="tw-space-y-4">
@@ -193,10 +285,22 @@ export default function AddProductPage() {
                   </FormItem>
                 )}
               />
-
               <CategorySelector
                 control={form.control}
                 name="category"
+                filterType="root"
+                onCategoryChange={handleCategoryChange}
+                defaultValue={product.mCategoriesId.toString()}
+                key={`category-${isFormReady ? 'ready' : 'loadiing'}-${product?.mCategoriesId.toString() || 'initial'}`}
+              />
+              <CategorySelector
+                control={form.control}
+                name="subCategory"
+                label="Subcategory"
+                placeholder="Select a Subcategory"
+                filterType="sub"
+                parentCategoryId={selectedCategoryId}
+                key={`subcategory-${isFormReady ? 'ready' : 'loading'}-${selectedCategoryId}`}
               />
             </CardContent>
           </Card>
@@ -205,53 +309,53 @@ export default function AddProductPage() {
             <CardHeader>
               <CardTitle>Product Details</CardTitle>
               <CardDescription>
-                Add detailed information about your product.
+                Update detailed information about your product.
               </CardDescription>
             </CardHeader>
             <CardContent className="tw-space-y-6">
               <div>
                 <h3 className="tw-text-lg tw-font-medium tw-mb-4">Product Images</h3>
                 <div className="tw-grid tw-grid-cols-2 md:tw-grid-cols-3 tw-gap-4">
-                  {images.map(image => (
+                  {images.map((image) => (
                     <div key={image.id} className="tw-relative tw-bg-gray-100 tw-border tw-rounded-md tw-flex tw-items-center tw-justify-center tw-h-32">
                       {image.preview ? (
                         <>
                           <Image
                             src={image.preview}
-                            alt="Product image"
-                            width={image.width || 100}
-                            height={image.height || 100}
-                            className="tw-object-contain tw-h-full tw-w-full"
+                            alt={`Product image ${image.id}`}
+                            fill
+                            className="tw-object-contain tw-w-full tw-h-full"
                           />
                           <div className="tw-absolute tw-inset-0 tw-flex tw-items-center tw-justify-center tw-bg-black tw-bg-opacity-40">
                             <button
                               type="button"
-                              onClick={() => handleImageDelete(image.id)}
+                              onClick={() => removeImage(image.id)}
                               className="tw-w-10 tw-h-10 tw-flex tw-items-center tw-justify-center tw-bg-destructive tw-text-destructive-foreground tw-rounded-full tw-shadow-lg hover:tw-bg-destructive/90 tw-transition-colors"
-                              aria-label="Remove image"
                             >
                               <X className="tw-h-6 tw-w-6" />
                             </button>
                           </div>
                         </>
                       ) : (
-                        <label htmlFor={`image-upload-${image.id}`} className="tw-cursor-pointer tw-flex tw-flex-col tw-items-center tw-justify-center tw-w-full tw-h-full">
+                        <label htmlFor={`image-${image.id}`} className="tw-cursor-pointer tw-flex tw-flex-col tw-items-center tw-justify-center tw-w-full tw-h-full">
                           <ImagePlus className="tw-w-6 tw-h-6 tw-text-gray-400" />
                           <span className="tw-mt-2 tw-text-sm tw-text-gray-500">Add Image</span>
                           <input
-                            id={`image-upload-${image.id}`}
+                            id={`image-${image.id}`}
                             type="file"
-                            className="tw-hidden"
                             accept="image/*"
-                            onChange={(e) => handleImageChange(image.id, e)}
+                            className="tw-hidden"
+                            onChange={(e) => handleImageChange(e, image.id)}
                           />
                         </label>
-                      )}
+                        )}
                     </div>
                   ))}
                 </div>
               </div>
+
               <Separator />
+
               <FormField
                 control={form.control}
                 name="description"
@@ -261,9 +365,7 @@ export default function AddProductPage() {
                     <FormControl>
                       <RichTextEditor
                         value={field.value}
-                        onChange={(html) => {
-                          field.onChange(html);
-                        }}
+                        onChange={field.onChange}
                         placeholder="Enter product description"
                       />
                     </FormControl>
@@ -271,6 +373,7 @@ export default function AddProductPage() {
                   </FormItem>
                 )}
               />
+
               <div className="tw-grid tw-grid-cols-1 md:tw-grid-cols-2 tw-gap-6">
                 <FormField
                   control={form.control}
@@ -279,7 +382,7 @@ export default function AddProductPage() {
                     <FormItem>
                       <FormLabel>Color</FormLabel>
                       <FormControl>
-                        <Input placeholder="e.g., Red, Blue, Black" {...field} />
+                        <Input placeholder="Enter color" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -289,7 +392,7 @@ export default function AddProductPage() {
                   control={form.control}
                   name="size"
                   onChange={(value) => {
-                    console.log('Size changed to:', value);
+                    console.log('size changed', value);
                   }}
                 />
               </div>
@@ -298,27 +401,30 @@ export default function AddProductPage() {
                   <FormField
                     control={form.control}
                     name="currency"
-                    render={({field}) => (
+                    render={({ field }) => (
                       <FormItem>
                         <FormLabel>Currency</FormLabel>
-                        <FormControl>
-                          <select
-                            className="tw-block tw-px-3 tw-py-2 tw-border tw-rounded-md !tw-placeholder-gray-400 focus:tw-outline-none focus:tw-ring-indigo-500"
-                            {...field}
-                          >
-                            <option value="" disabled>
-                              Select a currency
-                            </option>
-                            <option value="AED">AED - United Arab Emirates Dirham</option>
-                            <option value="USD">USD - United States Dollar</option>
-                            <option value="EUR">EUR - Euro</option>
-                            <option value="IDR">IDR - Indonesian Rupiah</option>
-                            <option value="JPY">JPY - Japanese Yen</option>
-                            <option value="GBP">GBP - British Pound</option>
-                            <option value="AUD">AUD - Australian Dollar</option>
-                          </select>
-                        </FormControl>
-                        <FormMessage/>
+                        <Select
+                          className="tw-block tw-px-3 tw-py-2 tw-border tw-rounded-md !tw-placeholder-gray-400 focus:tw-outline-none focus:tw-ring-indigo-500"
+                          onValueChange={field.onChange}
+                          value={field.value}
+                        >
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select currency" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="AED">AED - United Arab Emirates Dirham</SelectItem>
+                            <SelectItem value="USD">USD - United States Dollar</SelectItem>
+                            <SelectItem value="EUR">EUR - Euro (€)</SelectItem>
+                            <SelectItem value="IDR">IDR - Indonesian Rupiah</SelectItem>
+                            <SelectItem value="JPY">JPY - Japanese Yen</SelectItem>
+                            <SelectItem value="GBP">GBP - British Pound</SelectItem>
+                            <SelectItem value="AUD">AUD - Australian Dollar</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
                       </FormItem>
                     )}
                   />
@@ -329,7 +435,10 @@ export default function AddProductPage() {
                       <FormItem>
                         <FormLabel>Price</FormLabel>
                         <FormControl>
-                          <PriceInput field={field} currencySymbol={currency} />
+                          <PriceInput
+                            {...field}
+                            currencySymbol={form.watch('currency')}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -338,7 +447,7 @@ export default function AddProductPage() {
                   <FormField
                     control={form.control}
                     name="discountPercentage"
-                    render={({field}) => (
+                    render={({ field }) => (
                       <FormItem>
                         <FormLabel>Discount Percentage (%)</FormLabel>
                         <FormControl>
@@ -348,7 +457,7 @@ export default function AddProductPage() {
                             maxVal={100}
                           />
                         </FormControl>
-                        <FormMessage/>
+                        <FormMessage />
                       </FormItem>
                     )}
                   />
@@ -359,8 +468,10 @@ export default function AddProductPage() {
                       <FormItem>
                         <FormLabel>Stock</FormLabel>
                         <FormControl>
-                          <NumberWithLeadingZeroInput field={field} placeholder="Enter product stock" useThousandSeparator={true} />
-                          {/*<Input type="number" min="0" step="1" {...field} />*/}
+                          <NumberWithLeadingZeroInput
+                            value={field.value}
+                            placeholder="0"
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -397,27 +508,27 @@ export default function AddProductPage() {
                   <FormField
                     control={form.control}
                     name="weightUnit"
-                    render={({field}) => (
+                    render={({ field }) => (
                       <FormItem>
                         <FormLabel>Weight Unit</FormLabel>
-                        <FormControl>
-                          <Select
-                            onValueChange={field.onChange}
-                            defaultValue={field.value}
-                            className="tw-border-input tw-border-red-500"
-                          >
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                          className="tw-border-input tw-border-red-500"
+                        >
+                          <FormControl>
                             <SelectTrigger>
-                              <SelectValue placeholder="Select weight unit"/>
+                              <SelectValue placeholder="Select unit" />
                             </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="kg">Kilogram (kg)</SelectItem>
-                              <SelectItem value="g">Gram (g)</SelectItem>
-                              <SelectItem value="lb">Pound (lb)</SelectItem>
-                              <SelectItem value="oz">Ounce (oz)</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </FormControl>
-                        <FormMessage/>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="kg">Kilogram (kg)</SelectItem>
+                            <SelectItem value="g">Gram (g)</SelectItem>
+                            <SelectItem value="lb">Pound (lb)</SelectItem>
+                            <SelectItem value="oz">Ounce (oz)</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
                       </FormItem>
                     )}
                   />
@@ -426,7 +537,7 @@ export default function AddProductPage() {
                   <FormField
                     control={form.control}
                     name="dimensionWidth"
-                    render={({field}) => (
+                    render={({ field }) => (
                       <FormItem>
                         <FormLabel>Width (cm)</FormLabel>
                         <FormControl>
@@ -436,16 +547,17 @@ export default function AddProductPage() {
                             useThousandSeparator={true}
                           />
                         </FormControl>
-                        <FormMessage/>
+                        <FormMessage />
                       </FormItem>
                     )}
                   />
+
                   <FormField
                     control={form.control}
                     name="dimensionLength"
-                    render={({field}) => (
+                    render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Length</FormLabel>
+                        <FormLabel>Length (cm)</FormLabel>
                         <FormControl>
                           <NumberWithLeadingZeroInput
                             field={field}
@@ -453,16 +565,16 @@ export default function AddProductPage() {
                             useThousandSeparator={true}
                           />
                         </FormControl>
-                        <FormMessage/>
+                        <FormMessage />
                       </FormItem>
                     )}
                   />
                   <FormField
                     control={form.control}
                     name="dimensionHeight"
-                    render={({field}) => (
+                    render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Height</FormLabel>
+                        <FormLabel>Height (cm)</FormLabel>
                         <FormControl>
                           <NumberWithLeadingZeroInput
                             field={field}
@@ -470,7 +582,7 @@ export default function AddProductPage() {
                             useThousandSeparator={true}
                           />
                         </FormControl>
-                        <FormMessage/>
+                        <FormMessage />
                       </FormItem>
                     )}
                   />
@@ -480,26 +592,34 @@ export default function AddProductPage() {
                 <FormField
                   control={form.control}
                   name="material"
-                  render={({field}) => (
+                  render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Material</FormLabel>
+                      <FormLabel>Materials</FormLabel>
                       <FormControl>
-                        <Textarea className="placeholder:tw-text-gray-400" placeholder="Enter Product Material" {...field} />
+                        <RichTextEditor
+                          value={field.value}
+                          onChange={field.onChange}
+                          placeholder="Enter product materials"
+                        />
                       </FormControl>
-                      <FormMessage/>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
                 <FormField
                   control={form.control}
                   name="sustainabilityFeature"
-                  render={({field}) => (
+                  render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Sustainability Feature</FormLabel>
+                      <FormLabel>Sustainability Features</FormLabel>
                       <FormControl>
-                        <Textarea className="placeholder:tw-text-gray-400" placeholder="Describe sustainability features (if any)" {...field} />
+                        <RichTextEditor
+                          value={field.value}
+                          onChange={field.onChange}
+                          placeholder="Enter sustainability features"
+                        />
                       </FormControl>
-                      <FormMessage/>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -514,7 +634,7 @@ export default function AddProductPage() {
                       <div className="tw-space-y-0.5">
                         <FormLabel className="tw-text-base">Active Status</FormLabel>
                         <FormDescription>
-                          Set whether this product is active and visible on your store.
+                          Make this product visible in the store
                         </FormDescription>
                       </div>
                       <FormControl>
@@ -534,7 +654,7 @@ export default function AddProductPage() {
                       <div className="tw-space-y-0.5">
                         <FormLabel className="tw-text-base">Pre-order</FormLabel>
                         <FormDescription>
-                          Enable if this product is available for pre-order.
+                          Allow customers to order this product in advance
                         </FormDescription>
                       </div>
                       <FormControl>
@@ -549,18 +669,25 @@ export default function AddProductPage() {
               </div>
             </CardContent>
             <CardFooter className="tw-flex tw-justify-end">
+              <Button
+                variant="outline"
+                onClick={() => router.push('/bdashboard/product-management')}
+                type="button"
+              >
+                Cancel
+              </Button>
               <Button type="submit" className="tw-w-full sm:tw-w-auto" disabled={isPending}>
-                  {isPending ? (
-                    <>
-                      <Loader2 className="tw-animate-spin" />
-                      Please wait
-                    </>
-                  ) : (
-                    <>
-                      <Save className="tw-mr-2 tw-h-4 tw-w-4" />
-                      Save Product
-                    </>
-                  )}
+                {isPending ? (
+                  <>
+                    <Loader2 className="tw-animate-spin" />
+                    Please wait
+                  </>
+                ) : (
+                  <>
+                    <Save className="tw-mr-2 tw-h-4 tw-w-4" />
+                    Update Product
+                  </>
+                )}
               </Button>
             </CardFooter>
           </Card>

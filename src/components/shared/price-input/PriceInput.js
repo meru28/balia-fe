@@ -2,8 +2,8 @@ import { Input } from "@/components/ui/input";
 import { useCurrencyInput } from '@/libs/CurrencyInputHook';
 import {cn} from "@/lib/utils";
 
-const PriceInput = ({ field, currencySymbol = '' }) => {
-  const { displayValue, handleInputChange } = useCurrencyInput(field.value, field.onChange);
+const PriceInput = ({ value, onChange, onBlur, name, placeholder = "0.00", currencySymbol = '' }) => {
+  const { displayValue, handleInputChange } = useCurrencyInput(value, onChange);
 
   return (
     <div className="tw-relative">
@@ -16,8 +16,8 @@ const PriceInput = ({ field, currencySymbol = '' }) => {
         type="text"
         value={displayValue}
         onChange={handleInputChange}
-        onBlur={field.onBlur}
-        name={field.name}
+        onBlur={onBlur}
+        name={name}
         placeholder="0.00"
         className={cn("!tw-mb-0 !tw-border !tw-rounded-lg !tw-py-0 !tw-h-10 placeholder:!tw-text-gray-400", currencySymbol ? "!tw-pl-14" : "")}
       />

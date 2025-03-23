@@ -1,5 +1,5 @@
 import axios from "axios";
-import { getSession } from "next-auth/react";
+import {getSession, signOut} from "next-auth/react";
 
 const api = axios.create({
   baseURL: "/fire-backend",
@@ -28,6 +28,12 @@ api.interceptors.response.use(
     return response.data; // Return hanya data, bukan keseluruhan response Axios
   },
   (error) => {
+    if (error.response && error.response.status === 401) {
+      signOut({
+        redirect: true,
+        callbackUrl: "/login",
+      });
+    }
     return Promise.reject(error);
   }
 );
