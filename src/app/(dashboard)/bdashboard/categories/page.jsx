@@ -1,12 +1,9 @@
 'use client'
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {Plus, Edit2, Loader2} from "lucide-react";
 import {useCallback, useMemo, useState} from "react";
 import { createColumnHelper } from "@tanstack/react-table";
-import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
-import SimpleCategorySelector from "@/components/shared/categories/SimpleCategorySelector";
 import {useCategories} from "@/hooks/useCategories";
 import { CategoryDatatable} from "@/components/shared/category-datatable/CategoryDatatable";
 
@@ -62,7 +59,7 @@ export default function CategoriesPage() {
         </div>
       ),
     }),
-  ], [handleEdit]);
+  ], [columnHelper, handleEdit]);
 
   return (
     <div className="tw-container tw-mx-auto tw-p-10 tw-py-5">
