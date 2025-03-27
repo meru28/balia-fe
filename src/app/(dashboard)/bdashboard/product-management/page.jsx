@@ -51,7 +51,8 @@ export default function ProductsPage() {
   ];
 
   const { data: products = [], isLoading } = useProductGetQuery('products',
-    { searchTerm, categoryId: selectedCategory }, { staleTime: 2 * 60 * 1000 });
+    { categoryId: selectedCategory }
+  );
   const [globalFilter, setGlobalFilter] = useState('');
 
   useEffect(() => {
@@ -175,14 +176,21 @@ export default function ProductsPage() {
       cell: ({ row }) => (
         <div className="tw-flex tw-items-center tw-gap-3">
           <div className="tw-h-10 tw-w-10 tw-rounded tw-bg-gray-100 tw-flex tw-items-center tw-justify-center">
-            <Image src={row.original.mProductImages[0]?.image} alt="product" width={24} height={24} className="tw-h-6 tw-w-6" />
+            <Image
+              src={row.original.mProductImages?.[0]?.image || '/images/img/logo.png'}
+              alt="product"
+              width={24}
+              height={24}
+              className="tw-h-6 tw-w-6"
+              onError={(e) => e.currentTarget.src = '/img/logo.png'}
+            />
           </div>
           <span className="tw-font-medium">{row.original.name}</span>
         </div>
       ),
     },
     {
-      accessorKey: 'mCategoriesName',
+      accessorKey: 'mCategoriesParentName',
       header: () => {
         return (
           <div className="tw-p-0 tw-font-bold column-header">
@@ -190,7 +198,7 @@ export default function ProductsPage() {
           </div>
         )
       },
-      cell: ({row}) => <div className="tw-font-bold">{row.original.mCategoriesName}</div>,
+      cell: ({row}) => <div className="tw-font-bold">{row.original.mCategoriesParentName ? row.original.mCategoriesParentName : row.original.mCategoriesName}</div>,
     },
     {
       accessorKey: 'subCategory',
@@ -201,7 +209,7 @@ export default function ProductsPage() {
           </div>
         )
       },
-      cell: ({row}) => <div className="tw-font-bold">{row.original.mCategoriesName}</div>,
+      cell: ({row}) => <div className="tw-font-bold">{row.original.mCategoriesParentName ? row.original.mCategoriesName : "-"}</div>,
     },
     {
       accessorKey: 'sku',

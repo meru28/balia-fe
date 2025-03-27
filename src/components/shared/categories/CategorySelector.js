@@ -23,17 +23,23 @@ import {AlertOctagon} from "lucide-react";
 const CategorySelector = ({
                             control,
                             name,
+                            onChange,
                             onCategoriesLoaded,
                             onCategoryChange,
                             label = "Category",
                             placeholder = "Select a category",
                             filterType = 'root',
                             parentCategoryId = null,
-                            defaultValue = ""
+                            defaultValue = "",
+                            value
                           }) => {
 
   const {data: response, isLoading, error} = useCategories('categories');
   const [filteredCategories, setFilteredCategories] = useState([]);
+
+  useEffect(() => {
+    console.log('CategorySelector props:', { value, defaultValue, filterType });
+  }, [value, defaultValue, filterType]);
 
   useEffect(() => {
     if (response) {
@@ -70,17 +76,40 @@ const CategorySelector = ({
         onCategoriesLoaded(filtered);
       }
 
-      if (defaultValue && filtered.some(cat => String(cat.id) === String(defaultValue)) && onCategoryChange) {
-        onCategoryChange(defaultValue);
-      }
+      if (filtered.length > 0 && !value && defaultValue) {
+        // Pastikan defaultValue adalah string untuk kompatibilitas
+        const stringDefaultValue = String(defaultValue);
 
+        if (filtered.some(cat => String(cat.id) === stringDefaultValue)) {
+          const selectedCategory = filtered.find(cat =>
+            String(cat.id) === stringDefaultValue
+          );
+
+          console.log('Setting default category:', selectedCategory);
+
+          // Notifikasi parent
+          if (onChange) {
+            onChange(stringDefaultValue);
+          }
+
+          if (onCategoryChange) {
+            onCategoryChange({
+              id: stringDefaultValue,
+              name: selectedCategory?.name || "",
+            });
+          }
+        }
     }
-  }, [response, filterType, parentCategoryId, onCategoriesLoaded, defaultValue, onCategoryChange]);
+  }
+  }, [response, filterType, parentCategoryId, onCategoriesLoaded, defaultValue, onCategoryChange, onChange, value]);
 
   useEffect(() => {
-    console.log(`CategorySelector(${name}): defaultValue=${defaultValue}, field.value=${control._formValues[name]}`);
-    console.log(`Available category IDs:`, filteredCategories.map(c => String(c.id)));
-  }, [name, defaultValue, control._formValues[name], filteredCategories]);
+    // Validasi bahwa control dan _formValues tersedia sebelum mengaksesnya
+    if (control && control._formValues && name) {
+      console.log(`CategorySelector(${name}): defaultValue=${defaultValue}, field.value=${control._formValues[name]}`);
+      console.log(`Available category IDs:`, filteredCategories.map(c => String(c.id)));
+    }
+  }, [name, defaultValue, control, filteredCategories]);
 
   if (isLoading) {
     return (
@@ -109,33 +138,45 @@ const CategorySelector = ({
     );
   }
 
-  const defaultCategoryName = defaultValue
-    ? filteredCategories.find(cat => String(cat.id) === String(defaultValue))?.name || ""
-    : "";
+  // const currentValue = value ? String(value) : defaultValue ? String(defaultValue) : undefined;
+  // console.log('CategorySelector rendering with value:', currentValue);
+  // console.log('Available categories:', filteredCategories.map(c => ({id: c.id, name: c.name})));
 
   return (
     <FormField
       control={control}
       name={name}
       render={({field}) => {
-        const currentValue = field.value ? String(field.value) : "";
+        // const currentValue = field.value ? String(field.value) : "";
         return (
           <FormItem>
             <FormLabel>{label}</FormLabel>
             <Select
-              value={field.value || defaultValue}
-              onValueChange={(value) => {
-                field.onChange(value);
+              value={field.value ? String(field.value) : undefined}
+              onValueChange={(newValue) => {
+                console.log(`${filterType} selected:`, newValue);
+                field.onChange(newValue);
+                // Notifikasi parent melalui onChange (untuk FormField)
+
+                // Tambahan notifikasi parent jika diperlukan
                 if (onCategoryChange) {
-                  onCategoryChange(value);
+                  const selectedCategory = filteredCategories.find(
+                    cat => String(cat.id) === newValue
+                  );
+
+                  if (selectedCategory) {
+                    onCategoryChange({
+                      id: newValue,
+                      name: selectedCategory.name || "",
+                    });
+                  }
                 }
               }}
+              defaultValue={defaultValue ? String(defaultValue) : undefined}
             >
               <FormControl>
                 <SelectTrigger>
-                  <SelectValue placeholder={placeholder}>
-                    {field.value ? filteredCategories?.find((category) => String(category.id) === String(field.value))?.name : defaultCategoryName}
-                  </SelectValue>
+                  <SelectValue placeholder={placeholder} />
                 </SelectTrigger>
               </FormControl>
               <SelectContent className="tw-w-80">

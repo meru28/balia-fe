@@ -19,42 +19,11 @@ export const useCategories = (queryKey, params = {}) => {
     });
 }
 
-export const useCategoryById = (categoryId) => {
-  return useQuery({
-    queryKey: ['category', categoryId],
-    queryFn: async () => {
-      if (!categoryId) throw new Error('ID Kategori dibutuhkan')
-      const { data } = await axios.get(`/api/categories/${categoryId}`)
-      return data
-    },
-    enabled: !!categoryId,
-    staleTime: 5 * 60 * 1000,
-    gcTime: 30 * 60 * 1000,
-  })
-}
-
-export const useCategoryBySlug = (slug) => {
-  return useQuery({
-    queryKey: ['category-slug', slug],
-    queryFn: async () => {
-      if (!slug) throw new Error('Slug Kategori dibutuhkan')
-      const { data } = await axios.get(`/api/categories/slug/${slug}`)
-      return data
-    },
-    enabled: !!slug,
-    staleTime: 5 * 60 * 1000,
-    gcTime: 30 * 60 * 1000,
-  })
-}
-
 export const useCategoryMutations = () => {
   const queryClient = useQueryClient()
 
-  const createCategory = useMutation({
-    mutationFn: async (newCategory) => {
-      const { data } = await axios.post('/api/categories', newCategory)
-      return data
-    },
+  return useMutation({
+    mutationFn: async (newCategory) => apiService.createCategory(newCategory),
     onSuccess: () => {
       // Invalidate dan refetch
       queryClient.invalidateQueries({ queryKey: ['categories'] })

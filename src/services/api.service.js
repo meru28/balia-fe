@@ -133,4 +133,22 @@ export const apiService = {
       };
     }
   },
+
+  createCategory: async ({name, status, parent}) => {
+    try {
+      const response = await apiClient.post(API_ROUTES.PRODUCT.CREATE_CATEGORY, {
+        name,
+        status,
+        parent
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Create category error:', error);
+      throw {
+        message: error.response?.data?.message || "Failed to create category",
+        status: error.response?.status || 500
+      };
+    }
+  },
+  
 };

@@ -5,6 +5,7 @@ import ProductCardPrimary from "@/components/shared/cards/ProductCardPrimary";
 import getAllProducts from "@/libs/getAllProducts";
 import makePath from "@/libs/makePath";
 import Link from "next/link";
+import {useCategories} from "@/hooks/useCategories";
 
 const Products3 = ({
                      title,
@@ -19,6 +20,9 @@ const Products3 = ({
       ({collection}) => makePath(collection) === makePath(category)
     );
 
+  const {data: response, isLoading, error} = useCategories('categories');
+
+  const categories = response?.filter(category => !category.parentId || category.parentId === null);
   const drinksProducts = getFilteredProducts("Food & Drinks");
   const drinksProducts1 = drinksProducts?.slice(0, 6);
   const drinksProducts2 = drinksProducts?.slice(6, 12);
@@ -68,19 +72,16 @@ const Products3 = ({
                 }  text-uppercase text-center`}
               >
                 <div className="nav">
-                  <Link
-                    className="active show"
-                    data-bs-toggle="tab"
-                    href="#liton_tab_3_1"
-                  >
-                    Handbag
-                  </Link>
-                  <Link data-bs-toggle="tab" href="#liton_tab_3_2">
-                    Home & Living
-                  </Link>
-                  <Link data-bs-toggle="tab" href="#liton_tab_3_3">
-                    Accessories
-                  </Link>
+                  {categories?.map((category, idx) => (
+                    <Link
+                      key={idx}
+                      className={idx === 0 ? "active show" : ""}
+                      data-bs-toggle="tab"
+                      href={`#liton_tab_3_${idx + 1}`}
+                    >
+                      {category.name}
+                    </Link>
+                  ))}
                 </div>
               </div>
               <div className="tab-content">

@@ -13,6 +13,9 @@ import { Save } from "lucide-react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import CategorySelector from "@/components/shared/categories/CategorySelector";
 import Link from "next/link";
+import {useCategoryMutations} from "@/hooks/useCategories";
+import {toast} from "sonner";
+import {useRouter} from "next/navigation";
 
 const categorySchema = z.object({
   name: z.string().min(2, { message: "Category name must be at least 2 characters" }),
@@ -35,9 +38,25 @@ export default function AddCategoryPage() {
   });
 
   const categoryType = form.watch("type");
+  const router = useRouter()
+  const { mutate: createCategory, isPending } = useCategoryMutations();
 
   function onSubmit(data) {
-    console.log("Category data submitted:", data);
+    const requiredField = {
+      name: data.name,
+      status: data.isActive ? 1 : 0,
+      ...(data.parentId ? {parent: {id: +data.parentId}} : '')
+    }
+
+    createCategory(requiredField, {
+      onSuccess: () => {
+        form.reset();
+        toast.success("Category added successfully")
+        router.push('/bdashboard/categories')
+      }
+
+    })
+    console.log("Category data submitted:", requiredField);
     // Here you would typically send this data to your API
   }
 

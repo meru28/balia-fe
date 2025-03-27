@@ -10619,7 +10619,7 @@ ul.wp-block-latest-posts.is-grid.alignwide {
   width: 2px;
   top: 50%;
 }
-.ltn__blog-item-2 .ltn__blog-meta li:before::before {
+.ltn__blog-item-2 .ltn__blog-meta li::before {
   position: absolute;
   content: "";
   right: -15px;
@@ -10633,7 +10633,7 @@ ul.wp-block-latest-posts.is-grid.alignwide {
   transform: translateY(-50%);
   opacity: 0.6;
 }
-.ltn__blog-item-2 .ltn__blog-meta li:before:last-child::before {
+.ltn__blog-item-2 .ltn__blog-meta li:last-child::before {
   display: none;
 }
 .ltn__blog-item-2 .ltn__blog-btn {

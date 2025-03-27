@@ -67,7 +67,7 @@ const MenuBar = ({ editor }) => {
   );
 };
 
-export function RichTextEditor({ value, onChange, placeholder }) {
+export function RichTextEditor({ value, defaultValue, onChange, placeholder }) {
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -84,7 +84,7 @@ export function RichTextEditor({ value, onChange, placeholder }) {
       }),
       Underline,
     ],
-    content: value,
+    content: value || defaultValue,
     onUpdate: ({ editor }) => {
       setTimeout(() => {
         onChange(editor.getHTML());

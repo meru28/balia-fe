@@ -1,5 +1,6 @@
 import {apiService} from "@/services/api.service";
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
+import { usePathname } from 'next/navigation';
 
 export const useProductAddMutation = () => {
   const queryClient = useQueryClient();
@@ -35,6 +36,7 @@ export const useProductEditMutation = () => {
 
 
 export const useProductGetQuery = (queryKey, params = {}) => {
+
   return useQuery({
     queryKey: [queryKey, params],
     queryFn: async () => {

@@ -32,9 +32,7 @@ export function CategoryDatatable({ data, columns, onEdit, isLoading = false }) 
       const filtered = data.filter(item => {
         // Contoh filter berdasarkan ID atau parentId
         return (
-          item.id === selectedCategory ||
-          item.parentId === selectedCategory ||
-          item.group === selectedCategory
+          item.id === selectedCategory
         );
       });
       setFilteredData(filtered);
@@ -79,6 +77,7 @@ export function CategoryDatatable({ data, columns, onEdit, isLoading = false }) 
           <SimpleCategorySelector
             value={selectedCategory}
             onChange={handleCategoryChange}
+            showParentCategoriesOnly={true}
           />
         </div>
       </div>

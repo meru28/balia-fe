@@ -40,7 +40,7 @@ const productSchema = z.object({
   dimensionHeight: z.coerce.number().positive({message: "Height must be a positive number"}),
   description: z.string().min(10, { message: "Description must be at least 10 characters" }),
   category: z.string().min(1, { message: "Please select a category" }),
-  subCategory: z.string().min(1, { message: "Please select a subcategory" }),
+  subCategory: z.string(),
   sustainabilityFeature: z.string().min(10, { message: "Sustainability feature must be at least 10 characters" }),
   material: z.string().min(10, { message: "Material must be at least 10 characters" }),
   discountPercentage: z.coerce.number().int().min(0).max(100, { message: "Discount percentage must be between 0 and 100" }),
@@ -58,6 +58,10 @@ export default function EditProductPage({ params }) {
   const product = productData?.data?.content && productData.data.content.length > 0 ? productData.data.content[0] : null;
 
   const [selectedCategoryId, setSelectedCategoryId] = useState(null);
+  const [selectedCategoryName, setSelectedCategoryName] = useState(null);
+  const [selectedSubCategoryId, setSelectedSubCategoryId] = useState(product?.mCategoriesParentId || null);
+  const [selectedSubCategoryName, setSelectedSubCategoryName] = useState(product?.mCategoriesParentName || null);
+
   const [isFormReady, setIsFormReady] = useState(false);
 
   const [images, setImages] = useState([
@@ -109,18 +113,18 @@ export default function EditProductPage({ params }) {
         dimensionWidth: product.dimensionWidth || "",
         dimensionLength: product.dimensionLength || "",
         dimensionHeight: product.dimensionHeight || "",
-        description: product.description || "",
-        category: product.mCategoriesId.toString() || "",
-        subCategory: product.category || "",
+        description: product?.longDescription || "",
+        category: product.mCategoriesParentId ? product.mCategoriesParentId?.toString() : product.mCategoriesId?.toString(),
+        subCategory: product.mCategoriesParentId ? product.mCategoriesId?.toString() : "",
         sustainabilityFeature: product.sustainabilityFeature || "",
         material: product.material || "",
         discountPercentage: product.discountPercentage || 0,
         isPreorder: product.isPreorder || false,
       })
+      setSelectedCategoryId(product.mCategoriesParentId !== null ? product.mCategoriesParentId : product.mCategoriesId);
       setTimeout(() => {
-        form.setValue("category", product.mCategoriesId.toString());
-        setSelectedCategoryId(product.mCategoriesId || null);
-
+        form.setValue("weightUnit", product?.weightUnit);
+        form.setValue("category", product.mCategoriesParentId !== null ? product.mCategoriesParentId?.toString() : product.mCategoriesId?.toString());
         setIsFormReady(true)
       }, 100)
 
@@ -149,13 +153,23 @@ export default function EditProductPage({ params }) {
   const { mutate: editProduct, isPending } = useProductEditMutation();
 
   function onSubmit(data) {
+    console.log("Form values:", form.getValues("subCategory"));
+    // if (selectedCategoryName !== "Best Sellers") {
+    //   form.setError("subCategory", {
+    //     type: "manual",
+    //     message: "Please select a subcategory"
+    //   });
+    //   return;
+    //
+    // }
     const metadata = {
+      id: productId,
       name: data.name,
       sku: data.sku,
       price: data.price,
       currency: data.currency,
       stock: data.stock,
-      isActive: data.isActive ? 1 : 0,
+      status: data.isActive ? 1 : 0,
       color: data.color,
       size: data.size,
       weight: data.weight,
@@ -163,15 +177,13 @@ export default function EditProductPage({ params }) {
       dimensionWidth: data.dimensionWidth,
       dimensionLength: data.dimensionLength,
       dimensionHeight: data.dimensionHeight,
-      description: data.description,
-      category: data.subCategory ? data.subCategory : data.category,
+      longDescription: data.description,
+      mCategories: data.subCategory ? {"id": +data.subCategory} : {"id": +data.category},
       sustainabilityFeature: data.sustainabilityFeature,
       material: data.material,
       discountPercentage: data.discountPercentage,
-      isPreorder: data.isPreorder ? 1 : 0,
+      preOrder: data.isPreorder ? 1 : 0,
     };
-
-    console.log('metadata', metadata);
 
     const validImages = images.filter(img => img.file !== null);
     const files = validImages.map(img => img.file);
@@ -181,9 +193,9 @@ export default function EditProductPage({ params }) {
       onSuccess: () => {
         form.reset();
         setImages([
-          { id: 1, file: null, preview: null },
-          { id: 2, file: null, preview: null },
-          { id: 3, file: null, preview: null },
+          {id: 1, file: null, preview: null},
+          {id: 2, file: null, preview: null},
+          {id: 3, file: null, preview: null},
         ]);
         toast.success('Product updated successfully');
         router.push('/bdashboard/product-management');
@@ -231,15 +243,16 @@ export default function EditProductPage({ params }) {
     setImages(updatedImages);
   };
 
-  // Fungsi handler ketika kategori utama berubah
-  const handleCategoryChange = (categories) => {
-    // Simpan ID kategori yang dipilih
-    const categoryId = form.getValues("category");
-    setSelectedCategoryId(categoryId);
 
-    // Reset subCategory jika kategori utama berubah
-    form.setValue("subCategory", "");
+  const handleSubCategoryChange = (subCategory) => {
+    console.log('Subcategory changed:', subCategory);
+
+    // Update state lokal untuk subkategori
+    setSelectedSubCategoryId(subCategory.id);
+    setSelectedSubCategoryName(subCategory.name);
+    form.setValue("subCategory", subCategory.id);
   };
+
 
   if (isLoadingProduct) {
     return (
@@ -285,13 +298,32 @@ export default function EditProductPage({ params }) {
                   </FormItem>
                 )}
               />
-              <CategorySelector
+              <FormField
                 control={form.control}
                 name="category"
-                filterType="root"
-                onCategoryChange={handleCategoryChange}
-                defaultValue={product.mCategoriesId.toString()}
-                key={`category-${isFormReady ? 'ready' : 'loadiing'}-${product?.mCategoriesId.toString() || 'initial'}`}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <CategorySelector
+                        control={form.control}
+                        name="category"
+                        filterType="root"
+                        defaultValue={product?.mCategoriesParentId}
+                        value={field.value}
+                        onCategoryChange={(category) => {
+                          // Perbarui nilai form di sini
+                          field.onChange(category.id);
+                          setSelectedCategoryId(category.id);
+                          setSelectedCategoryName(category.name);
+                          form.setValue("subCategory", "");
+                        }}
+                        label="Category"
+                        placeholder="Select a category"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
               <CategorySelector
                 control={form.control}
@@ -300,7 +332,8 @@ export default function EditProductPage({ params }) {
                 placeholder="Select a Subcategory"
                 filterType="sub"
                 parentCategoryId={selectedCategoryId}
-                key={`subcategory-${isFormReady ? 'ready' : 'loading'}-${selectedCategoryId}`}
+                onCategoryChange={handleSubCategoryChange}
+                key={`subcategory-${selectedCategoryId || 'none'}`}
               />
             </CardContent>
           </Card>
@@ -365,6 +398,7 @@ export default function EditProductPage({ params }) {
                     <FormControl>
                       <RichTextEditor
                         value={field.value}
+                        defaultValue={product?.longDescription}
                         onChange={field.onChange}
                         placeholder="Enter product description"
                       />
@@ -513,7 +547,7 @@ export default function EditProductPage({ params }) {
                         <FormLabel>Weight Unit</FormLabel>
                         <Select
                           onValueChange={field.onChange}
-                          defaultValue={field.value}
+                          value={field.value}
                           className="tw-border-input tw-border-red-500"
                         >
                           <FormControl>
@@ -598,6 +632,7 @@ export default function EditProductPage({ params }) {
                       <FormControl>
                         <RichTextEditor
                           value={field.value}
+                          defaultValue={product?.material}
                           onChange={field.onChange}
                           placeholder="Enter product materials"
                         />
@@ -615,6 +650,7 @@ export default function EditProductPage({ params }) {
                       <FormControl>
                         <RichTextEditor
                           value={field.value}
+                          defaultValue={product?.sustainabilityFeature}
                           onChange={field.onChange}
                           placeholder="Enter sustainability features"
                         />

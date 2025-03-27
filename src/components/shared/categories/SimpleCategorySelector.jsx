@@ -18,10 +18,39 @@ const SimpleCategorySelector = ({
                                   value,
                                   onChange,
                                   onCategoriesLoaded,
-                                  label = ""
+                                  label = "",
+                                  showParentCategoriesOnly = true // parameter untuk mengontrol filter
                                 }) => {
   const { data: categories = [], isLoading, error } = useCategories('categories', {});
   const [selectedCategory, setSelectedCategory] = useState(value || '');
+
+  // Log data kategori yang diterima
+  useEffect(() => {
+    if (categories?.length > 0) {
+      // Verifikasi apakah kategori memiliki properti parentId
+      const sampleCategory = categories[0];
+    }
+  }, [categories]);
+
+  // Filter kategori berdasarkan parentId
+  const filteredCategories = useMemo(() => {
+    if (!categories?.length) return [];
+
+
+    // Cek properti parentId dan struktur data
+    const categoriesWithNullParent = categories.filter(category => {
+      const hasNullParent = category.parentId === null;
+      return hasNullParent;
+    });
+
+
+    // Filter kategori
+    // Jika showParentCategoriesOnly false, tampilkan hanya kategori yang parentId === null
+    // Jika showParentCategoriesOnly true, tampilkan semua kategori
+    const filtered = categoriesWithNullParent;
+
+    return filtered;
+  }, [categories, showParentCategoriesOnly]);
 
   const unselectCategory = useCallback((e) => {
     e.stopPropagation(); // Menghindari Select terbuka ketika tombol X diklik
@@ -48,9 +77,9 @@ const SimpleCategorySelector = ({
 
   useEffect(() => {
     if (categories?.length > 0 && onCategoriesLoaded) {
-      onCategoriesLoaded(categories);
+      onCategoriesLoaded(filteredCategories);
     }
-  }, [categories, onCategoriesLoaded]);
+  }, [filteredCategories, onCategoriesLoaded, categories]);
 
   useEffect(() => {
     return () => {
@@ -99,15 +128,19 @@ const SimpleCategorySelector = ({
             </SelectValue>
           </SelectTrigger>
           <SelectContent position="popper" className="tw-max-h-[300px" align="start" sideOffset={4}>
-            {categories?.map((category) => (
-              <SelectItem
-                key={category.id}
-                value={category.id}
-                className="tw-truncate"
-              >
-                {category.name}
-              </SelectItem>
-            ))}
+            {filteredCategories.length > 0 ? (
+              filteredCategories.map((category) => (
+                <SelectItem
+                  key={category.id}
+                  value={String(category.id)}
+                  className="tw-truncate"
+                >
+                  {category.name}
+                </SelectItem>
+              ))
+            ) : (
+              <div className="tw-p-2 tw-text-center tw-text-gray-500">Tidak ada kategori tersedia</div>
+            )}
           </SelectContent>
         </Select>
         {selectedCategory && (

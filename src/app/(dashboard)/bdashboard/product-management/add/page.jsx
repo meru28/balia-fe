@@ -1,6 +1,6 @@
 "use client";
 
-import {useState} from "react";
+import React, {useState} from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -39,6 +39,7 @@ const productSchema = z.object({
   dimensionHeight: z.coerce.number().positive({message: "Height must be a positive number"}),
   description: z.string().min(10, { message: "Description must be at least 10 characters" }),
   category: z.string().min(1, { message: "Please select a category" }),
+  subCategory: z.string(),
   sustainabilityFeature: z.string().min(10, { message: "Sustainability feature must be at least 10 characters" }),
   material: z.string().min(10, { message: "Material must be at least 10 characters" }),
   discountPercentage: z.coerce.number().int().min(0).max(100, { message: "Discount percentage must be between 0 and 100" }),
@@ -52,12 +53,16 @@ export default function AddProductPage() {
     { id: 3, file: null, preview: null },
   ]);
 
+  const [selectedCategoryId, setSelectedCategoryId] = useState(null);
+  const [selectedSubCategoryId, setSelectedSubCategoryId] = useState(null);
+  const [selectedSubCategoryName, setSelectedSubCategoryName] = useState(null);
+
   const form = useForm({
     resolver: zodResolver(productSchema),
     defaultValues: {
       name: "",
       sku: "",
-      price: 0,
+      price: "",
       currency: "AED",
       stock: 0,
       isActive: true,
@@ -70,6 +75,7 @@ export default function AddProductPage() {
       dimensionHeight: "",
       description: "",
       category: "",
+      subCategory: "",
       sustainabilityFeature: "",
       material: "",
       discountPercentage: 0,
@@ -98,7 +104,7 @@ export default function AddProductPage() {
       dimensionHeight: data.dimensionHeight.toString(),
       longDescription: data.description,
       shortDescription: data.description,
-      mCategories: {"id": +data.category},
+      mCategories: data.subCategory ? {"id": +data.category} : {"id": +data.category},
       sustainabilityFeature: data.sustainabilityFeature,
       material: data.material,
       discountPercentage: data.discountPercentage,
@@ -151,6 +157,15 @@ export default function AddProductPage() {
     }
   };
 
+  const handleSubCategoryChange = (subCategory) => {
+    console.log('Subcategory changed:', subCategory);
+
+    // Update state lokal untuk subkategori
+    setSelectedSubCategoryId(subCategory.id);
+    setSelectedSubCategoryName(subCategory.name);
+    form.setValue("subCategory", subCategory.id);
+  };
+
   const handleImageDelete = (id, e) => {
     if (e) e.stopPropagation();
 
@@ -193,10 +208,48 @@ export default function AddProductPage() {
                   </FormItem>
                 )}
               />
-
+              {/*<FormField*/}
+              {/*  control={form.control}*/}
+              {/*  name="category"*/}
+              {/*  render={({ field }) => (*/}
+              {/*    <FormItem>*/}
+              {/*      <FormControl>*/}
+              {/*        <CategorySelector*/}
+              {/*          control={form.control}*/}
+              {/*          name="category"*/}
+              {/*          filterType="root"*/}
+              {/*          defaultValue={product?.mCategoriesParentId}*/}
+              {/*          value={field.value}*/}
+              {/*          onCategoryChange={(category) => {*/}
+              {/*            // Perbarui nilai form di sini*/}
+              {/*            field.onChange(category.id);*/}
+              {/*            setSelectedCategoryId(category.id);*/}
+              {/*            setSelectedCategoryName(category.name);*/}
+              {/*          }}*/}
+              {/*          label="Category"*/}
+              {/*          placeholder="Select a category"*/}
+              {/*        />*/}
+              {/*      </FormControl>*/}
+              {/*      <FormMessage />*/}
+              {/*    </FormItem>*/}
+              {/*  )}*/}
+              {/*/>*/}
               <CategorySelector
                 control={form.control}
                 name="category"
+                onCategoryChange={(category) => {
+                  setSelectedCategoryId(category.id);
+                }}
+              />
+              <CategorySelector
+                control={form.control}
+                name="subCategory"
+                label="Subcategory"
+                placeholder="Select a Subcategory"
+                filterType="sub"
+                parentCategoryId={selectedCategoryId}
+                onCategoryChange={handleSubCategoryChange}
+                key={`subcategory-${selectedCategoryId || 'none'}`}
               />
             </CardContent>
           </Card>
@@ -329,7 +382,7 @@ export default function AddProductPage() {
                       <FormItem>
                         <FormLabel>Price</FormLabel>
                         <FormControl>
-                          <PriceInput field={field} currencySymbol={currency} />
+                          <PriceInput {...field} currencySymbol={form.watch('currency')} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
