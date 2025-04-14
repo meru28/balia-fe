@@ -64,13 +64,13 @@ export default function ProductsPage() {
     };
   }, []);
 
-  useEffect(() => {
-    if (isMounted && !isLoading) {
-      console.log("Table container exists:", document.getElementById('table-container') !== null);
-      console.log("Column header exists:", document.querySelector('.column-header') !== null);
-      console.log("Resize indicator exists:", document.getElementById('resize-indicator') !== null);
-    }
-  }, [isMounted, isLoading]);
+  // useEffect(() => {
+  //   if (isMounted && !isLoading) {
+  //     console.log("Table container exists:", document.getElementById('table-container') !== null);
+  //     console.log("Column header exists:", document.querySelector('.column-header') !== null);
+  //     console.log("Resize indicator exists:", document.getElementById('resize-indicator') !== null);
+  //   }
+  // }, [isMounted, isLoading]);
 
   // Inisialisasi tour
   useEffect(() => {

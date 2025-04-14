@@ -6,6 +6,7 @@ import getAllProducts from "@/libs/getAllProducts";
 import makePath from "@/libs/makePath";
 import Link from "next/link";
 import {useCategories} from "@/hooks/useCategories";
+import {useEffect} from "react";
 
 const Products3 = ({
                      title,
@@ -22,7 +23,12 @@ const Products3 = ({
 
   const {data: response, isLoading, error} = useCategories('categories');
 
-  const categories = response?.filter(category => !category.parentId || category.parentId === null);
+  const categories = response?.filter(category => (!category.parentId || category.parentId === null) && category.name.toLowerCase() !== 'best sellers');
+  const filteredCategories = categories?.filter(category => category.name.toLowerCase() !== 'best sellers');
+
+  useEffect(() => {
+    console.log(filteredCategories);
+  })
   const drinksProducts = getFilteredProducts("Food & Drinks");
   const drinksProducts1 = drinksProducts?.slice(0, 6);
   const drinksProducts2 = drinksProducts?.slice(6, 12);

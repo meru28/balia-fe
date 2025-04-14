@@ -1,6 +1,5 @@
 import {apiService} from "@/services/api.service";
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
-import { usePathname } from 'next/navigation';
 
 export const useProductAddMutation = () => {
   const queryClient = useQueryClient();

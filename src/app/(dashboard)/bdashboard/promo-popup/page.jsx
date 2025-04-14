@@ -5,8 +5,10 @@ import {Input} from "@/components/ui/input";
 import {Textarea} from "@/components/ui/textarea";
 import {Button} from "@/components/ui/button";
 import {ImageIcon} from "lucide-react";
-import {useRef, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import Image from "next/image";
+import {useNewsPromo, useUpdateNewsPromo} from "@/hooks/useNewsPromo";
+import {toast} from "sonner";
 
 export default function PromoPopupPage() {
   const [popupContent, setPopupContent] = useState({
@@ -16,7 +18,9 @@ export default function PromoPopupPage() {
     buttonLabelMinimized: "News Offer"
   });
 
-  const [imagePreview, setImagePreview] = useState(null);
+  const [imagePreview, setImagePreview] = useState({
+    id: 1, file: null, preview: null
+  });
   const fileInputRef = useRef(null);
 
   const handleChange = (e) => {
@@ -32,7 +36,11 @@ export default function PromoPopupPage() {
     if (file) {
       // Create a preview URL for the selected image
       const previewUrl = URL.createObjectURL(file);
-      setImagePreview(previewUrl);
+      setImagePreview(prev => ({
+        ...prev,
+        file,
+        preview: previewUrl
+      }));
     }
   };
 
@@ -42,6 +50,55 @@ export default function PromoPopupPage() {
     alert("Changes saved successfully!");
   };
 
+  const {data: newsPromo, isLoading} = useNewsPromo(['newsPromo'])
+
+  useEffect(() => {
+    if (newsPromo && newsPromo[0] && !isLoading) {
+      setPopupContent(prevState =>({
+        ...prevState,
+        header: newsPromo[0].header || prevState.header,
+        subheader: newsPromo[0].description || prevState.subheader,
+        buttonLabel: newsPromo[0].buttonLabel || prevState.buttonLabel,
+        buttonLabelMinimized: newsPromo[0].buttonLabelMinimal || prevState.buttonLabelMinimized,
+      }))
+      if (newsPromo[0]?.image !== '' && !imagePreview.file) {
+        setImagePreview(prev => ({
+          id: newsPromo[0].id,
+          file: null,
+          preview: newsPromo[0].image
+        }));
+      }
+    }
+
+  }, [newsPromo, isLoading, imagePreview.file])
+
+  const { mutate: updateNewsPromo, isPending } = useUpdateNewsPromo()
+
+  function onSubmit() {
+    const metadata = {
+      id: newsPromo[0].id,
+      title: newsPromo[0].title,
+      header: popupContent.header,
+      description: popupContent.subheader,
+      status: 1,
+      buttonLabel: popupContent.buttonLabel,
+      buttonLabelMinimal: popupContent.buttonLabelMinimized,
+      originalName: imagePreview.file?.name
+    }
+
+    const validImages = Object.keys(imagePreview).includes('file') && imagePreview.file !== null ? imagePreview.file : null;
+    updateNewsPromo({metadata, validImages}, {
+      onSuccess: () => {
+        toast.success('Promo popup updated successfully')
+      },
+      onError: (err) => {
+        toast.error(err.message)
+      }
+    })
+    
+    console.log('cekkkkk', validImages)
+  }
+
   return (
     <div className="tw-container tw-mx-auto tw-px-4 sm:tw-px-6 md:tw-px-10 tw-py-4 md:tw-py-5">
       <div className="tw-mb-4 md:tw-mb-6 tw-bg-white tw-rounded-lg tw-p-3 md:tw-p-4 tw-shadow-lg">
@@ -50,7 +107,7 @@ export default function PromoPopupPage() {
           <h1 className="tw-text-2xl md:tw-text-3xl tw-p-0 tw-m-0 tw-font-bold">Custom Promo Popup</h1>
         </div>
       </div>
-      <div className="tw-grid tw-grid-cols-1 md:tw-grid-cols-2 tw-gap-8">
+      <div className="tw-flex tw-flex-col tw-gap-8">
         {/* Edit Form */}
         <Card>
           <CardHeader>
@@ -79,7 +136,7 @@ export default function PromoPopupPage() {
               <Input
                 id="header"
                 name="header"
-                value={popupContent.header}
+                value={popupContent.header || ""}
                 onChange={handleChange}
                 placeholder="Enter header text..."
               />
@@ -118,27 +175,29 @@ export default function PromoPopupPage() {
               />
             </div>
 
-            <Button onClick={handleSave} className="tw-w-full">
-              Save Changes
+            <Button onClick={onSubmit} className="tw-w-full" disabled={isPending}>
+              {isPending ? "Saving..." : "Save Changes"}
             </Button>
           </CardContent>
         </Card>
 
         {/* Preview */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Preview</CardTitle>
+        <Card className="tw-w-3/5 tw-h-fit tw-mx-auto">
+          <CardHeader className="!tw-bg-[#e5e7eb]">
+            <CardTitle className="">Preview</CardTitle>
           </CardHeader>
-          <CardContent className="tw-space-y-4">
-            <div className="tw-aspect-video tw-relative tw-bg-muted tw-rounded-lg tw-overflow-hidden">
-              {imagePreview ? (
-                <Image
-                  src={imagePreview}
-                  width={100}
-                  height={100}
-                  alt="Preview"
-                  className="tw-object-cover tw-w-full tw-h-full"
-                />
+          <CardContent className="tw-flex tw-flex-row tw-h-[87%] tw-w-full !tw-p-0">
+            <div className="tw-w-1/2 tw-relative tw-bg-muted tw-rounded-lg">
+              {imagePreview.preview ? (
+                <div className="tw-relative tw-w-full tw-h-full">
+                  <Image
+                    src={imagePreview.preview}
+                    width={100}
+                    height={100}
+                    alt="Preview"
+                    className="tw-w-full tw-h-full tw-object-cover tw-rounded-lg"
+                  />
+                </div>
               ) : (
                 <div className="tw-flex tw-flex-col tw-items-center tw-justify-center tw-h-full tw-gap-2">
                   <ImageIcon className="tw-h-12 tw-w-12 tw-text-muted-foreground" />
@@ -147,7 +206,7 @@ export default function PromoPopupPage() {
               )}
             </div>
 
-            <div className="tw-space-y-4 tw-p-4 tw-bg-card tw-rounded-lg">
+            <div className="tw-space-y-4 tw-p-4 tw-bg-card tw-rounded-lg tw-flex tw-flex-col tw-justify-center text-center">
               <h2 className="tw-text-2xl tw-font-bold">{popupContent.header}</h2>
               <p className="tw-text-muted-foreground">{popupContent.subheader}</p>
               <input
@@ -157,11 +216,11 @@ export default function PromoPopupPage() {
               />
               <Button className="tw-w-full">{popupContent.buttonLabel}</Button>
             </div>
-            <div className="">
-              <Button className="tw-w-fit tw-animate-bounce tw-absolute tw-bottom-10">{popupContent.buttonLabelMinimized}</Button>
-            </div>
           </CardContent>
         </Card>
+      </div>
+      <div className="tw-relative tw-border-2">
+        <Button className="tw-w-fit tw-animate-bounce">{popupContent.buttonLabelMinimized}</Button>
       </div>
     </div>
   )

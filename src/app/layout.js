@@ -9,6 +9,7 @@ import { Suspense } from "react";
 import SessionAndQueryProvider from "@/providers/ClientSessionProvider"
 import { Toaster } from "@/components/ui/sonner"
 import TidioChat from "@/libs/TidioChat";
+import { getNewsPromo } from '@/app/actions/promo';
 const open_sans = localFont({
   src: [
     {
@@ -44,7 +45,8 @@ export const metadata = {
   description: "Balia - Summer is here. Always",
 };
 
-export default function RootLayout({ children, session }) {
+export default async function RootLayout({ children, session }) {
+  await getNewsPromo();
 
   return (
     <html
@@ -52,7 +54,6 @@ export default function RootLayout({ children, session }) {
       suppressHydrationWarning={true}
       className={`${rajdhani.variable} ${open_sans.variable} ${brittany.variable}`}
     >
-
       <body className={open_sans.className}>
         <SessionAndQueryProvider session={session}>
           <Suspense fallback={<div></div>}>

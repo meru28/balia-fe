@@ -65,9 +65,9 @@ export default function EditProductPage({ params }) {
   const [isFormReady, setIsFormReady] = useState(false);
 
   const [images, setImages] = useState([
-    { id: 1, file: null, preview: null },
-    { id: 2, file: null, preview: null },
-    { id: 3, file: null, preview: null },
+    { id: 1, imageId: null, file: null, preview: null, isDeleted: false },
+    { id: 2, imageId: null, file: null, preview: null, isDeleted: false },
+    { id: 3, imageId: null, file: null, preview: null, isDeleted: false },
   ]);
 
   const form = useForm({
@@ -134,6 +134,7 @@ export default function EditProductPage({ params }) {
         product?.mProductImages.forEach((image, index) => {
           if (index < 3) {
             updatedImages[index].file = null;
+            updatedImages[index].imageId = image.id;
             updatedImages[index].preview = image.image || image;
           }
         });
@@ -143,11 +144,15 @@ export default function EditProductPage({ params }) {
   }, [product, isLoadingProduct, form]);
 
   useEffect(() => {
-    if (isFormReady) {
-      console.log("Form values:", form.getValues());
-      console.log("Selected Category ID:", selectedCategoryId);
-    }
-  }, [isFormReady, form, selectedCategoryId]);
+    // Cleanup function untuk menghapus URL objek ketika komponen di-unmount
+    return () => {
+      images.forEach(image => {
+        if (image.preview && image.preview.startsWith('blob:')) {
+          URL.revokeObjectURL(image.preview);
+        }
+      });
+    };
+  }, [images]);
 
   const router = useRouter();
   const { mutate: editProduct, isPending } = useProductEditMutation();
@@ -162,6 +167,16 @@ export default function EditProductPage({ params }) {
     //   return;
     //
     // }
+    const validImages = images.filter(img => img.file !== null);
+    const filterImagesNotNull = validImages.filter(img => img.preview === null);
+    const updatedImages = validImages.map(img => {
+        return {
+          id: img.imageId,
+          originalName: img.file.name,
+        }
+      });
+    console.log('cek images', updatedImages);
+    const files = validImages.map(img => img.file);
     const metadata = {
       id: productId,
       name: data.name,
@@ -183,12 +198,11 @@ export default function EditProductPage({ params }) {
       material: data.material,
       discountPercentage: data.discountPercentage,
       preOrder: data.isPreorder ? 1 : 0,
+      mProductImages: updatedImages
     };
 
-    const validImages = images.filter(img => img.file !== null);
-    const files = validImages.map(img => img.file);
     // Filter out images that have been uploaded
-
+    console.log('cek metadata', validImages);
     editProduct({ metadata, files }, {
       onSuccess: () => {
         form.reset();
@@ -209,44 +223,46 @@ export default function EditProductPage({ params }) {
   const handleImageChange = (e, imageId) => {
     const file = e.target.files[0];
     if (!file) return;
+    console.log("File terpilih:", file);
 
-    const updatedImages = images.map(img => {
-      if (img.id === imageId) {
-        return {
-          ...img,
+    try {
+      // Buat URL objek
+      const objectUrl = URL.createObjectURL(file);
+      // console.log("Object URL dibuat:", objectUrl);
+
+      // Update images langsung tanpa menggunakan state sebelumnya
+      const newImages = [...images];
+      const imageIndex = newImages.findIndex(img => img.id === imageId);
+
+      if (imageIndex !== -1) {
+        newImages[imageIndex] = {
+          ...newImages[imageIndex],
           file: file,
-          preview: URL.createObjectURL(file),
+          preview: objectUrl
         };
-      }
-      return img;
-    });
 
-    setImages(updatedImages);
+        console.log("Image yang akan diupdate:", newImages[imageIndex]);
+        setImages(newImages);
+        console.log("State images setelah update:", newImages);
+      }
+    } catch (error) {
+      console.error("Error saat mengubah gambar:", error);
+    }
   };
 
   const removeImage = (imageId) => {
-    const updatedImages = images.map(img => {
-      if (img.id === imageId) {
-        // Clear the image file and preview
-        if (img.preview) {
-          URL.revokeObjectURL(img.preview);
-        }
-        return {
-          ...img,
-          file: null,
-          preview: null,
-        };
-      }
-      return img;
-    });
-
-    setImages(updatedImages);
+    console.log("Image yang akan dihapus:", imageId);
+    setImages(prevImages =>
+      prevImages.map(img =>
+        img.imageId === imageId
+          ? { ...img, file: null, preview: null }
+          : img
+      )
+    );
   };
 
 
   const handleSubCategoryChange = (subCategory) => {
-    console.log('Subcategory changed:', subCategory);
-
     // Update state lokal untuk subkategori
     setSelectedSubCategoryId(subCategory.id);
     setSelectedSubCategoryName(subCategory.name);
@@ -362,7 +378,7 @@ export default function EditProductPage({ params }) {
                           <div className="tw-absolute tw-inset-0 tw-flex tw-items-center tw-justify-center tw-bg-black tw-bg-opacity-40">
                             <button
                               type="button"
-                              onClick={() => removeImage(image.id)}
+                              onClick={() => removeImage(image.imageId)}
                               className="tw-w-10 tw-h-10 tw-flex tw-items-center tw-justify-center tw-bg-destructive tw-text-destructive-foreground tw-rounded-full tw-shadow-lg hover:tw-bg-destructive/90 tw-transition-colors"
                             >
                               <X className="tw-h-6 tw-w-6" />
@@ -503,7 +519,7 @@ export default function EditProductPage({ params }) {
                         <FormLabel>Stock</FormLabel>
                         <FormControl>
                           <NumberWithLeadingZeroInput
-                            value={field.value}
+                            field={field}
                             placeholder="0"
                           />
                         </FormControl>

@@ -6,9 +6,12 @@ export const API_ROUTES = {
     VERIFY_USER: '/auth/verify',
   },
   PRODUCT: {
-    ADD_PRODUCT: '/master/m-products',
-    GET_PRODUCT: '/master/m-product/by-query',
-    GET_CATEGORY: '/master/m-categories',
-    CREATE_CATEGORY: '/master/m-categories',
+    ADD_PRODUCT: '/mst/m-products',
+    GET_PRODUCT: '/mst/m-product/by-query',
+    GET_CATEGORY: '/mst/m-categories',
+    CREATE_CATEGORY: '/mst/m-categories',
+  },
+  PROMO: {
+    GET_NEWS_PROMO: '/mst/m-news-offer',
   }
 };

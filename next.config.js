@@ -2,7 +2,9 @@
 const nextConfig = {
   reactStrictMode: false,
   images: {
+    domains: ['cdn.balia.ae'],
     unoptimized: true,
+    minimumCacheTTL: 3600,
     remotePatterns: [
       {
         protocol: 'https',

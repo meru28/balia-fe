@@ -99,7 +99,7 @@ export const apiService = {
       return response.data;
     } catch (error) {
       throw {
-        message: error.response?.data?.message || "Failed to add product",
+        message: error.response?.data?.message || "Failed to edit product",
         status: error.response?.status || 500
       }
     }
@@ -119,10 +119,9 @@ export const apiService = {
     }
   },
 
-
   getCategory: async (params = {}) => {
     try {
-      return await apiClient.get(`${API_ROUTES.PRODUCT.GET_CATEGORY}`, {
+      return await apiClient.get(API_ROUTES.PRODUCT.GET_CATEGORY, {
         params: params
       })
     } catch (error) {
@@ -150,5 +149,48 @@ export const apiService = {
       };
     }
   },
-  
+
+  getNewsPromo: async () => {
+    try {
+      const params = {
+        size: 5,
+        sort: 'id,asc',
+        page: 0
+      }
+      const response = await apiClient.get(API_ROUTES.PROMO.GET_NEWS_PROMO)
+      return response;
+    } catch (error) {
+      console.error('Get news promo error:', error);
+      throw {
+        message: error.response?.data?.message || "Failed to fetch News Promo",
+        status: error.response?.status || 500
+      };
+    }
+  },
+
+  putUpdateNewsPromo: async (metadata, files) => {
+    const formData = new FormData();
+    formData.append('metadata', JSON.stringify(metadata))
+    formData.append(`files`, files);
+
+// Debugging check: Log the formData entries to ensure they are populated as expected
+    for (let [key, value] of formData.entries()) {
+      console.log(`${key}:`, value);
+    }
+
+    try {
+      const response = await apiClient.put(API_ROUTES.PROMO.GET_NEWS_PROMO, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          "Accept": "application/json, text/plain, */*"
+        }
+      })
+      return response.data;
+    } catch (error) {
+      throw {
+        message: error.response?.data?.message || "Failed to edit product",
+        status: error.response?.status || 500
+      }
+    }
+  }
 };

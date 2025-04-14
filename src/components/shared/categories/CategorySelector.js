@@ -38,10 +38,6 @@ const CategorySelector = ({
   const [filteredCategories, setFilteredCategories] = useState([]);
 
   useEffect(() => {
-    console.log('CategorySelector props:', { value, defaultValue, filterType });
-  }, [value, defaultValue, filterType]);
-
-  useEffect(() => {
     if (response) {
       let filtered = [];
 
@@ -85,7 +81,7 @@ const CategorySelector = ({
             String(cat.id) === stringDefaultValue
           );
 
-          console.log('Setting default category:', selectedCategory);
+          // console.log('Setting default category:', selectedCategory);
 
           // Notifikasi parent
           if (onChange) {
@@ -103,13 +99,13 @@ const CategorySelector = ({
   }
   }, [response, filterType, parentCategoryId, onCategoriesLoaded, defaultValue, onCategoryChange, onChange, value]);
 
-  useEffect(() => {
-    // Validasi bahwa control dan _formValues tersedia sebelum mengaksesnya
-    if (control && control._formValues && name) {
-      console.log(`CategorySelector(${name}): defaultValue=${defaultValue}, field.value=${control._formValues[name]}`);
-      console.log(`Available category IDs:`, filteredCategories.map(c => String(c.id)));
-    }
-  }, [name, defaultValue, control, filteredCategories]);
+  // useEffect(() => {
+  //   // Validasi bahwa control dan _formValues tersedia sebelum mengaksesnya
+  //   if (control && control._formValues && name) {
+  //     console.log(`CategorySelector(${name}): defaultValue=${defaultValue}, field.value=${control._formValues[name]}`);
+  //     console.log(`Available category IDs:`, filteredCategories.map(c => String(c.id)));
+  //   }
+  // }, [name, defaultValue, control, filteredCategories]);
 
   if (isLoading) {
     return (
