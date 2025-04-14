@@ -26,7 +26,7 @@ export default function PopupDialog({ promoData }) {
       const storedTimestamp = localStorage.getItem('promoImageTimestamp');
       const now = Date.now();
       const cacheValid = storedImageUrl && storedTimestamp &&
-        (now - parseInt(storedTimestamp) < 24 * 60 * 60 * 1000);
+        (now - parseInt(storedTimestamp) < 30 * 1000);
 
       // Tentukan URL mana yang akan digunakan
       const currentPromoImage = promo[0]?.image;

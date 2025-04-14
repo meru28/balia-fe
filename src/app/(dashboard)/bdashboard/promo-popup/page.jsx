@@ -19,7 +19,7 @@ export default function PromoPopupPage() {
   });
 
   const [imagePreview, setImagePreview] = useState({
-    id: 1, file: null, preview: null
+    id: 1, file: null, preview: null, originalName: null,
   });
   const fileInputRef = useRef(null);
 
@@ -65,6 +65,7 @@ export default function PromoPopupPage() {
         setImagePreview(prev => ({
           id: newsPromo[0].id,
           file: null,
+          originalName: newsPromo[0].originalName,
           preview: newsPromo[0].image
         }));
       }
@@ -83,7 +84,7 @@ export default function PromoPopupPage() {
       status: 1,
       buttonLabel: popupContent.buttonLabel,
       buttonLabelMinimal: popupContent.buttonLabelMinimized,
-      originalName: imagePreview.file?.name
+      originalName: imagePreview.file?.name ? imagePreview.file?.name : imagePreview.originalName
     }
 
     const validImages = Object.keys(imagePreview).includes('file') && imagePreview.file !== null ? imagePreview.file : null;
@@ -95,8 +96,6 @@ export default function PromoPopupPage() {
         toast.error(err.message)
       }
     })
-    
-    console.log('cekkkkk', validImages)
   }
 
   return (

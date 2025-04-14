@@ -171,7 +171,7 @@ export const apiService = {
   putUpdateNewsPromo: async (metadata, files) => {
     const formData = new FormData();
     formData.append('metadata', JSON.stringify(metadata))
-    formData.append(`files`, files);
+    formData.append(`files`, files ? files : []);
 
 // Debugging check: Log the formData entries to ensure they are populated as expected
     for (let [key, value] of formData.entries()) {
